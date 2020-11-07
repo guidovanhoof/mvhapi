@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bcc10eaef5af6aa8f14177e136075dd8",
+    "content-hash": "63933978e1df31dc1ea0bd711e631739",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -7267,6 +7267,44 @@
                 }
             ],
             "time": "2020-09-28T06:39:44+00:00"
+        },
+        {
+            "name": "sempro/phpunit-pretty-print",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sempro/phpunit-pretty-print.git",
+                "reference": "ab64b50cfc3b94a6081091b34ab52f978ca27d9f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sempro/phpunit-pretty-print/zipball/ab64b50cfc3b94a6081091b34ab52f978ca27d9f",
+                "reference": "ab64b50cfc3b94a6081091b34ab52f978ca27d9f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1.0",
+                "phpunit/phpunit": ">=7.0.0 ^9.0.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.16"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sempro\\PHPUnitPrettyPrinter\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Prettify PHPUnit output",
+            "support": {
+                "issues": "https://github.com/sempro/phpunit-pretty-print/issues",
+                "source": "https://github.com/sempro/phpunit-pretty-print/tree/1.3.0"
+            },
+            "time": "2020-09-11T13:37:56+00:00"
         },
         {
             "name": "theseer/tokenizer",
