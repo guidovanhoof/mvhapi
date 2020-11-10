@@ -13,10 +13,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get(
+    '/',
+    function () {
+        return view('home');
+    }
+);
+Route::get(
+    'home',
+    function () {
+        return view('home');
+    }
+);
 
-Auth::routes();
+Route::get(
+    'login', 'App\Http\Controllers\Auth\LoginController@showLoginForm'
+)
+    ->name('login');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post(
+    'login',
+    'App\Http\Controllers\Auth\LoginController@login'
+);
+Route::post(
+    'logout',
+    'App\Http\Controllers\Auth\LoginController@logout'
+);
+
+//Auth::routes();
+
+Route::fallback(
+    function () {
+        return view('home');
+    }
+);

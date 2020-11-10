@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\KalendersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::resource(
+    'kalenders',
+    KalendersController::class
+)
+    ->middleware('auth:sanctum')
+    ->only('store');
+
+Route::middleware(
+    'auth:sanctum'
+)
+    ->get(
+        '/user',
+        function (Request $request) {
+            return $request->user();
+        }
+    );
