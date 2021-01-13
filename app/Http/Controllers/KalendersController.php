@@ -15,7 +15,7 @@ class KalendersController extends Controller
      */
     public function index()
     {
-        //
+        return KalenderResource::collection(Kalender::all()->sortByDesc("jaar"));
     }
 
     /**
