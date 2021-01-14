@@ -15,12 +15,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource(
-    'kalenders',
-    KalendersController::class
-)
-    ->middleware('auth:sanctum')
-    ->only('store');
+//Route::resource(
+//    'kalenders',
+//    KalendersController::class
+//)
+//    ->middleware('auth:sanctum')
+//    ->only('store');
+
+Route::group(
+    ["prefix" => "admin"],
+    function () {
+        Route::resource(
+            "kalenders",
+            KalendersController::class
+        )
+            ->only('index');
+    }
+);
 
 Route::middleware(
     'auth:sanctum'
