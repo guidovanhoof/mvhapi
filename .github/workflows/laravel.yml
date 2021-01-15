@@ -19,7 +19,7 @@ jobs:
     - name: Copy .env
       run: cp .env.sqlite .env
     - name: Copy  phpunit.xml
-      run: cp phpunit.xml.sqlite 'phpunit.xml
+      run: cp phpunit.xml.sqlite phpunit.xml
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Generate key
