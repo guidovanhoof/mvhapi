@@ -17,9 +17,9 @@ jobs:
         php-version: '8.0'
     - uses: actions/checkout@v2
     - name: Copy .env
-      run: php -r "file_exists('.env') || copy('.env.sqlite', '.env');"
+      run: cp .env.sqlite .env
     - name: Copy  phpunit.xml
-      run: php -r "file_exists('phpunit.xml') || copy('phpunit.xml.sqlite', 'phpunit.xml');"
+      run: cp phpunit.xml.sqlite 'phpunit.xml
     - name: Install Dependencies
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Generate key
