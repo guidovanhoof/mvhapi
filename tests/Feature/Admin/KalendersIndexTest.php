@@ -31,21 +31,6 @@ class KalendersIndexTest extends TestCase
         $this->assertCount(1, $data);
         $this->assertKalenderEquals($data[0], $kalender);
     }
-//
-//    /** @test */
-//    public function meerdereKalendersAanwezig()
-//    {
-//        $eerste_kalender = bewaarKalender();
-//        $tweede_kalender = bewaarKalender();
-//
-//        $response = $this->get('api/admin/kalenders');
-//
-//        $response->assertStatus(200);
-//        $data = $response->json()["data"];
-//        $this->assertCount(2, $data);
-//        $this->assertKalenderEquals($data[0], $eerste_kalender);
-//        $this->assertKalenderEquals($data[1], $tweede_kalender);
-//    }
 
     /**
      * @param $data

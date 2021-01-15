@@ -14,15 +14,17 @@ class Kalender extends Model
 
     protected $fillable = ['jaar', 'opmerkingen'];
 
-    public function omschrijving() {
+    public function omschrijving(): string
+    {
         return self::PREFIX . $this->jaar;
     }
 
-    public function link() {
+    public function link(): string
+    {
         return self::URL_PREFIX . $this->jaar;
     }
 
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'jaar';
     }
