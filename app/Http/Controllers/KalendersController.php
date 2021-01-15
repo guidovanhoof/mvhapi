@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\KalenderResource;
 use App\Models\Kalender;
+use http\Env\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class KalendersController extends Controller
@@ -11,7 +13,7 @@ class KalendersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
@@ -54,11 +56,19 @@ class KalendersController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Kalender  $kalender
-     * @return \Illuminate\Http\Response
+     * @return KalenderResource|\Illuminate\Http\JsonResponse
      */
-    public function show(Kalender $kalender)
+    public function show($jaar)
     {
-        //
+        try {
+            $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
+            return new KalenderResource($kalender);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return response()->json(
+                ["message" => "Kalender niet gevonden!"],
+                404
+            );
+        }
     }
 
     /**

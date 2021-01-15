@@ -15,21 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::resource(
-//    'kalenders',
-//    KalendersController::class
-//)
-//    ->middleware('auth:sanctum')
-//    ->only('store');
-
 Route::group(
     ["prefix" => "admin"],
     function () {
-        Route::resource(
+        Route::apiResource(
             "kalenders",
             KalendersController::class
         )
-            ->only('index');
+            ->parameters(["kalenders" => "jaar"])
+            ->only('index', 'show');
     }
 );
 
