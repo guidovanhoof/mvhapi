@@ -21,16 +21,6 @@ class KalendersController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -45,7 +35,6 @@ class KalendersController extends Controller
             ]
         );
 
-        //return response()->json(Kalender::create($validData)->toArray(), 201);
         return response()->json(
             new KalenderResource(Kalender::create($validData)),
             201
@@ -55,7 +44,7 @@ class KalendersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Kalender  $kalender
+     * @param $jaar
      * @return KalenderResource|\Illuminate\Http\JsonResponse
      */
     public function show($jaar)
@@ -72,26 +61,36 @@ class KalendersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Kalender  $kalender
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Kalender $kalender)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Kalender  $kalender
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @param $jaar
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Kalender $kalender)
+    public function update(Request $request, $jaar)
     {
-        //
+        $validData = $request->validate(
+            [
+                'jaar' => 'required|unique:kalenders,jaar,' . $jaar . ',jaar',
+                'opmerkingen' => 'nullable'
+            ]
+        );
+
+        try {
+            $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
+            $kalender->jaar = $validData["jaar"];
+            $kalender->opmerkingen = $validData["opmerkingen"];
+            $kalender->save();
+            return response()->json(
+                new KalenderResource($kalender),
+                200
+            );
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return response()->json(
+                ["message" => "Kalender niet gevonden!"],
+                404
+            );
+        }
     }
 
     /**
