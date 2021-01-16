@@ -23,7 +23,7 @@ Route::group(
             KalendersController::class
         )
             ->parameters(["kalenders" => "jaar"])
-            ->only('index', 'show', 'store', 'update');
+            ->except('create', 'edit');
     }
 );
 
