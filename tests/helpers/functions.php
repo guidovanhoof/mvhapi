@@ -2,6 +2,8 @@
 
 use App\Models\Kalender;
 
+const ADMIN_API_URL = "api/admin/kalenders";
+
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
 }
