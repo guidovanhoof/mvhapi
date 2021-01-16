@@ -13,7 +13,7 @@ class KalendersIndexTest extends TestCase
     /** @test */
     public function geenKalendersAanwezig()
     {
-        $response = $this->get('api/admin/kalenders');
+        $response = $this->get(ADMIN_API_URL);
 
         $response->assertStatus(200);
         $response->assertJson([]);
@@ -24,7 +24,7 @@ class KalendersIndexTest extends TestCase
     {
         $kalender = bewaarKalender();
 
-        $response = $this->get('api/admin/kalenders');
+        $response = $this->get(ADMIN_API_URL);
 
         $response->assertStatus(200);
         $data = $response->json()["data"];
@@ -49,7 +49,7 @@ class KalendersIndexTest extends TestCase
         $eerste_kalender = bewaarKalender(["jaar" => 2019]);
         $tweede_kalender = bewaarKalender(["jaar" => 2020]);
 
-        $response = $this->get('api/admin/kalenders');
+        $response = $this->get(ADMIN_API_URL);
 
         $response->assertStatus(200);
         $data = $response->json()["data"];
