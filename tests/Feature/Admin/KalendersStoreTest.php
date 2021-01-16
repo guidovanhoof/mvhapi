@@ -14,7 +14,8 @@ class KalendersStoreTest extends TestCase
     {
         $kalender = maakKalender();
 
-        $response = $this->post(
+        $response = $this->json(
+            'POST',
             ADMIN_API_URL,
             ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
         );
