@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\KalenderResource;
 use App\Models\Kalender;
-use http\Env\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -97,10 +96,22 @@ class KalendersController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Kalender  $kalender
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Kalender $kalender)
+    public function destroy($jaar)
     {
-        //
+        try {
+            $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
+            $kalender->delete();
+            return response()->json(
+                ["message" => "Kalender verwijderd!"],
+                200
+            );
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return response()->json(
+                ["message" => "Kalender niet gevonden!"],
+                404
+            );
+        }
     }
 }
