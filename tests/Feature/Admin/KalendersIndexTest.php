@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Kalender;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class KalendersIndexTest extends TestCase
@@ -13,7 +14,7 @@ class KalendersIndexTest extends TestCase
     /** @test */
     public function geenKalendersAanwezig()
     {
-        $response = $this->get(ADMIN_API_URL);
+        $response = $this->getKalenders();
 
         $response->assertStatus(200);
         $response->assertJson([]);
@@ -24,7 +25,7 @@ class KalendersIndexTest extends TestCase
     {
         $kalender = bewaarKalender();
 
-        $response = $this->get(ADMIN_API_URL);
+        $response = $this->getKalenders();
 
         $response->assertStatus(200);
         $data = $response->json()["data"];
@@ -36,7 +37,7 @@ class KalendersIndexTest extends TestCase
      * @param $data
      * @param Kalender $kalender
      */
-    public function assertKalenderEquals($data, Kalender $kalender): void
+    private function assertKalenderEquals($data, Kalender $kalender): void
     {
         $this->assertEquals($data["jaar"], $kalender->jaar);
         $this->assertEquals($data["omschrijving"], $kalender->omschrijving());
@@ -49,12 +50,28 @@ class KalendersIndexTest extends TestCase
         $eerste_kalender = bewaarKalender(["jaar" => 2019]);
         $tweede_kalender = bewaarKalender(["jaar" => 2020]);
 
-        $response = $this->get(ADMIN_API_URL);
+        $response = $this->getKalenders();
 
         $response->assertStatus(200);
         $data = $response->json()["data"];
         $this->assertCount(2, $data);
         $this->assertKalenderEquals($data[0], $tweede_kalender);
         $this->assertKalenderEquals($data[1], $eerste_kalender);
+    }
+
+    /**
+     * @return TestResponse
+     */
+    private function getKalenders(): TestResponse
+    {
+        $plainToken = createUserAndToken();
+
+        return $this
+            ->withHeader('Authorization', 'Bearer ' . $plainToken)
+            ->json(
+                'GET',
+                URL_KALENDERS_ADMIN
+            )
+        ;
     }
 }
