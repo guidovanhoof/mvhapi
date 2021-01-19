@@ -2,7 +2,10 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Models\Kalender;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class KalendersStoreTest extends TestCase
@@ -14,11 +17,7 @@ class KalendersStoreTest extends TestCase
     {
         $kalender = maakKalender();
 
-        $response = $this->json(
-            'POST',
-            ADMIN_API_URL,
-            ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
-        );
+        $response = $this->bewaarKalender($kalender);
 
         $response->assertStatus(201);
         $this
@@ -35,11 +34,7 @@ class KalendersStoreTest extends TestCase
         $expectedErrorMessage = "Jaar is verplicht!";
         $kalender = maakKalender(['jaar' => null]);
 
-        $response = $this->json(
-            'POST',
-            ADMIN_API_URL,
-            ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
-        );
+        $response = $this->bewaarKalender($kalender);
 
         $response->assertStatus(422);
         $this->assertEquals(errorMessage("jaar", $response), $expectedErrorMessage);
@@ -50,12 +45,7 @@ class KalendersStoreTest extends TestCase
         $expectedErrorMessage = "Jaar bestaat reeds!";
         $kalender = bewaarKalender();
 
-        //dd(["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]);
-        $response = $this->json(
-            'POST',
-            ADMIN_API_URL,
-            ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
-        );
+        $response = $this->bewaarKalender($kalender);
 
         $response->assertStatus(422);
         $this->assertEquals(errorMessage("jaar", $response), $expectedErrorMessage);
@@ -65,10 +55,7 @@ class KalendersStoreTest extends TestCase
     public function opmerkingenIsOptioneel() {
         $kalender = maakKalender(["opmerkingen" => null]);
 
-        $response = $this->post(
-            ADMIN_API_URL,
-            ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
-        );
+        $response = $this->bewaarKalender($kalender);
 
         $response->assertStatus(201);
         $this
@@ -77,6 +64,25 @@ class KalendersStoreTest extends TestCase
                 $kalender->toArray()
             )
             ->assertJson($kalender->toJson())
+        ;
+    }
+
+    /**
+     * @param Kalender $kalender
+     * @return TestResponse
+     */
+    private function bewaarKalender(Kalender $kalender): TestResponse
+    {
+        $plainToken = createUserAndToken();
+
+        return
+            $this
+                ->withHeader('Authorization', 'Bearer ' . $plainToken)
+                ->json(
+                    'POST',
+                    URL_KALENDERS_ADMIN,
+                    ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
+                )
         ;
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Kalender;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class KalendersUpdateTest extends TestCase
@@ -14,7 +15,9 @@ class KalendersUpdateTest extends TestCase
     /** @test */
     public function kalenderNietAanwezig()
     {
-        $response = $this->get('api/admin/kalenders/1900');
+        $kalender = maakKalender(["jaar" => 1900]);
+
+        $response = $this->wijzigKalender($kalender, $kalender->jaar);
 
         $response->assertStatus(404);
         $data = $response->json();
@@ -28,7 +31,7 @@ class KalendersUpdateTest extends TestCase
         $jaar = $kalender->jaar;
         $kalender->jaar = $kalender->jaar + 10;
 
-        $response = $this->updateKalender($jaar, $kalender);
+        $response = $this->wijzigKalender($kalender, $jaar);
 
         $response->assertStatus(200);
         $this->assertKalenderInDatabase($kalender);
@@ -40,7 +43,7 @@ class KalendersUpdateTest extends TestCase
         $kalender = bewaarKalender();
         $kalender->opmerkingen = "Gewijzigde opmerkingen";
 
-        $response = $this->updateKalender($kalender->jaar, $kalender);
+        $response = $this->wijzigKalender($kalender, $kalender->jaar);
 
         $response->assertStatus(200);
         $this->assertKalenderInDatabase($kalender);
@@ -54,7 +57,7 @@ class KalendersUpdateTest extends TestCase
         $kalender->jaar = $kalender->jaar + 10;
         $kalender->opmerkingen = "Gewijzigde opmerkingen";
 
-        $response = $this->updateKalender($jaar, $kalender);
+        $response = $this->wijzigKalender($kalender, $jaar);
 
         $response->assertStatus(200);
         $this->assertKalenderInDatabase($kalender);
@@ -67,7 +70,7 @@ class KalendersUpdateTest extends TestCase
         $jaar = $kalender->jaar;
         $kalender->jaar = null;
 
-        $response = $this->updateKalender($jaar, $kalender);
+        $response = $this->wijzigKalender($kalender, $jaar);
 
         $response->assertStatus(422);
         $this->assertEquals(errorMessage("jaar", $response), $expectedErrorMessage);
@@ -82,7 +85,7 @@ class KalendersUpdateTest extends TestCase
         $jaar = $kalender2->jaar;
         $kalender2->jaar = $kalender1->jaar;
 
-        $response = $this->updateKalender($jaar, $kalender2);
+        $response = $this->wijzigKalender($kalender2, $jaar);
 
         $response->assertStatus(422);
         $this->assertEquals(errorMessage("jaar", $response), $expectedErrorMessage);
@@ -93,17 +96,17 @@ class KalendersUpdateTest extends TestCase
         $kalender = bewaarKalender();
         $kalender->opmerkingen = null;
 
-        $response = $this->updateKalender($kalender->jaar, $kalender);
+        $response = $this->wijzigKalender($kalender, $kalender->jaar);
 
         $response->assertStatus(200);
         $this->assertKalenderInDatabase($kalender);
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model $kalender
+     * @param Kalender $kalender
      * @return array
      */
-    private function dataToArray(\Illuminate\Database\Eloquent\Model $kalender): array
+    private function dataToArray(Kalender $kalender): array
     {
         return ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen];
     }
@@ -122,16 +125,21 @@ class KalendersUpdateTest extends TestCase
     }
 
     /**
-     * @param $jaar
      * @param Kalender $kalender
-     * @return \Illuminate\Testing\TestResponse
+     * @return TestResponse
      */
-    private function updateKalender($jaar, Kalender $kalender): \Illuminate\Testing\TestResponse
+    private function wijzigKalender(Kalender $kalender, $jaar): TestResponse
     {
-        return $this->json(
-            'PUT',
-            ADMIN_API_URL . '/' . $jaar,
-            $this->dataToArray($kalender)
-        );
+        $plainToken = createUserAndToken();
+
+        return
+            $this
+                ->withHeader('Authorization', 'Bearer ' . $plainToken)
+                ->json(
+                    'PUT',
+                    URL_KALENDERS_ADMIN . $jaar,
+                    ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
+                )
+            ;
     }
 }

@@ -4,6 +4,7 @@ namespace Tests\Feature\Admin;
 
 use App\Models\Kalender;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class KalendersShowTest extends TestCase
@@ -13,7 +14,7 @@ class KalendersShowTest extends TestCase
     /** @test */
     public function kalenderNietAanwezig()
     {
-        $response = $this->get('api/admin/kalenders/1900');
+        $response = $this->getKalender('1900');
 
         $response->assertStatus(404);
         $data = $response->json();
@@ -25,7 +26,7 @@ class KalendersShowTest extends TestCase
     {
         $kalender = bewaarKalender();
 
-        $response = $this->get('api/admin/kalenders/' . $kalender->jaar);
+        $response = $this->getKalender($kalender->jaar);
 
         $response->assertStatus(200);
         $data = $response->json()["data"];
@@ -41,5 +42,23 @@ class KalendersShowTest extends TestCase
         $this->assertEquals($data["jaar"], $kalender->jaar);
         $this->assertEquals($data["omschrijving"], $kalender->omschrijving());
         $this->assertEquals($data["opmerkingen"], $kalender->opmerkingen);
+    }
+
+    /**
+     * @param $jaar
+     * @return TestResponse
+     */
+    private function getKalender($jaar): TestResponse
+    {
+        $plainToken = createUserAndToken();
+
+        return
+            $this
+                ->withHeader('Authorization', 'Bearer ' . $plainToken)
+                ->json(
+                    'GET',
+                    URL_KALENDERS_ADMIN . $jaar
+                )
+        ;
     }
 }

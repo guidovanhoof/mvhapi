@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\KalendersController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,16 +24,22 @@ Route::group(
             KalendersController::class
         )
             ->parameters(["kalenders" => "jaar"])
-            ->except('create', 'edit');
+            ->middleware("auth:sanctum")
+        ;
     }
 );
 
-Route::middleware(
-    'auth:sanctum'
-)
-    ->get(
-        '/user',
-        function (Request $request) {
-            return $request->user();
-        }
-    );
+Route::post(
+    'token/create',
+    [ApiAuthController::class, 'createToken']
+);
+
+//Route::middleware(
+//    'auth:sanctum'
+//)
+//    ->get(
+//        '/user',
+//        function (Request $request) {
+//            return $request->user();
+//        }
+//    );

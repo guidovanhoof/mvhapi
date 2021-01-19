@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class KalendersDestroyTest extends TestCase
@@ -40,13 +41,19 @@ class KalendersDestroyTest extends TestCase
 
     /**
      * @param $jaar
-     * @return \Illuminate\Testing\TestResponse
+     * @return TestResponse
      */
-    public function deleteKalender($jaar): \Illuminate\Testing\TestResponse
+    public function deleteKalender($jaar): TestResponse
     {
-        return $this->json(
-            'DELETE',
-            ADMIN_API_URL . '/' . $jaar,
-        );
+        $plainToken = createUserAndToken();
+
+        return
+            $this
+                ->withHeader('Authorization', 'Bearer ' . $plainToken)
+                ->json(
+                    'DELETE',
+                    URL_KALENDERS_ADMIN . $jaar,
+                )
+        ;
     }
 }
