@@ -7,6 +7,7 @@ use App\Models\Wedstrijdtype;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class WedstrijdtypesController extends Controller
 {
@@ -23,7 +24,7 @@ class WedstrijdtypesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -33,12 +34,21 @@ class WedstrijdtypesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse|Response
      */
     public function store(Request $request)
     {
-        //
+        $validData = $request->validate(
+            [
+                'omschrijving' => 'required|unique:wedstrijdtypes,omschrijving',
+            ]
+        );
+
+        return response()->json(
+            new WedstrijdtypeResource(Wedstrijdtype::create($validData)),
+            201
+        );
     }
 
     /**
@@ -64,7 +74,7 @@ class WedstrijdtypesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Wedstrijdtype  $wedstrijdtype
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Wedstrijdtype $wedstrijdtype)
     {
@@ -74,9 +84,9 @@ class WedstrijdtypesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Wedstrijdtype  $wedstrijdtype
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Wedstrijdtype $wedstrijdtype)
     {
@@ -87,7 +97,7 @@ class WedstrijdtypesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Wedstrijdtype  $wedstrijdtype
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Wedstrijdtype $wedstrijdtype)
     {

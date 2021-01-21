@@ -18,6 +18,10 @@ class Wedstrijdtype extends Model
      */
     public function setOmschrijvingAttribute($value)
     {
-        $this->attributes["omschrijving"] = preg_replace('/[^A-Z\s]/', '', strtoupper($value));
+        $this->attributes["omschrijving"] = preg_replace(
+            '/[^A-Z\s]/',
+            '',
+            strtoupper($value)
+        );
     }
 }
