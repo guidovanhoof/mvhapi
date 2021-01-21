@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\WedstrijdtypeResource;
 use App\Models\Wedstrijdtype;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -43,12 +44,20 @@ class WedstrijdtypesController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Wedstrijdtype  $wedstrijdtype
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return WedstrijdtypeResource|JsonResponse
      */
-    public function show(Wedstrijdtype $wedstrijdtype)
+    public function show( $id)
     {
-        //
+        try {
+            $wedstrijdtype = Wedstrijdtype::where("id", $id)->firstOrFail();
+            return new WedstrijdtypeResource($wedstrijdtype);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return response()->json(
+                ["message" => "Wedstrijdtype niet gevonden!"],
+                404
+            );
+        }
     }
 
     /**
