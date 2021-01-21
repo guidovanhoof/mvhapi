@@ -16,8 +16,6 @@ class WedstrijdtypesSeeder extends Seeder
     {
         $types = [
             "Ledenwedstrijd",
-            "Marathon",
-            "Koppelmarathon",
             "Jeugdvissen",
             "Koppel met getrokken maat, apart vissen",
             "Criterium",

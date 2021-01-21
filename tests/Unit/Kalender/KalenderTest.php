@@ -32,7 +32,7 @@ class KalenderTest extends TestCase
     public function heeftEenOmschrijving()
     {
         $jaar = date('Y');
-        $omschrijving = 'Kalender ';
+        $omschrijving = 'KALENDER ';
         $kalender = maakKalender(['jaar' => $jaar]);
 
         $this->assertEquals($omschrijving . $jaar, $kalender->omschrijving());

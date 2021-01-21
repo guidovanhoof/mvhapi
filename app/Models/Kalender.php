@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Kalender extends Model
 {
     use HasFactory;
-    protected $table="kalenders";
-    const PREFIX = 'Kalender ';
+
+    protected $table = "kalenders";
+    const PREFIX = 'KALENDER ';
     const URL_PREFIX = 'api/kalenders/';
 
     protected $fillable = ['jaar', 'opmerkingen'];

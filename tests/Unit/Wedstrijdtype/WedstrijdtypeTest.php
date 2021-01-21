@@ -13,7 +13,7 @@ class WedstrijdtypeTest extends TestCase
     /** @test  */
     public function heeftEenOmschrijving()
     {
-        $omschrijving = "nieuw wedstrijdtype";
+        $omschrijving = "NIEUW WEDSTRIJDTYPE";
         $wedstrijdtype = bewaarWedstrijdtype(['omschrijving' => $omschrijving]);
 
         $this->assertEquals($omschrijving, $wedstrijdtype->omschrijving);
@@ -31,14 +31,24 @@ class WedstrijdtypeTest extends TestCase
     }
 
     /** @test  */
-    public function uniekIsNietHoofdletterGevoelig()
+    public function omschrijvingIsInHoofdletters()
     {
-        $this->expectException(QueryException::class);
+        $omschrijvingKleineLetters = "wedstrijdtype";
+        $omschrijvingHoofdletters = "WEDSTRIJDTYPE";
 
-        $omschrijving1 = "wedstrijdtype";
-        $omschrijving2 = "WEDSTRIJDTYPE";
+        $wedstrijdtype = bewaarWedstrijdtype(['omschrijving' => $omschrijvingKleineLetters]);
 
-        bewaarWedstrijdtype(['omschrijving' => $omschrijving1]);
-        bewaarWedstrijdtype(['omschrijving' => $omschrijving2]);
+        $this->assertEquals($omschrijvingHoofdletters, $wedstrijdtype->omschrijving);
+    }
+
+    /** @test  */
+    public function enkelLettersInOmschrijving()
+    {
+        $omschrijving = "|@#{[^{}1234567890°_&é\"'(§è!çà)-azertyuiop^*[]qsdfghjklmùµ%£´`²³<wxcvbn,;:=>?./+~ ";
+        $letters = "AZERTYUIOPQSDFGHJKLMWXCVBN ";
+
+        $wedstrijdtype = bewaarWedstrijdtype(['omschrijving' => $omschrijving]);
+
+        $this->assertEquals($letters, $wedstrijdtype->omschrijving);
     }
 }
