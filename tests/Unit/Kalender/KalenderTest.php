@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Kalender;
 
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,7 +32,7 @@ class KalenderTest extends TestCase
     public function heeftEenOmschrijving()
     {
         $jaar = date('Y');
-        $omschrijving = 'Kalender ';
+        $omschrijving = 'KALENDER ';
         $kalender = maakKalender(['jaar' => $jaar]);
 
         $this->assertEquals($omschrijving . $jaar, $kalender->omschrijving());

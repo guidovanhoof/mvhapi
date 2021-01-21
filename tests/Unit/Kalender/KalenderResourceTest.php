@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Kalender;
 
 
 use App\Http\Resources\KalenderResource;

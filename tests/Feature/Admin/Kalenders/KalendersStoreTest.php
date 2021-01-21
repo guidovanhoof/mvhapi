@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Admin;
+namespace Tests\Feature\Admin\Kalenders;
 
 use App\Models\Kalender;
 use Illuminate\Database\Eloquent\Model;
