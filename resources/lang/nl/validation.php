@@ -7,6 +7,7 @@ return [
     'attributes' => [
         'jaar' => 'Jaar',
         'email' => 'Email',
-        'password' => 'Wachtwoord'
+        'password' => 'Wachtwoord',
+        'omschrijving' => 'Omschrijving',
     ],
 ];
