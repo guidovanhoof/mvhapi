@@ -70,15 +70,14 @@ class KalendersController extends Controller
      */
     public function update(Request $request, $jaar)
     {
-        $validData = $request->validate(
-            [
-                'jaar' => 'required|unique:kalenders,jaar,' . $jaar . ',jaar',
-                'opmerkingen' => 'nullable'
-            ]
-        );
-
         try {
             $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
+            $validData = $request->validate(
+                [
+                    'jaar' => 'required|unique:kalenders,jaar,' . $jaar . ',jaar',
+                    'opmerkingen' => 'nullable'
+                ]
+            );
             $kalender->jaar = $validData["jaar"];
             $kalender->opmerkingen = $validData["opmerkingen"];
             $kalender->save();

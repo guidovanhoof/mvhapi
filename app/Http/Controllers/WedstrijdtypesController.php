@@ -69,14 +69,13 @@ class WedstrijdtypesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validData = $request->validate(
-            [
-                'omschrijving' => 'required|unique:wedstrijdtypes,omschrijving,' . $id . ',id',
-            ]
-        );
-
         try {
             $wedstrijdtype = Wedstrijdtype::where("id", $id)->firstOrFail();
+            $validData = $request->validate(
+                [
+                    'omschrijving' => 'required|unique:wedstrijdtypes,omschrijving,' . $id . ',id',
+                ]
+            );
             $wedstrijdtype->omschrijving = $validData["omschrijving"];
             $wedstrijdtype->save();
             return response()->json(
