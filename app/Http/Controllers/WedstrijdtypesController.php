@@ -22,16 +22,6 @@ class WedstrijdtypesController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
@@ -71,26 +61,34 @@ class WedstrijdtypesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Wedstrijdtype  $wedstrijdtype
-     * @return Response
-     */
-    public function edit(Wedstrijdtype $wedstrijdtype)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  \App\Models\Wedstrijdtype  $wedstrijdtype
-     * @return Response
+     * @param $id
+     * @return JsonResponse|Response
      */
-    public function update(Request $request, Wedstrijdtype $wedstrijdtype)
+    public function update(Request $request, $id)
     {
-        //
+        $validData = $request->validate(
+            [
+                'omschrijving' => 'required|unique:wedstrijdtypes,omschrijving,' . $id . ',id',
+            ]
+        );
+
+        try {
+            $wedstrijdtype = Wedstrijdtype::where("id", $id)->firstOrFail();
+            $wedstrijdtype->omschrijving = $validData["omschrijving"];
+            $wedstrijdtype->save();
+            return response()->json(
+                new WedstrijdtypeResource($wedstrijdtype),
+                200
+            );
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return response()->json(
+                ["message" => "Wedstrijdtype niet gevonden!"],
+                404
+            );
+        }
     }
 
     /**

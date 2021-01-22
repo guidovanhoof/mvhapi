@@ -33,7 +33,7 @@ Route::group(
         )
             ->parameters(["wedstrijdtypes" => "id"])
             ->middleware("auth:sanctum")
-            ->only('index', 'show', 'store')
+            ->only('index', 'show', 'store', 'update')
         ;
     }
 );
