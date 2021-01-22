@@ -5,14 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Resources\KalenderResource;
 use App\Models\Kalender;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class KalendersController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
@@ -22,10 +24,10 @@ class KalendersController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validData = $request->validate(
             [
@@ -44,7 +46,7 @@ class KalendersController extends Controller
      * Display the specified resource.
      *
      * @param $jaar
-     * @return KalenderResource|\Illuminate\Http\JsonResponse
+     * @return KalenderResource|JsonResponse
      */
     public function show($jaar)
     {
@@ -62,9 +64,9 @@ class KalendersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @param $jaar
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function update(Request $request, $jaar)
     {
@@ -96,7 +98,7 @@ class KalendersController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Kalender  $kalender
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy($jaar)
     {
