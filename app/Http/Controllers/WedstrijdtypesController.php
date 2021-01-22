@@ -94,11 +94,23 @@ class WedstrijdtypesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Wedstrijdtype  $wedstrijdtype
-     * @return Response
+     * @param $id
+     * @return JsonResponse|Response
      */
-    public function destroy(Wedstrijdtype $wedstrijdtype)
+    public function destroy($id)
     {
-        //
+        try {
+            $wedstrijdtype = Wedstrijdtype::where("id", $id)->firstOrFail();
+            $wedstrijdtype->delete();
+            return response()->json(
+                ["message" => "Wedstrijdtype verwijderd!"],
+                200
+            );
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return response()->json(
+                ["message" => "Wedstrijdtype niet gevonden!"],
+                404
+            );
+        }
     }
 }

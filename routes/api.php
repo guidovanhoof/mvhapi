@@ -33,7 +33,6 @@ Route::group(
         )
             ->parameters(["wedstrijdtypes" => "id"])
             ->middleware("auth:sanctum")
-            ->only('index', 'show', 'store', 'update')
         ;
     }
 );
@@ -48,12 +47,3 @@ Route::fallback(
         return response()->json("Pagina niet gevonden!", 404);
     }
 );
-//Route::middleware(
-//    'auth:sanctum'
-//)
-//    ->get(
-//        '/user',
-//        function (Request $request) {
-//            return $request->user();
-//        }
-//    );
