@@ -30,18 +30,7 @@ class KalendersIndexTest extends TestCase
         $response->assertStatus(200);
         $data = $response->json()["data"];
         $this->assertCount(1, $data);
-        $this->assertKalenderEquals($data[0], $kalender);
-    }
-
-    /**
-     * @param $data
-     * @param Kalender $kalender
-     */
-    private function assertKalenderEquals($data, Kalender $kalender): void
-    {
-        $this->assertEquals($data["jaar"], $kalender->jaar);
-        $this->assertEquals($data["omschrijving"], $kalender->omschrijving());
-        $this->assertEquals($data["opmerkingen"], $kalender->opmerkingen);
+        assertKalenderEquals($this, $data[0], $kalender);
     }
 
     /** @test */
@@ -55,8 +44,8 @@ class KalendersIndexTest extends TestCase
         $response->assertStatus(200);
         $data = $response->json()["data"];
         $this->assertCount(2, $data);
-        $this->assertKalenderEquals($data[0], $tweede_kalender);
-        $this->assertKalenderEquals($data[1], $eerste_kalender);
+        assertKalenderEquals($this, $data[0], $tweede_kalender);
+        assertKalenderEquals($this, $data[1], $eerste_kalender);
     }
 
     /**

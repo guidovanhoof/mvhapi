@@ -4,6 +4,7 @@ use App\Models\Kalender;
 use App\Models\User;
 use App\Models\Wedstrijd;
 use App\Models\Wedstrijdtype;
+use Tests\TestCase;
 
 const URL_KALENDERS_ADMIN = "api/admin/kalenders/";
 const URL_WEDSTRIJDTYPES_ADMIN = "api/admin/wedstrijdtypes/";
@@ -60,3 +61,31 @@ function maakWedstrijd($velden = [])
     return Wedstrijd::factory()->make($velden);
 }
 
+/**
+ * @param TestCase $tester
+ * @param $data
+ * @param Kalender $kalender
+ */
+function assertKalenderEquals(TestCase $tester, $data, Kalender $kalender): void
+{
+    $tester->assertEquals($data["jaar"], $kalender->jaar);
+    $tester->assertEquals($data["omschrijving"], $kalender->omschrijving());
+    $tester->assertEquals($data["opmerkingen"], $kalender->opmerkingen);
+}
+
+/**
+ * @param TestCase $tester
+ * @param $data
+ * @param Wedstrijd $wedstrijd
+ */
+function assertWedstrijdEquals(TestCase $tester, $data, Wedstrijd $wedstrijd): void
+{
+    $tester->assertEquals($data["kalender_id"], $wedstrijd->kalender_id);
+    $tester->assertEquals($data["datum"], $wedstrijd->datum);
+    $tester->assertEquals($data["nummer"], $wedstrijd->nummer);
+    $tester->assertEquals($data["omschrijving"], $wedstrijd->omschrijving);
+    $tester->assertEquals($data["sponsor"], $wedstrijd->sponsor);
+    $tester->assertEquals($data["aanvang"], $wedstrijd->aanvang);
+    $tester->assertEquals($data["wedstrijdtype_id"], $wedstrijd->wedstrijdtype_id);
+    $tester->assertEquals($data["opmerkingen"], $wedstrijd->opmerkingen);
+}

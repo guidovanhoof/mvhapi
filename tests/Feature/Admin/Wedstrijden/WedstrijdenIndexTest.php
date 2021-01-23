@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Admin\Wedstrijden;
 
-use App\Models\Kalender;
-use App\Models\Wedstrijd;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
@@ -22,7 +20,7 @@ class WedstrijdenIndexTest extends TestCase
     }
 
     /** @test */
-    public function eenWedstrijdAanwezig()
+    public function wedstrijdenAanwezig()
     {
         $wedstrijd = bewaarWedstrijd();
 
@@ -31,23 +29,8 @@ class WedstrijdenIndexTest extends TestCase
         $response->assertStatus(200);
         $data = $response->json()["data"];
         $this->assertCount(1, $data);
-        $this->assertWedstrijdEquals($data[0], $wedstrijd);
-    }
-
-    /**
-     * @param $data
-     * @param Kalender $wedstrijd
-     */
-    private function assertWedstrijdEquals($data, Wedstrijd $wedstrijd): void
-    {
-        $this->assertEquals($data["kalender_id"], $wedstrijd->kalender_id);
-        $this->assertEquals($data["datum"], $wedstrijd->datum);
-        $this->assertEquals($data["nummer"], $wedstrijd->nummer);
-        $this->assertEquals($data["omschrijving"], $wedstrijd->omschrijving);
-        $this->assertEquals($data["sponsor"], $wedstrijd->sponsor);
-        $this->assertEquals($data["aanvang"], $wedstrijd->aanvang);
-        $this->assertEquals($data["wedstrijdtype_id"], $wedstrijd->wedstrijdtype_id);
-        $this->assertEquals($data["opmerkingen"], $wedstrijd->opmerkingen);
+//        $this->assertWedstrijdEquals($data[0], $wedstrijd);
+        assertWedstrijdEquals($this, $data[0], $wedstrijd);
     }
 
 //    /** @test */
