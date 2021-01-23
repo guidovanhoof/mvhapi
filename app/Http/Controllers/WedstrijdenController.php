@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\WedstrijdResource;
 use App\Models\Wedstrijd;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
@@ -14,19 +16,9 @@ class WedstrijdenController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         return WedstrijdResource::collection(Wedstrijd::all());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -43,23 +35,20 @@ class WedstrijdenController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Wedstrijd  $wedstrijd
-     * @return \Illuminate\Http\Response
+     * @param $datum
+     * @return WedstrijdResource|JsonResponse
      */
-    public function show(Wedstrijd $wedstrijd)
+    public function show($datum)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Wedstrijd  $wedstrijd
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Wedstrijd $wedstrijd)
-    {
-        //
+        try {
+            $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
+            return new WedstrijdResource($wedstrijd);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return response()->json(
+                ["message" => "Wedstrijd niet gevonden!"],
+                404
+            );
+        }
     }
 
     /**
