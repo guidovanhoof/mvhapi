@@ -20,11 +20,6 @@ class Kalender extends Model
         return self::PREFIX . $this->jaar;
     }
 
-    public function link(): string
-    {
-        return self::URL_PREFIX . $this->jaar;
-    }
-
     public function getRouteKeyName(): string
     {
         return 'jaar';
