@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\KalendersController;
+use App\Http\Controllers\WedstrijdenController;
 use App\Http\Controllers\WedstrijdtypesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,12 +27,22 @@ Route::group(
             ->parameters(["kalenders" => "jaar"])
             ->middleware("auth:sanctum")
         ;
+
         Route::apiResource(
             "wedstrijdtypes",
             WedstrijdtypesController::class
         )
             ->parameters(["wedstrijdtypes" => "id"])
             ->middleware("auth:sanctum")
+        ;
+
+        Route::apiResource(
+            "wedstrijden",
+            WedstrijdenController::class
+        )
+            ->parameters(["wedstrijden" => "datum"])
+            ->middleware("auth:sanctum")
+            ->only('index')
         ;
     }
 );

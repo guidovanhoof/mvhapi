@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Wedstrijd;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UsersSeeder::class,
             KalendersSeeder::class,
             WedstrijdtypesSeeder::class,
+            WedstrijdenSeeder::class,
         ]);
     }
 }

@@ -39,16 +39,6 @@ class KalenderTest extends TestCase
     }
 
     /** @test  */
-    public function heeftEenLink()
-    {
-        $jaar = date('Y');
-        $link = 'api/kalenders/';
-        $kalender = maakKalender(['jaar' => $jaar]);
-
-        $this->assertEquals($link . $jaar, $kalender->link());
-    }
-
-    /** @test  */
     public function heeftJaarAlsRouteKeyName()
     {
         $kalender = maakKalender();
