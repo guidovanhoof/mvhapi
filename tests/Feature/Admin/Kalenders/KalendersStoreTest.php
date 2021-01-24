@@ -20,13 +20,7 @@ class KalendersStoreTest extends TestCase
         $response = $this->bewaarKalender($kalender);
 
         $response->assertStatus(201);
-        $this
-            ->assertDatabaseHas(
-                'kalenders',
-                $kalender->toArray()
-            )
-            ->assertJson($kalender->toJson())
-        ;
+        $this->assertInDatabase($kalender);
     }
 
     /** @test */
@@ -36,8 +30,7 @@ class KalendersStoreTest extends TestCase
 
         $response = $this->bewaarKalender($kalender);
 
-        $response->assertStatus(422);
-        $this->assertEquals(errorMessage("jaar", $response), $expectedErrorMessage);
+        assertErrorMessage($this, "jaar", $response, $expectedErrorMessage);
     }
 
     /** @test */
@@ -47,8 +40,7 @@ class KalendersStoreTest extends TestCase
 
         $response = $this->bewaarKalender($kalender);
 
-        $response->assertStatus(422);
-        $this->assertEquals(errorMessage("jaar", $response), $expectedErrorMessage);
+        assertErrorMessage($this, "jaar", $response, $expectedErrorMessage);
     }
 
     /** @test */
@@ -58,13 +50,7 @@ class KalendersStoreTest extends TestCase
         $response = $this->bewaarKalender($kalender);
 
         $response->assertStatus(201);
-        $this
-            ->assertDatabaseHas(
-                'kalenders',
-                $kalender->toArray()
-            )
-            ->assertJson($kalender->toJson())
-        ;
+        $this->assertInDatabase($kalender);
     }
 
     /**
@@ -84,5 +70,18 @@ class KalendersStoreTest extends TestCase
                     ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
                 )
         ;
+    }
+
+    /**
+     * @param Kalender $kalender
+     */
+    private function assertInDatabase(Kalender $kalender): void
+    {
+        $this
+            ->assertDatabaseHas(
+                'kalenders',
+                $kalender->toArray()
+            )
+            ->assertJson($kalender->toJson());
     }
 }

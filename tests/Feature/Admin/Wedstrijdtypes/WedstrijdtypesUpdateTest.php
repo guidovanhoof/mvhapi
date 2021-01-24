@@ -44,8 +44,7 @@ class WedstrijdtypesUpdateTest extends TestCase
 
         $response = $this->wijzigWedstrijdtype($wedstrijdtype);
 
-        $response->assertStatus(422);
-        $this->assertEquals(errorMessage("omschrijving", $response), $expectedErrorMessage);
+        assertErrorMessage($this, "omschrijving", $response, $expectedErrorMessage);
     }
 
     /** @test */
@@ -57,8 +56,7 @@ class WedstrijdtypesUpdateTest extends TestCase
 
         $response = $this->wijzigWedstrijdtype($wedstrijdtype2);
 
-        $response->assertStatus(422);
-        $this->assertEquals(errorMessage("omschrijving", $response), $expectedErrorMessage);
+        assertErrorMessage($this, "omschrijving", $response, $expectedErrorMessage);
     }
 
     /**

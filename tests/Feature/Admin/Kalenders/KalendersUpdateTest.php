@@ -72,8 +72,7 @@ class KalendersUpdateTest extends TestCase
 
         $response = $this->wijzigKalender($kalender, $jaar);
 
-        $response->assertStatus(422);
-        $this->assertEquals(errorMessage("jaar", $response), $expectedErrorMessage);
+        assertErrorMessage($this, "jaar", $response, $expectedErrorMessage);
     }
 
 
@@ -87,8 +86,7 @@ class KalendersUpdateTest extends TestCase
 
         $response = $this->wijzigKalender($kalender2, $jaar);
 
-        $response->assertStatus(422);
-        $this->assertEquals(errorMessage("jaar", $response), $expectedErrorMessage);
+        assertErrorMessage($this, "jaar", $response, $expectedErrorMessage);
     }
 
     /** @test */

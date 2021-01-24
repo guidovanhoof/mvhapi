@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\WedstrijdResource;
 use App\Models\Wedstrijd;
+use App\Rules\InKalenderJaar;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,12 +25,34 @@ class WedstrijdenController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validData = $request->validate(
+            [
+                'kalender_id' => 'required|exists:kalenders,id',
+                'datum' => [
+                    'bail',
+                    'required',
+                    'date',
+                    'unique:wedstrijden,datum',
+                    new InKalenderJaar($request["kalender_id"])
+                ],
+                'nummer' => 'nullable|numeric|between:1,65535',
+                'omschrijving' => 'required',
+                'sponsor' => 'nullable',
+                'aanvang' => 'required|date_format:H:i:s',
+                'wedstrijdtype_id' => 'required|exists:wedstrijdtypes,id',
+                'opmerkingen' => 'nullable',
+            ]
+        );
+
+        return response()->json(
+            new WedstrijdResource(Wedstrijd::create($validData)),
+            201
+        );
     }
 
     /**
@@ -54,7 +77,7 @@ class WedstrijdenController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Wedstrijd  $wedstrijd
      * @return \Illuminate\Http\Response
      */

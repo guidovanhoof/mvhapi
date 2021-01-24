@@ -36,7 +36,29 @@ class WedstrijdTest extends TestCase
         $omschrijving = 'wedstrijdomschrijving';
         $wedstrijd = bewaarWedstrijd(['omschrijving' => $omschrijving]);
 
-        $this->assertEquals($omschrijving, $wedstrijd->omschrijving);
+        $this->assertEquals(strtoupper($omschrijving), $wedstrijd->omschrijving);
+    }
+
+    /** @test  */
+    public function omschrijvingIsInHoofdletters()
+    {
+        $omschrijvingKleineLetters = "wedstrijd";
+        $omschrijvingHoofdletters = "WEDSTRIJD";
+
+        $wedstrijd = bewaarWedstrijd(['omschrijving' => $omschrijvingKleineLetters]);
+
+        $this->assertEquals($omschrijvingHoofdletters, $wedstrijd->omschrijving);
+    }
+
+    /** @test  */
+    public function omschrijvingHeeftGeenAccenten()
+    {
+        $omschrijving = "áéýúíóàèùìòâêûîô^´`¨äëÿüïö~ãõñç";
+        $letters = "AEYUIOAEUIOAEUIOAEYUIOAONC";
+
+        $wedstrijd = bewaarWedstrijd(['omschrijving' => $omschrijving]);
+
+        $this->assertEquals($letters, $wedstrijd->omschrijving);
     }
 
     /** @test  */
@@ -63,6 +85,28 @@ class WedstrijdTest extends TestCase
         $wedstrijd = bewaarWedstrijd(['sponsor' => $sponsor]);
 
         $this->assertEquals($sponsor, $wedstrijd->sponsor);
+    }
+
+    /** @test  */
+    public function sponsorIsInHoofdletters()
+    {
+        $sponsorKleineLetters = "sponsor";
+        $sponsorHoofdletters = "SPONSOR";
+
+        $wedstrijd = bewaarWedstrijd(['sponsor' => $sponsorKleineLetters]);
+
+        $this->assertEquals($sponsorHoofdletters, $wedstrijd->sponsor);
+    }
+
+    /** @test  */
+    public function sponsorHeeftGeenAccenten()
+    {
+        $sponsor = "áéýúíóàèùìòâêûîô^´`¨äëÿüïö~ãõñç";
+        $letters = "AEYUIOAEUIOAEUIOAEYUIOAONC";
+
+        $wedstrijd = bewaarWedstrijd(['sponsor' => $sponsor]);
+
+        $this->assertEquals($letters, $wedstrijd->sponsor);
     }
 
     /** @test  */

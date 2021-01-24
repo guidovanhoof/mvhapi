@@ -4,6 +4,7 @@ use App\Models\Kalender;
 use App\Models\User;
 use App\Models\Wedstrijd;
 use App\Models\Wedstrijdtype;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 const URL_KALENDERS_ADMIN = "api/admin/kalenders/";
@@ -88,4 +89,18 @@ function assertWedstrijdEquals(TestCase $tester, $data, Wedstrijd $wedstrijd): v
     $tester->assertEquals($data["aanvang"], $wedstrijd->aanvang);
     $tester->assertEquals($data["wedstrijdtype_id"], $wedstrijd->wedstrijdtype_id);
     $tester->assertEquals($data["opmerkingen"], $wedstrijd->opmerkingen);
+}
+
+/**
+ * @param TestCase $testcase
+ * @param string $veld
+ * @param TestResponse $response
+ * @param string $expectedErrorMessage
+ */
+function assertErrorMessage(
+    TestCase $testcase, string $veld, TestResponse $response, string $expectedErrorMessage
+): void
+{
+    $response->assertStatus(422);
+    $testcase->assertEquals(errorMessage($veld, $response), $expectedErrorMessage);
 }

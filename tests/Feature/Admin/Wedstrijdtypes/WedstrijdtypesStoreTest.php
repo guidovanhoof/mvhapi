@@ -35,8 +35,7 @@ class WedstrijdtypesStoreTest extends TestCase
 
         $response = $this->bewaarWedstrijdtype($wedstrijdtype);
 
-        $response->assertStatus(422);
-        $this->assertEquals(errorMessage("omschrijving", $response), $expectedErrorMessage);
+        assertErrorMessage($this, "omschrijving", $response, $expectedErrorMessage);
     }
 
     /** @test */
@@ -46,8 +45,7 @@ class WedstrijdtypesStoreTest extends TestCase
 
         $response = $this->bewaarWedstrijdtype($wedstrijdtype);
 
-        $response->assertStatus(422);
-        $this->assertEquals(errorMessage("omschrijving", $response), $expectedErrorMessage);
+        assertErrorMessage($this, "omschrijving", $response, $expectedErrorMessage);
     }
 
     /**
