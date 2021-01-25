@@ -6,7 +6,6 @@ use App\Models\Kalender;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class InKalenderJaar implements Rule
 {
@@ -32,8 +31,8 @@ class InKalenderJaar implements Rule
     public function passes($attribute, $value)
     {
         try {
-            $kalender = Kalender::firstOrFail();
-            return $kalender->jaar === Carbon::parse($value)->year;
+            $kalender = Kalender::findorFail($this->kalenderId);
+            return $kalender->jaar == Carbon::parse($value)->year;
 
         } catch (ModelNotFoundException $modelNotFoundException) {
             return false;
