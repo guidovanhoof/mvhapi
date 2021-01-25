@@ -42,10 +42,10 @@ class WedstrijdtypeTest extends TestCase
     }
 
     /** @test  */
-    public function enkelLettersInOmschrijving()
+    public function omschrijvingHeeftGeenAccenten()
     {
-        $omschrijving = "|@#{[^{}1234567890°_&é\"'(§è!çà)-azertyuiop^*[]qsdfghjklmùµ%£´`²³<wxcvbn,;:=>?./+~ ";
-        $letters = "AZERTYUIOPQSDFGHJKLMWXCVBN ";
+        $omschrijving = "áéýúíóàèùìòâêûîô^´`¨äëÿüïö~ãõñç";
+        $letters = "AEYUIOAEUIOAEUIOAEYUIOAONC";
 
         $wedstrijdtype = bewaarWedstrijdtype(['omschrijving' => $omschrijving]);
 

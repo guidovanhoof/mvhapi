@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Wedstrijd;
 
 use App\Http\Resources\WedstrijdResource;
 use App\Models\Wedstrijd;
@@ -52,7 +52,7 @@ class WedstrijdResourceTest extends TestCase
 
         $wedstrijdResource = WedstrijdResource::collection(Wedstrijd::first()->get())->resolve();
 
-        $this->assertEquals($omschrijving, $wedstrijdResource[0]["omschrijving"]);
+        $this->assertEquals(strtoupper($omschrijving), $wedstrijdResource[0]["omschrijving"]);
     }
 
     /** @test  */
@@ -63,7 +63,7 @@ class WedstrijdResourceTest extends TestCase
 
         $wedstrijdResource = WedstrijdResource::collection(Wedstrijd::first()->get())->resolve();
 
-        $this->assertEquals($sponsor, $wedstrijdResource[0]["sponsor"]);
+        $this->assertEquals(strtoupper($sponsor), $wedstrijdResource[0]["sponsor"]);
     }
 
     /** @test  */

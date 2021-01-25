@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use function App\Helpers\verwijderAccenten;
 
 class Wedstrijdtype extends Model
 {
@@ -18,10 +19,6 @@ class Wedstrijdtype extends Model
      */
     public function setOmschrijvingAttribute($value)
     {
-        $this->attributes["omschrijving"] = preg_replace(
-            '/[^A-Z\s]/',
-            '',
-            strtoupper($value)
-        );
+        $this->attributes["omschrijving"] = strtoupper(verwijderAccenten($value));
     }
 }
