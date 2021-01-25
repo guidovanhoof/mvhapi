@@ -4,7 +4,6 @@ namespace Tests\Feature\Admin\Wedstrijden;
 
 use App\Models\Wedstrijd;
 use Faker\Factory;
-use Faker\Generator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
