@@ -10,26 +10,32 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class WedstrijdenStoreTest extends TestCase
+class WedstrijdenUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @var Collection|Model|mixed
-     */
-    private $kalender;
-    private $wedstrijd;
+    protected $kalender = null;
+    protected $wedstrijd = null;
+    protected $datum = null;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->kalender = bewaarKalender();
-        $this->wedstrijd = $this->maakWedstrijd();
+        $this->kalender = bewaarKalender(["jaar" => date("Y")]);
+        $this->datum = $this->kalender->jaar . "-04-28";
+        $this->wedstrijd = bewaarWedstrijd(
+            [
+                "kalender_id" => $this->kalender->id,
+                "datum" => $this->datum,
+            ])
+        ;
     }
 
     public function tearDown(): void
     {
+        $this->wedstrijd->delete();
+        $this->wedstrijd = null;
         $this->kalender->delete();
         $this->kalender = null;
 
@@ -37,11 +43,27 @@ class WedstrijdenStoreTest extends TestCase
     }
 
     /** @test */
-    public function wedstrijdAanmaken()
+    public function wedstrijdNietAanwezig()
     {
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $expectedErrorMessage = "Wedstrijd niet gevonden!";
 
-        $response->assertStatus(201);
+        $response = $this->updateWedstrijd($this->wedstrijd, "1900-04-28");
+
+        $response->assertStatus(404);
+        $data = $response->json();
+        $this->assertEquals($expectedErrorMessage, $data["message"]);
+    }
+
+    /** @test */
+    public function kalenderIdWijzigen()
+    {
+        $nieuweKalender = bewaarKalender();
+        $this->wedstrijd->kalender_id = $nieuweKalender->id;
+        $this->wedstrijd->datum = $nieuweKalender->jaar . substr($this->wedstrijd->datum, 4, 6);
+
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
+
+        $response->assertStatus(200);
         $this->assertInDatabase($this->wedstrijd);
     }
 
@@ -50,7 +72,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Kalender_id is verplicht!";
         $this->wedstrijd->kalender_id = null;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "kalender_id", $response, $expectedErrorMessage);
     }
@@ -60,7 +82,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Kalender_id niet gevonden!";
         $this->wedstrijd->kalender_id = 666;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "kalender_id", $response, $expectedErrorMessage);
     }
@@ -70,7 +92,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Datum is verplicht!";
         $this->wedstrijd->datum = null;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "datum", $response, $expectedErrorMessage);
     }
@@ -78,21 +100,28 @@ class WedstrijdenStoreTest extends TestCase
     /** @test */
     public function datumIsUniek() {
         $expectedErrorMessage = "Datum bestaat reeds!";
-        $eersteWedstrijd = bewaarWedstrijd(["kalender_id" => $this->kalender->id]);
-        $wedstrijd = $this->maakWedstrijd(["datum" => $eersteWedstrijd->datum]);
+        $wedstrijd = bewaarWedstrijd(
+          [
+              "kalender_id" => $this->kalender->id,
+              "datum" => $this->kalender->jaar . "-05-01",
+          ]
+        );
+        $this->wedstrijd->datum = $wedstrijd->datum;
 
-        $response = $this->bewaarWedstrijd($wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "datum", $response, $expectedErrorMessage);
-        $eersteWedstrijd->delete();
+        $wedstrijd->delete();
     }
 
     /** @test */
     public function datumIsGeldigeDatum() {
         $expectedErrorMessage = "Datum is geen geldige datum!";
-        $this->wedstrijd->datum = "abcde";
+        $wedstrijd = bewaarWedstrijd();
+        $datum = $wedstrijd->datum;
+        $wedstrijd->datum = "abcde";
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($wedstrijd, $datum);
 
         assertErrorMessage($this, "datum", $response, $expectedErrorMessage);
     }
@@ -100,9 +129,12 @@ class WedstrijdenStoreTest extends TestCase
     /** @test */
     public function datumMoetInKalenderjaarLiggen() {
         $expectedErrorMessage = "Datum niet in kalenderjaar!";
-        $this->wedstrijd->datum = ($this->kalender->jaar - 1) .  "-04-28";
+        $kalender = bewaarKalender(["jaar" => 2020]);
+        $wedstrijd =bewaarWedstrijd(["kalender_id" => $kalender->id, "datum" => "2020-04-28"]);
+        $datum = $wedstrijd->datum;
+        $wedstrijd->datum = "2019-04-28";
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($wedstrijd, $datum);
 
         assertErrorMessage($this, "datum", $response, $expectedErrorMessage);
     }
@@ -111,9 +143,9 @@ class WedstrijdenStoreTest extends TestCase
     public function nummerIsOptioneel() {
         $this->wedstrijd->nummer = null;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         $this->assertInDatabase($this->wedstrijd);
     }
 
@@ -122,7 +154,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Nummer is niet numeriek!";
         $this->wedstrijd->nummer = "abcd";
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "nummer", $response, $expectedErrorMessage);
     }
@@ -132,7 +164,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Nummer moet liggen tussen 1 en 65535!";
         $this->wedstrijd->nummer = 66666;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "nummer", $response, $expectedErrorMessage);
     }
@@ -142,7 +174,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Omschrijving is verplicht!";
         $this->wedstrijd->omschrijving = null;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "omschrijving", $response, $expectedErrorMessage);
     }
@@ -151,9 +183,9 @@ class WedstrijdenStoreTest extends TestCase
     public function sponsorIsOptioneel() {
         $this->wedstrijd->sponsor = null;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         $this->assertInDatabase($this->wedstrijd);
     }
 
@@ -162,7 +194,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Aanvang is verplicht!";
         $this->wedstrijd->aanvang = null;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd,$this->datum);
 
         assertErrorMessage($this, "aanvang", $response, $expectedErrorMessage);
     }
@@ -172,7 +204,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Aanvang is geen geldig tijdstip!";
         $this->wedstrijd->aanvang = "abcde";
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "aanvang", $response, $expectedErrorMessage);
     }
@@ -182,7 +214,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Wedstrijdtype_id is verplicht!";
         $this->wedstrijd->wedstrijdtype_id = null;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "wedstrijdtype_id", $response, $expectedErrorMessage);
     }
@@ -192,7 +224,7 @@ class WedstrijdenStoreTest extends TestCase
         $expectedErrorMessage = "Wedstrijdtype_id niet gevonden!";
         $this->wedstrijd->wedstrijdtype_id = 666;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         assertErrorMessage($this, "wedstrijdtype_id", $response, $expectedErrorMessage);
     }
@@ -201,17 +233,18 @@ class WedstrijdenStoreTest extends TestCase
     public function opmerkingenIsOptioneel() {
         $this->wedstrijd->opmerkingen = null;
 
-        $response = $this->bewaarWedstrijd($this->wedstrijd);
+        $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         $this->assertInDatabase($this->wedstrijd);
     }
 
     /**
      * @param Wedstrijd $wedstrijd
+     * @param $datum
      * @return TestResponse
      */
-    private function bewaarWedstrijd(Wedstrijd $wedstrijd): TestResponse
+    private function updateWedstrijd(Wedstrijd $wedstrijd, $datum): TestResponse
     {
         $plainToken = createUserAndToken();
 
@@ -219,9 +252,18 @@ class WedstrijdenStoreTest extends TestCase
             $this
                 ->withHeader('Authorization', 'Bearer ' . $plainToken)
                 ->json(
-                    'POST',
-                    URL_WEDSTRIJDEN_ADMIN,
-                    $this->dataToArray($wedstrijd)
+                    'PUT',
+                    URL_WEDSTRIJDEN_ADMIN . $datum,
+                    [
+                        'kalender_id' => $wedstrijd->kalender_id,
+                        'datum' => $wedstrijd->datum,
+                        'nummer' => $wedstrijd->nummer,
+                        'omschrijving' => $wedstrijd->omschrijving,
+                        'sponsor' => $wedstrijd->sponsor,
+                        'aanvang' => $wedstrijd->aanvang,
+                        'wedstrijdtype_id' => $wedstrijd->wedstrijdtype_id,
+                        'opmerkingen' => $wedstrijd->opmerkingen,
+                    ]
                 )
         ;
     }
@@ -244,9 +286,9 @@ class WedstrijdenStoreTest extends TestCase
             );
     }
 
-/**
- * @param Wedstrijd $wedstrijd
- */
+    /**
+     * @param Wedstrijd $wedstrijd
+     */
     private function assertInDatabase(Wedstrijd $wedstrijd): void
     {
         $this
@@ -264,14 +306,14 @@ class WedstrijdenStoreTest extends TestCase
     private function dataToArray(Wedstrijd $wedstrijd): array
     {
         return [
-            'kalender_id' => $wedstrijd->kalender_id,
-            'datum' => $wedstrijd->datum,
-            'nummer' => $wedstrijd->nummer,
-            'omschrijving' => $wedstrijd->omschrijving,
-            'sponsor' => $wedstrijd->sponsor,
-            'aanvang' => $wedstrijd->aanvang,
-            'wedstrijdtype_id' => $wedstrijd->wedstrijdtype_id,
-            'opmerkingen' => $wedstrijd->opmerkingen,
+            "kalender_id" => $wedstrijd->kalender_id,
+            "nummer" => $wedstrijd->nummer,
+            "datum" => $wedstrijd->datum,
+            "omschrijving" => $wedstrijd->omschrijving,
+            "sponsor" => $wedstrijd->sponsor,
+            "aanvang" => $wedstrijd->aanvang,
+            "wedstrijdtype_id" => $wedstrijd->wedstrijdtype_id,
+            "opmerkingen" => $wedstrijd->opmerkingen,
         ];
     }
 }

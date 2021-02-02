@@ -2,6 +2,9 @@
 
 namespace App\Helpers;
 
+const STORE_MODE = false;
+const UPDATE_MODE = true;
+
 function verwijderAccenten($tekst)
 {
     return

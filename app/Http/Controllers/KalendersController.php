@@ -78,9 +78,7 @@ class KalendersController extends Controller
                     'opmerkingen' => 'nullable'
                 ]
             );
-            $kalender->jaar = $validData["jaar"];
-            $kalender->opmerkingen = $validData["opmerkingen"];
-            $kalender->save();
+            $kalender->update($validData);
             return response()->json(
                 new KalenderResource($kalender),
                 200

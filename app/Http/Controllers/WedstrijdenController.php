@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
+use const App\Helpers\STORE_MODE;
+use const App\Helpers\UPDATE_MODE;
 
 class WedstrijdenController extends Controller
 {
@@ -30,29 +33,9 @@ class WedstrijdenController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validData = $request->validate(
-            [
-                'kalender_id' => 'required|exists:kalenders,id',
-                'datum' => [
-                    'bail',
-                    'required',
-                    'date',
-                    'unique:wedstrijden,datum',
-                    new InKalenderJaar($request["kalender_id"])
-                ],
-                'nummer' => 'nullable|numeric|between:1,65535',
-                'omschrijving' => 'required',
-                'sponsor' => 'nullable',
-                'aanvang' => 'required|date_format:H:i:s',
-                'wedstrijdtype_id' => 'required|exists:wedstrijdtypes,id',
-                'opmerkingen' => 'nullable',
-            ]
-        );
+        $validData = $this->valideerWedstrijd($request, new Wedstrijd(), STORE_MODE);
 
-        return response()->json(
-            new WedstrijdResource(Wedstrijd::create($validData)),
-            201
-        );
+        return $this->wedstrijdResourceResponse(Wedstrijd::create($validData), 201);
     }
 
     /**
@@ -65,12 +48,9 @@ class WedstrijdenController extends Controller
     {
         try {
             $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
-            return new WedstrijdResource($wedstrijd);
+            return $this->wedstrijdResourceResponse($wedstrijd, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return response()->json(
-                ["message" => "Wedstrijd niet gevonden!"],
-                404
-            );
+            return $this->wedstrijdNietGevondenResponse();
         }
     }
 
@@ -78,22 +58,81 @@ class WedstrijdenController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  \App\Models\Wedstrijd  $wedstrijd
-     * @return \Illuminate\Http\Response
+     * @param $datum
+     * @return JsonResponse|Response
      */
-    public function update(Request $request, Wedstrijd $wedstrijd)
+    public function update(Request $request, $datum)
     {
-        //
+        try {
+            $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
+            $validData = $this->valideerWedstrijd($request, $wedstrijd, UPDATE_MODE);
+            $wedstrijd->update($validData);
+            return $this->wedstrijdResourceResponse($wedstrijd, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return $this->wedstrijdNietGevondenResponse();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Wedstrijd  $wedstrijd
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Wedstrijd $wedstrijd)
     {
         //
+    }
+
+    /**
+     * @param Request $request
+     * @param $wedstrijd
+     * @param $update
+     * @return array
+     */
+    private function valideerWedstrijd(Request $request, $wedstrijd, $update): array
+    {
+        return $request->validate(
+            [
+                'kalender_id' => 'required|exists:kalenders,id',
+                'datum' => [
+                    'bail',
+                    'required',
+                    'date',
+                    'unique:wedstrijden,datum' . ($update ? ',' . $wedstrijd->datum . ',datum' : ''),
+                    new InKalenderJaar($request["kalender_id"])
+                ],
+                'nummer' => 'nullable|numeric|between:1,65535',
+                'omschrijving' => 'required',
+                'sponsor' => 'nullable',
+                'aanvang' => 'required|date_format:H:i:s',
+                'wedstrijdtype_id' => 'required|exists:wedstrijdtypes,id',
+                'opmerkingen' => 'nullable',
+            ]
+        );
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    private function wedstrijdNietGevondenResponse(): JsonResponse
+    {
+        return response()->json(
+            ["message" => "Wedstrijd niet gevonden!"],
+            404
+        );
+    }
+
+    /**
+     * @param $wedstrijd
+     * @param $status
+     * @return JsonResponse
+     */
+    private function wedstrijdResourceResponse($wedstrijd, $status): JsonResponse
+    {
+        return response()->json(
+            new WedstrijdResource($wedstrijd),
+            $status
+        );
     }
 }

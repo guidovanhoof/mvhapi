@@ -29,7 +29,7 @@ class WedstrijdenShowTest extends TestCase
         $response = $this->getWedstrijd($wedstrijd->datum);
 
         $response->assertStatus(200);
-        $data = $response->json()["data"];
+        $data = $response->json();
         assertWedstrijdEquals($this, $data, $wedstrijd);
     }
 
