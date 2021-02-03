@@ -33,20 +33,32 @@ class WedstrijdenIndexTest extends TestCase
         assertWedstrijdEquals($this, $data[0], $wedstrijd);
     }
 
-//    /** @test */
-//    public function gesorteerdOpJaarAflopend()
-//    {
-//        $eerste_kalender = bewaarKalender(["jaar" => 2019]);
-//        $tweede_kalender = bewaarKalender(["jaar" => 2020]);
-//
-//        $response = $this->getWedstrijden();
-//
-//        $response->assertStatus(200);
-//        $data = $response->json()["data"];
-//        $this->assertCount(2, $data);
-//        $this->assertWedstrijdEquals($data[0], $tweede_kalender);
-//        $this->assertWedstrijdEquals($data[1], $eerste_kalender);
-//    }
+    /** @test */
+    public function gesorteerdOpJaarAflopend()
+    {
+        $jaar = date('Y');
+        $kalender = bewaarKalender(["jaar" => $jaar]);
+        $eerste_wedstrijd = bewaarWedstrijd(
+            [
+                "kalender_id" => $kalender->id,
+                "datum" => $jaar . "-04-28",
+            ]
+        );
+        $tweede_wedstrijd = bewaarWedstrijd(
+            [
+                "kalender_id" => $kalender->id,
+                "datum" => $jaar . "-05-28",
+            ]
+        );
+
+        $response = $this->getWedstrijden();
+
+        $response->assertStatus(200);
+        $data = $response->json()["data"];
+        $this->assertCount(2, $data);
+        assertWedstrijdEquals($this, $data[0], $tweede_wedstrijd);
+        assertWedstrijdEquals($this, $data[1], $eerste_wedstrijd);
+    }
 
     /**
      * @return TestResponse
