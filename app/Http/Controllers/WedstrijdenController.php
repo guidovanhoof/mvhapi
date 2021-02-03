@@ -24,7 +24,7 @@ class WedstrijdenController extends Controller
      */
     public function index(): AnonymousResourceCollection
     {
-        return WedstrijdResource::collection(Wedstrijd::all());
+        return WedstrijdResource::collection(Wedstrijd::all()->sortByDesc("datum"));
     }
 
     /**
