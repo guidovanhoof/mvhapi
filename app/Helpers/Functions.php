@@ -2,9 +2,15 @@
 
 namespace App\Helpers;
 
-const STORE_MODE = false;
-const UPDATE_MODE = true;
+use Illuminate\Http\JsonResponse;
 
+const STORING = false;
+const UPDATING = true;
+
+/**
+ * @param $tekst
+ * @return string|string[]
+ */
 function verwijderAccenten($tekst)
 {
     return
@@ -29,4 +35,28 @@ function verwijderAccenten($tekst)
             ],
             $tekst
         );
+}
+
+/**
+ * @param $omschrijving
+ * @return JsonResponse
+ */
+function verwijderdResponse($omschrijving): JsonResponse
+{
+    return response()->json(
+        ["message" => "$omschrijving verwijderd!"],
+        200
+    );
+}
+
+/**
+ * @param $omschrijving
+ * @return JsonResponse
+ */
+function nietGevondenResponse($omschrijving): JsonResponse
+{
+    return response()->json(
+        ["message" => "$omschrijving niet gevonden!"],
+        404
+    );
 }

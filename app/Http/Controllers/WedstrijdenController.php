@@ -10,8 +10,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
-use const App\Helpers\STORE_MODE;
-use const App\Helpers\UPDATE_MODE;
+use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
+use const App\Helpers\STORING;
+use const App\Helpers\UPDATING;
 
 class WedstrijdenController extends Controller
 {
@@ -33,7 +35,7 @@ class WedstrijdenController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validData = $this->valideerWedstrijd($request, new Wedstrijd(), STORE_MODE);
+        $validData = $this->valideerWedstrijd($request, new Wedstrijd(), STORING);
 
         return $this->wedstrijdResourceResponse(Wedstrijd::create($validData), 201);
     }
@@ -50,7 +52,7 @@ class WedstrijdenController extends Controller
             $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
             return $this->wedstrijdResourceResponse($wedstrijd, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return $this->wedstrijdNietGevondenResponse();
+            return nietGevondenResponse("Wedstrijd");
         }
     }
 
@@ -65,23 +67,29 @@ class WedstrijdenController extends Controller
     {
         try {
             $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
-            $validData = $this->valideerWedstrijd($request, $wedstrijd, UPDATE_MODE);
+            $validData = $this->valideerWedstrijd($request, $wedstrijd, UPDATING);
             $wedstrijd->update($validData);
             return $this->wedstrijdResourceResponse($wedstrijd, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return $this->wedstrijdNietGevondenResponse();
+            return nietGevondenResponse("Wedstrijd");
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Wedstrijd  $wedstrijd
-     * @return Response
+     * @param Wedstrijd $wedstrijd
+     * @return JsonResponse|Response
      */
-    public function destroy(Wedstrijd $wedstrijd)
+    public function destroy($datum)
     {
-        //
+        try {
+            $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
+            $wedstrijd->delete();
+            return verwijderdResponse("Wedstrijd");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Wedstrijd");
+        }
     }
 
     /**
@@ -109,17 +117,6 @@ class WedstrijdenController extends Controller
                 'wedstrijdtype_id' => 'required|exists:wedstrijdtypes,id',
                 'opmerkingen' => 'nullable',
             ]
-        );
-    }
-
-    /**
-     * @return JsonResponse
-     */
-    private function wedstrijdNietGevondenResponse(): JsonResponse
-    {
-        return response()->json(
-            ["message" => "Wedstrijd niet gevonden!"],
-            404
         );
     }
 

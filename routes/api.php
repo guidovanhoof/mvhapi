@@ -42,7 +42,6 @@ Route::group(
         )
             ->parameters(["wedstrijden" => "datum"])
             ->middleware("auth:sanctum")
-            ->only('index', 'show', 'store', 'update')
         ;
     }
 );

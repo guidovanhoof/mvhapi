@@ -12,23 +12,37 @@ class KalendersStoreTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $kalender;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->kalender = maakKalender();
+    }
+
+    public function tearDown(): void
+    {
+        Kalender::query()->delete();
+
+        parent::tearDown();
+    }
+
     /** @test */
     public function kalenderAanmaken()
     {
-        $kalender = maakKalender();
-
-        $response = $this->bewaarKalender($kalender);
+        $response = $this->bewaarKalender($this->kalender);
 
         $response->assertStatus(201);
-        $this->assertInDatabase($kalender);
+        $this->assertInDatabase($this->kalender);
     }
 
     /** @test */
     public function jaarIsVerplicht() {
         $expectedErrorMessage = "Jaar is verplicht!";
-        $kalender = maakKalender(['jaar' => null]);
+        $this->kalender->jaar = null;
 
-        $response = $this->bewaarKalender($kalender);
+        $response = $this->bewaarKalender($this->kalender);
 
         assertErrorMessage($this, "jaar", $response, $expectedErrorMessage);
     }
@@ -36,21 +50,22 @@ class KalendersStoreTest extends TestCase
     /** @test */
     public function jaarIsUniek() {
         $expectedErrorMessage = "Jaar bestaat reeds!";
-        $kalender = bewaarKalender();
+        $bestaandeKalender = bewaarKalender();
+        $this->kalender->jaar = $bestaandeKalender->jaar;
 
-        $response = $this->bewaarKalender($kalender);
+        $response = $this->bewaarKalender($this->kalender);
 
         assertErrorMessage($this, "jaar", $response, $expectedErrorMessage);
     }
 
     /** @test */
     public function opmerkingenIsOptioneel() {
-        $kalender = maakKalender(["opmerkingen" => null]);
+        $this->kalender->opmerkingen = null;
 
-        $response = $this->bewaarKalender($kalender);
+        $response = $this->bewaarKalender($this->kalender);
 
         $response->assertStatus(201);
-        $this->assertInDatabase($kalender);
+        $this->assertInDatabase($this->kalender);
     }
 
     /**
@@ -67,7 +82,7 @@ class KalendersStoreTest extends TestCase
                 ->json(
                     'POST',
                     URL_KALENDERS_ADMIN,
-                    ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
+                    $this->dataToArray($kalender)
                 )
         ;
     }
@@ -80,8 +95,20 @@ class KalendersStoreTest extends TestCase
         $this
             ->assertDatabaseHas(
                 'kalenders',
-                $kalender->toArray()
+                $this->dataToArray($kalender)
             )
             ->assertJson($kalender->toJson());
+    }
+
+    /**
+     * @param Kalender $kalender
+     * @return array
+     */
+    private function dataToArray(Kalender $kalender): array
+    {
+        return [
+            "jaar" => $kalender->jaar,
+            "opmerkingen" => $kalender->opmerkingen
+        ];
     }
 }

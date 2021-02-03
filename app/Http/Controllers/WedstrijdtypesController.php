@@ -7,14 +7,19 @@ use App\Models\Wedstrijdtype;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
+use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
+use const App\Helpers\STORING;
+use const App\Helpers\UPDATING;
 
 class WedstrijdtypesController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return JsonResponse
+     * @return JsonResponse|AnonymousResourceCollection
      */
     public function index()
     {
@@ -29,16 +34,9 @@ class WedstrijdtypesController extends Controller
      */
     public function store(Request $request)
     {
-        $validData = $request->validate(
-            [
-                'omschrijving' => 'required|unique:wedstrijdtypes,omschrijving',
-            ]
-        );
+        $validData = $this->valideerWedstrijdtype($request, new Wedstrijdtype(), STORING);
 
-        return response()->json(
-            new WedstrijdtypeResource(Wedstrijdtype::create($validData)),
-            201
-        );
+        return $this->wedstrijdtypeResourceResponse(Wedstrijdtype::create($validData), 201);
     }
 
     /**
@@ -51,12 +49,9 @@ class WedstrijdtypesController extends Controller
     {
         try {
             $wedstrijdtype = Wedstrijdtype::where("id", $id)->firstOrFail();
-            return new WedstrijdtypeResource($wedstrijdtype);
+            return $this->wedstrijdtypeResourceResponse($wedstrijdtype, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return response()->json(
-                ["message" => "Wedstrijdtype niet gevonden!"],
-                404
-            );
+            return nietGevondenResponse("Wedstrijdtype");
         }
     }
 
@@ -71,22 +66,11 @@ class WedstrijdtypesController extends Controller
     {
         try {
             $wedstrijdtype = Wedstrijdtype::where("id", $id)->firstOrFail();
-            $validData = $request->validate(
-                [
-                    'omschrijving' => 'required|unique:wedstrijdtypes,omschrijving,' . $id . ',id',
-                ]
-            );
-            $wedstrijdtype->omschrijving = $validData["omschrijving"];
-            $wedstrijdtype->save();
-            return response()->json(
-                new WedstrijdtypeResource($wedstrijdtype),
-                200
-            );
+            $validData = $this->valideerWedstrijdtype($request, $wedstrijdtype, UPDATING);
+            $wedstrijdtype->update($validData);
+            return $this->wedstrijdtypeResourceResponse($wedstrijdtype, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return response()->json(
-                ["message" => "Wedstrijdtype niet gevonden!"],
-                404
-            );
+            return nietGevondenResponse("Wedstrijdtype");
         }
     }
 
@@ -101,15 +85,37 @@ class WedstrijdtypesController extends Controller
         try {
             $wedstrijdtype = Wedstrijdtype::where("id", $id)->firstOrFail();
             $wedstrijdtype->delete();
-            return response()->json(
-                ["message" => "Wedstrijdtype verwijderd!"],
-                200
-            );
+            return verwijderdResponse("Wedstrijdtype");
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return response()->json(
-                ["message" => "Wedstrijdtype niet gevonden!"],
-                404
-            );
+            return nietGevondenResponse("Wedstrijdtype");
         }
+    }
+
+    /**
+     * @param $wedstrijdtype
+     * @param $status
+     * @return JsonResponse
+     */
+    private function wedstrijdtypeResourceResponse($wedstrijdtype, $status): JsonResponse
+    {
+        return response()->json(
+            new WedstrijdtypeResource($wedstrijdtype),
+            $status
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param $wedstrijdtype
+     * @param $updating
+     * @return array
+     */
+    private function valideerWedstrijdtype(Request $request, Wedstrijdtype $wedstrijdtype, $updating): array
+    {
+        return $request->validate(
+            [
+                'omschrijving' => 'required|unique:wedstrijdtypes,omschrijving' . ($updating ? (',' . $wedstrijdtype->id . ',id') : ''),
+            ]
+        );
     }
 }
