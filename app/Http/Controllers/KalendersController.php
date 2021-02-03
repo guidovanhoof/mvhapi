@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
+use const App\Helpers\STORING;
+use const App\Helpers\UPDATING;
 
 class KalendersController extends Controller
 {
@@ -16,7 +20,7 @@ class KalendersController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         return KalenderResource::collection(Kalender::all()->sortByDesc("jaar"));
     }
@@ -29,17 +33,9 @@ class KalendersController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validData = $request->validate(
-            [
-                'jaar' => 'required|unique:kalenders,jaar',
-                'opmerkingen' => 'nullable'
-            ]
-        );
+        $validData = $this->valideerKalender($request, new Kalender(), STORING);
 
-        return response()->json(
-            new KalenderResource(Kalender::create($validData)),
-            201
-        );
+        return $this->kalenderResourceResponse(Kalender::create($validData), 201);
     }
 
     /**
@@ -52,12 +48,9 @@ class KalendersController extends Controller
     {
         try {
             $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
-            return new KalenderResource($kalender);
+            return $this->kalenderResourceResponse($kalender, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return response()->json(
-                ["message" => "Kalender niet gevonden!"],
-                404
-            );
+            return nietGevondenResponse("Kalender");
         }
     }
 
@@ -68,49 +61,61 @@ class KalendersController extends Controller
      * @param $jaar
      * @return JsonResponse
      */
-    public function update(Request $request, $jaar)
+    public function update(Request $request, $jaar): JsonResponse
     {
         try {
             $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
-            $validData = $request->validate(
-                [
-                    'jaar' => 'required|unique:kalenders,jaar,' . $jaar . ',jaar',
-                    'opmerkingen' => 'nullable'
-                ]
-            );
+            $validData = $this->valideerKalender($request, $kalender, UPDATING);
             $kalender->update($validData);
-            return response()->json(
-                new KalenderResource($kalender),
-                200
-            );
+            return $this->kalenderResourceResponse($kalender, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return response()->json(
-                ["message" => "Kalender niet gevonden!"],
-                404
-            );
+            return nietGevondenResponse("Kalender");
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Kalender  $kalender
+     * @param $jaar
      * @return JsonResponse
      */
-    public function destroy($jaar)
+    public function destroy($jaar): JsonResponse
     {
         try {
             $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
             $kalender->delete();
-            return response()->json(
-                ["message" => "Kalender verwijderd!"],
-                200
-            );
+            return verwijderdResponse("Kalender");
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return response()->json(
-                ["message" => "Kalender niet gevonden!"],
-                404
-            );
+            return nietGevondenResponse("Kalender");
         }
+    }
+
+    /**
+     * @param Kalender $kalender
+     * @param int $status
+     * @return JsonResponse
+     */
+    private function kalenderResourceResponse(Kalender $kalender, int $status): JsonResponse
+    {
+        return response()->json(
+            new KalenderResource($kalender),
+            $status
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param Kalender $kalender
+     * @param $updating
+     * @return array
+     */
+    private function valideerKalender(Request $request, Kalender $kalender, $updating): array
+    {
+        return $request->validate(
+            [
+                'jaar' => 'required|unique:kalenders,jaar' . ($updating ? (',' . $kalender->jaar . ',jaar'): ''),
+                'opmerkingen' => 'nullable'
+            ]
+        );
     }
 }

@@ -29,7 +29,7 @@ class KalendersShowTest extends TestCase
         $response = $this->getKalender($kalender->jaar);
 
         $response->assertStatus(200);
-        $data = $response->json()["data"];
+        $data = $response->json();
         assertKalenderEquals($this, $data, $kalender);
     }
 

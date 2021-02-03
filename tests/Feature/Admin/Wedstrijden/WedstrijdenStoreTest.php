@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin\Wedstrijden;
 
+use App\Models\Kalender;
 use App\Models\Wedstrijd;
 use Faker\Factory;
 use Illuminate\Database\Eloquent\Collection;
@@ -30,7 +31,9 @@ class WedstrijdenStoreTest extends TestCase
 
     public function tearDown(): void
     {
-        $this->kalender->delete();
+        Wedstrijd::query()->delete();
+        $this->wedstrijd = null;
+        Kalender::query()->delete();
         $this->kalender = null;
 
         parent::tearDown();
@@ -42,6 +45,7 @@ class WedstrijdenStoreTest extends TestCase
         $response = $this->bewaarWedstrijd($this->wedstrijd);
 
         $response->assertStatus(201);
+//        dd($response);
         $this->assertInDatabase($this->wedstrijd);
     }
 
@@ -232,15 +236,15 @@ class WedstrijdenStoreTest extends TestCase
      */
     private function maakWedstrijd($velden = [])
     {
-        $kalender = bewaarKalender();
+//        $kalender = bewaarKalender();
         if (!isset($velden["datum"])) {
             $faker = Factory::create();
-            $datum = $faker->dateTimeBetween($kalender->jaar . '-01-01', $kalender->jaar . '-12-31');
+            $datum = $faker->dateTimeBetween($this->kalender->jaar . '-01-01', $this->kalender->jaar . '-12-31');
             $velden["datum"] = $datum->format('Y-m-d');
         }
         return
             maakWedstrijd(
-                array_merge(["kalender_id" => $kalender->id], $velden)
+                array_merge(["kalender_id" => $this->kalender->id], $velden)
             );
     }
 
