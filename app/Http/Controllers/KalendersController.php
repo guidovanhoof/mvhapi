@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Resources\KalenderResource;
 use App\Models\Kalender;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
 use const App\Helpers\STORING;
 use const App\Helpers\UPDATING;
@@ -83,7 +85,11 @@ class KalendersController extends Controller
     {
         try {
             $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
-            $kalender->delete();
+            try {
+                $kalender->delete();
+            } catch(QueryException $queryException) {
+                return nietVerwijderdResponse("Kalender", "wedstrijden");
+            }
             return verwijderdResponse("Kalender");
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Kalender");

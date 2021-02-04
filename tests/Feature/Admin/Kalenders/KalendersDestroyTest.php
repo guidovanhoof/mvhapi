@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin\Kalenders;
 
+use App\Models\Kalender;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
@@ -13,8 +14,7 @@ class KalendersDestroyTest extends TestCase
     /** @test */
     public function kalenderNietAanwezig()
     {
-        $jaar = 1900;
-        $response = $this->deleteKalender($jaar);
+        $response = $this->deleteKalender(1900);
 
         $response->assertStatus(404);
         $data = $response->json();
@@ -33,9 +33,29 @@ class KalendersDestroyTest extends TestCase
         $this
             ->assertDatabaseMissing(
                 "kalenders",
-                ["jaar" => $kalender->jaar, "opmerkingen" => $kalender->opmerkingen]
+                $this->dataToArray($kalender)
             )
             ->assertEquals("Kalender verwijderd!", $data["message"])
+        ;
+    }
+
+    /** @test */
+    public function nogWedstrijdenGekoppeld()
+    {
+        $expectedMessage = "Kalender niet verwijderd! Nog wedstrijden aanwezig!";
+        $kalender = bewaarKalender();
+        bewaarWedstrijd(["kalender_id" => $kalender->id]);
+
+        $response = $this->deleteKalender($kalender->jaar);
+
+        $response->assertStatus(403);
+        $data = $response->json();
+        $this
+            ->assertDatabaseHas(
+                "kalenders",
+                $this->dataToArray($kalender)
+            )
+            ->assertEquals($expectedMessage, $data["message"])
         ;
     }
 
@@ -55,5 +75,17 @@ class KalendersDestroyTest extends TestCase
                     URL_KALENDERS_ADMIN . $jaar,
                 )
         ;
+    }
+
+    /**
+     * @param Kalender $kalender
+     * @return array
+     */
+    private function dataToArray(Kalender $kalender): array
+    {
+        return [
+            "jaar" => $kalender->jaar,
+            "opmerkingen" => $kalender->opmerkingen
+        ];
     }
 }
