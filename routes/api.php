@@ -28,6 +28,13 @@ Route::group(
             ->middleware("auth:sanctum")
         ;
 
+        Route::get(
+            "kalenders/{jaar}/wedstrijden",
+            [KalendersController::class, "wedstrijden"]
+        )
+            ->middleware("auth:sanctum")
+        ;
+
         Route::apiResource(
             "wedstrijdtypes",
             WedstrijdtypesController::class
