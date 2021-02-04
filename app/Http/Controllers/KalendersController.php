@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\KalenderResource;
+use App\Http\Resources\WedstrijdResource;
 use App\Models\Kalender;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -85,6 +86,22 @@ class KalendersController extends Controller
             $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
             $kalender->delete();
             return verwijderdResponse("Kalender");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Kalender");
+        }
+    }
+
+    /**
+     * Overzicht alle westrijden van een kalender
+     *
+     * @param $jaar
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function wedstrijden($jaar)
+    {
+        try {
+            $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
+            return WedstrijdResource::collection($kalender->wedstrijden);
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Kalender");
         }

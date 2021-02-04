@@ -24,4 +24,12 @@ class Kalender extends Model
     {
         return 'jaar';
     }
+
+    public function wedstrijden()
+    {
+        return $this
+            ->hasMany(Wedstrijd::class)
+            ->orderBy("datum", "desc")
+        ;
+    }
 }
