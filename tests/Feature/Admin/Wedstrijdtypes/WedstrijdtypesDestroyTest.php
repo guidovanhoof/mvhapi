@@ -38,6 +38,26 @@ class WedstrijdtypesDestroyTest extends TestCase
         ;
     }
 
+    /** @test */
+    public function nogWedstrijdenGekoppeld()
+    {
+        $expectedMessage = "Wedstrijdtype niet verwijderd! Nog wedstrijden aanwezig!";
+        $wedstrijdtype = bewaarWedstrijdtype();
+        bewaarWedstrijd(["wedstrijdtype_id" => $wedstrijdtype->id]);
+
+        $response = $this->deleteWedstrijdtype($wedstrijdtype->id);
+
+        $response->assertStatus(403);
+        $data = $response->json();
+        $this
+            ->assertDatabaseHas(
+                "wedstrijdtypes",
+                ["id" => $wedstrijdtype->id, "omschrijving" => $wedstrijdtype->omschrijving]
+            )
+            ->assertEquals($expectedMessage, $data["message"])
+        ;
+    }
+
     /**
      * @param $id
      * @return TestResponse

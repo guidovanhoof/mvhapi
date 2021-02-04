@@ -60,3 +60,16 @@ function nietGevondenResponse($omschrijving): JsonResponse
         404
     );
 }
+
+/**
+ * @param $omschrijving
+ * @param $reden
+ * @return JsonResponse
+ */
+function nietVerwijderdResponse($omschrijving, $reden): JsonResponse
+{
+    return response()->json(
+        ["message" => "$omschrijving niet verwijderd! Nog $reden aanwezig!"],
+        403
+    );
+}
