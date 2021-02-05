@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Kalender;
+use App\Models\Reeks;
 use App\Models\User;
 use App\Models\Wedstrijd;
 use App\Models\Wedstrijdtype;
@@ -10,6 +11,7 @@ use Tests\TestCase;
 const URL_KALENDERS_ADMIN = "api/admin/kalenders/";
 const URL_WEDSTRIJDTYPES_ADMIN = "api/admin/wedstrijdtypes/";
 const URL_WEDSTRIJDEN_ADMIN = "api/admin/wedstrijden/";
+const URL_REEKSEN_ADMIN = "api/admin/reeksen/";
 
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
@@ -92,6 +94,21 @@ function assertWedstrijdEquals(TestCase $tester, $data, Wedstrijd $wedstrijd): v
 }
 
 /**
+ * @param TestCase $tester
+ * @param $data
+ * @param Reeks $reeks
+ */
+function assertReeksEquals(TestCase $tester, $data, Reeks $reeks): void
+{
+    $tester->assertEquals($data["wedstrijd_id"], $reeks->wedstrijd_id);
+    $tester->assertEquals($data["nummer"], $reeks->nummer);
+    $tester->assertEquals($data["aanvang"], $reeks->aanvang);
+    $tester->assertEquals($data["duur"], $reeks->duur);
+    $tester->assertEquals($data["gewicht_zak"], $reeks->gewicht_zak);
+    $tester->assertEquals($data["opmerkingen"], $reeks->opmerkingen);
+}
+
+/**
  * @param TestCase $testcase
  * @param string $veld
  * @param TestResponse $response
@@ -103,4 +120,15 @@ function assertErrorMessage(
 {
     $response->assertStatus(422);
     $testcase->assertEquals(errorMessage($veld, $response), $expectedErrorMessage);
+}
+
+
+function bewaarReeks($velden = [])
+{
+    return Reeks::factory()->create($velden);
+}
+
+function maakReeks($velden = [])
+{
+    return Reeks::factory()->make($velden);
 }
