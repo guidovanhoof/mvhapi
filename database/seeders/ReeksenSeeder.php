@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Reeks;
-use App\Models\Wedstrijd;
 use Illuminate\Database\Seeder;
 
 class ReeksenSeeder extends Seeder
@@ -15,7 +14,7 @@ class ReeksenSeeder extends Seeder
      */
     public function run()
     {
-        foreach (Wedstrijd::all() as $wedstrijd) {
+        foreach (Reeks::all() as $wedstrijd) {
             foreach (range(1, random_int(1, 3)) as $nummer) {
                 Reeks::factory()->create(
                     [

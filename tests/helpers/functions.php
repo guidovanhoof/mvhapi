@@ -133,3 +133,49 @@ function maakReeks($velden = [])
 {
     return Reeks::factory()->make($velden);
 }
+
+/**
+ * @param TestCase $testCase
+ * @param $data
+ * @param Wedstrijdtype $wedstrijdtype
+ */
+function assertWedstrijdtypeEquals(TestCase $testCase, $data, Wedstrijdtype $wedstrijdtype): void
+{
+    $testCase->assertEquals($data["id"], $wedstrijdtype->id);
+    $testCase->assertEquals($data["omschrijving"], $wedstrijdtype->omschrijving);
+}
+
+/**
+ * @param Wedstrijd $wedstrijd
+ * @return array
+ */
+function wedstrijdToArray(Wedstrijd $wedstrijd): array
+{
+    return [
+        "kalender_id" => $wedstrijd->kalender_id,
+        "nummer" => $wedstrijd->nummer,
+        "datum" => $wedstrijd->datum,
+        "omschrijving" => $wedstrijd->omschrijving,
+        "sponsor" => $wedstrijd->sponsor,
+        "aanvang" => $wedstrijd->aanvang,
+        "wedstrijdtype_id" => $wedstrijd->wedstrijdtype_id,
+        "opmerkingen" => $wedstrijd->opmerkingen,
+    ];
+}
+
+/**
+ * @param Reeks $reeks
+ * @param bool $metId
+ * @return array
+ */
+function reeksToArray(Reeks $reeks): array
+{
+    return [
+        'wedstrijd_id' => $reeks->wedstrijd_id,
+        'nummer' => $reeks->nummer,
+        'aanvang' => $reeks->aanvang,
+        'duur' => $reeks->duur,
+        'gewicht_zak' => $reeks->gewicht_zak,
+        'opmerkingen' => $reeks->opmerkingen,
+    ];
+}

@@ -11,7 +11,11 @@ return [
     'between' => [
         'numeric' => ':attribute moet liggen tussen :min en :max!',
     ],
-    'inkalenderjaar' => 'Datum niet in kalenderjaar!',
+    'gte' => [
+        'numeric' => ':attribute moet groter of gelijk aan :value zijn!',
+    ],
+    'datum_in_kalender_jaar' => 'Datum niet in kalenderjaar!',
+    'nummer_uniek_per_wedstrijd' => 'Nummer bestaat reeds voor wedstrijd!',
     'attributes' => [
         'jaar' => 'Jaar',
         'email' => 'Email',
@@ -22,5 +26,8 @@ return [
         'nummer' => 'Nummer',
         'aanvang' => 'Aanvang',
         'wedstrijdtype_id' => 'Wedstrijdtype_id',
+        'wedstrijd_id' => 'Wedstrijd_id',
+        'duur' => 'Duur',
+        'gewicht_zak' => 'Gewicht zak',
     ],
 ];

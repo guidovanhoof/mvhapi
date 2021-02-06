@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\WedstrijdResource;
 use App\Models\Wedstrijd;
-use App\Rules\InKalenderJaar;
+use App\Rules\DatumInKalenderJaar;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -108,7 +108,7 @@ class WedstrijdenController extends Controller
                     'required',
                     'date',
                     'unique:wedstrijden,datum' . ($update ? ',' . $wedstrijd->datum . ',datum' : ''),
-                    new InKalenderJaar($request["kalender_id"])
+                    new DatumInKalenderJaar($request["kalender_id"])
                 ],
                 'nummer' => 'nullable|numeric|between:1,65535',
                 'omschrijving' => 'required',
