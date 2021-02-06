@@ -294,26 +294,8 @@ class WedstrijdenUpdateTest extends TestCase
         $this
             ->assertDatabaseHas(
                 'wedstrijden',
-                $this->dataToArray($wedstrijd)
+                wedstrijdToArray($wedstrijd)
             )
             ->assertJson($wedstrijd->toJson());
-    }
-
-    /**
-     * @param Wedstrijd $wedstrijd
-     * @return array
-     */
-    private function dataToArray(Wedstrijd $wedstrijd): array
-    {
-        return [
-            "kalender_id" => $wedstrijd->kalender_id,
-            "nummer" => $wedstrijd->nummer,
-            "datum" => $wedstrijd->datum,
-            "omschrijving" => $wedstrijd->omschrijving,
-            "sponsor" => $wedstrijd->sponsor,
-            "aanvang" => $wedstrijd->aanvang,
-            "wedstrijdtype_id" => $wedstrijd->wedstrijdtype_id,
-            "opmerkingen" => $wedstrijd->opmerkingen,
-        ];
     }
 }

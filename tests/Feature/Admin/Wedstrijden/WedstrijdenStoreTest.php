@@ -45,7 +45,6 @@ class WedstrijdenStoreTest extends TestCase
         $response = $this->bewaarWedstrijd($this->wedstrijd);
 
         $response->assertStatus(201);
-//        dd($response);
         $this->assertInDatabase($this->wedstrijd);
     }
 
@@ -172,7 +171,7 @@ class WedstrijdenStoreTest extends TestCase
     }
 
     /** @test */
-    public function aanvangIsGeldigeDatum() {
+    public function aanvangIsGeldigeTijd() {
         $expectedErrorMessage = "Aanvang is geen geldig tijdstip!";
         $this->wedstrijd->aanvang = "abcde";
 
@@ -225,7 +224,7 @@ class WedstrijdenStoreTest extends TestCase
                 ->json(
                     'POST',
                     URL_WEDSTRIJDEN_ADMIN,
-                    $this->dataToArray($wedstrijd)
+                    wedstrijdToArray($wedstrijd)
                 )
         ;
     }
@@ -236,7 +235,6 @@ class WedstrijdenStoreTest extends TestCase
      */
     private function maakWedstrijd($velden = [])
     {
-//        $kalender = bewaarKalender();
         if (!isset($velden["datum"])) {
             $faker = Factory::create();
             $datum = $faker->dateTimeBetween($this->kalender->jaar . '-01-01', $this->kalender->jaar . '-12-31');
@@ -256,26 +254,8 @@ class WedstrijdenStoreTest extends TestCase
         $this
             ->assertDatabaseHas(
                 'wedstrijden',
-                $this->dataToArray($wedstrijd)
+                wedstrijdToArray($wedstrijd)
             )
             ->assertJson($wedstrijd->toJson());
-    }
-
-    /**
-     * @param Wedstrijd $wedstrijd
-     * @return array
-     */
-    private function dataToArray(Wedstrijd $wedstrijd): array
-    {
-        return [
-            'kalender_id' => $wedstrijd->kalender_id,
-            'datum' => $wedstrijd->datum,
-            'nummer' => $wedstrijd->nummer,
-            'omschrijving' => $wedstrijd->omschrijving,
-            'sponsor' => $wedstrijd->sponsor,
-            'aanvang' => $wedstrijd->aanvang,
-            'wedstrijdtype_id' => $wedstrijd->wedstrijdtype_id,
-            'opmerkingen' => $wedstrijd->opmerkingen,
-        ];
     }
 }

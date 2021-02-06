@@ -9,7 +9,7 @@ class Reeks extends Model
 {
     protected $table = "reeksen";
     protected $fillable = [
-        'wedstrijd_id', 'nummer', 'aanvang', 'duuur', 'gewicht_zak', 'opmerkingen',
+        'wedstrijd_id', 'nummer', 'aanvang', 'duur', 'gewicht_zak', 'opmerkingen',
     ];
 
     use HasFactory;

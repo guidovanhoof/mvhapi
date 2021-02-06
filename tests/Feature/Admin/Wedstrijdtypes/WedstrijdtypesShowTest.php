@@ -31,17 +31,7 @@ class WedstrijdtypesShowTest extends TestCase
 
         $response->assertStatus(200);
         $data = $response->json();
-        $this->assertWedstrijdtypeEquals($data, $wedstrijdtype);
-    }
-
-    /**
-     * @param $data
-     * @param Wedstrijdtype $wedstrijdtype
-     */
-    public function assertWedstrijdtypeEquals($data, Wedstrijdtype $wedstrijdtype): void
-    {
-        $this->assertEquals($data["id"], $wedstrijdtype->id);
-        $this->assertEquals($data["omschrijving"], $wedstrijdtype->omschrijving);
+        assertWedstrijdtypeEquals($this, $data, $wedstrijdtype);
     }
 
     /**

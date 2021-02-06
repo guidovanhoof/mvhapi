@@ -29,7 +29,7 @@ class ReeksFactory extends Factory
             'nummer' => $this->faker->numberBetween(1, 255),
             'aanvang' => $this->faker->time(),
             'duur' => $this->faker->time(),
-            'gewicht_zak' => $this->faker->numberBetween(1, 666),
+            'gewicht_zak' => $this->faker->numberBetween(0, 255),
             'opmerkingen' => $this->faker->text(75),
         ];
     }

@@ -44,6 +44,8 @@ return [
     'exists' => 'The selected :attribute is invalid.',
     'file' => 'The :attribute must be a file.',
     'filled' => 'The :attribute field must have a value.',
+    'datum_in_kalender_jaar' => 'Datum niet in kalenderjaar!',
+    'nummer_uniek_per_wedstrijd' => 'Nummer bestaat reeds voor wedstrijd!',
     'inkalenderjaar' => 'Date not within calendar year',
     'gt' => [
         'numeric' => 'The :attribute must be greater than :value.',

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Rules;
 
-use App\Rules\InKalenderJaar;
+use App\Rules\DatumInKalenderJaar;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -16,7 +16,7 @@ class InKalenderJaarTest extends TestCase
     public function validationFails()
     {
         $kalender = bewaarKalender(["jaar" => 2020]);
-        $validationRule = new InKalenderJaar($kalender->id);
+        $validationRule = new DatumInKalenderJaar($kalender->id);
 
         $this->assertFalse($validationRule->passes("datum", "2019-01-01"));
         $this->assertEquals($validationRule->message(), "Datum niet in kalenderjaar!");
@@ -26,7 +26,7 @@ class InKalenderJaarTest extends TestCase
     public function validationSucceeds()
     {
         $kalender = bewaarKalender(["jaar" => 2020]);
-        $validationRule = new InKalenderJaar($kalender->id);
+        $validationRule = new DatumInKalenderJaar($kalender->id);
 
         $this->assertTrue($validationRule->passes("datum", "2020-04-28"));
     }
