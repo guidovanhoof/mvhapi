@@ -58,7 +58,7 @@ Route::group(
         )
             ->parameters(["reeksen" => "id"])
             ->middleware("auth:sanctum")
-            ->only('index')
+            ->only('index', 'show')
         ;
     }
 );

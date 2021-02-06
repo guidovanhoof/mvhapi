@@ -1,43 +1,45 @@
 <?php
 
-namespace Tests\Feature\Admin\Kalenders;
+namespace Tests\Feature\Admin\Reeksen;
 
 use App\Models\Kalender;
+use App\Models\Reeks;
+use App\Models\Wedstrijdtype;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class KalendersShowTest extends TestCase
+class ReeksenShowTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function kalenderNietAanwezig()
+    public function reeksNietAanwezig()
     {
-        $response = $this->getKalender('1900');
+        $response = $this->getReeks('666');
 
         $response->assertStatus(404);
         $data = $response->json();
-        $this->assertEquals("Kalender niet gevonden!", $data["message"]);
+        $this->assertEquals("Reeks niet gevonden!", $data["message"]);
     }
 
     /** @test */
-    public function kalenderAanwezig()
+    public function reeksAanwezig()
     {
-        $kalender = bewaarKalender();
+        $reeks = bewaarReeks();
 
-        $response = $this->getKalender($kalender->jaar);
+        $response = $this->getReeks($reeks->id);
 
         $response->assertStatus(200);
         $data = $response->json();
-        assertKalenderEquals($this, $data, $kalender);
+        assertReeksEquals($this, $data, $reeks);
     }
-    
+
     /**
-     * @param $jaar
+     * @param $id
      * @return TestResponse
      */
-    private function getKalender($jaar): TestResponse
+    private function getReeks($id): TestResponse
     {
         $plainToken = createUserAndToken();
 
@@ -46,7 +48,7 @@ class KalendersShowTest extends TestCase
                 ->withHeader('Authorization', 'Bearer ' . $plainToken)
                 ->json(
                     'GET',
-                    URL_KALENDERS_ADMIN . $jaar
+                    URL_REEKSEN_ADMIN . $id
                 )
         ;
     }

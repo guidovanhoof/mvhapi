@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ReeksResource;
 use App\Models\Reeks;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use function App\Helpers\nietGevondenResponse;
 
 class ReeksController extends Controller
 {
@@ -24,20 +27,10 @@ class ReeksController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -45,21 +38,26 @@ class ReeksController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Geef één specifieke reeks terug.
      *
-     * @param  \App\Models\Reeks  $reeks
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return JsonResponse
      */
-    public function show(Reeks $reeks)
+    public function show(int $id): JsonResponse
     {
-        //
+        try {
+            $reeks = Reeks::where("id", $id)->firstOrFail();
+            return $this->reeksResourceResponse($reeks, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Reeks");
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Reeks  $reeks
-     * @return \Illuminate\Http\Response
+     * @param Reeks $reeks
+     * @return Response
      */
     public function edit(Reeks $reeks)
     {
@@ -70,8 +68,8 @@ class ReeksController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Reeks  $reeks
-     * @return \Illuminate\Http\Response
+     * @param Reeks $reeks
+     * @return Response
      */
     public function update(Request $request, Reeks $reeks)
     {
@@ -81,11 +79,24 @@ class ReeksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Reeks  $reeks
-     * @return \Illuminate\Http\Response
+     * @param Reeks $reeks
+     * @return Response
      */
     public function destroy(Reeks $reeks)
     {
         //
+    }
+
+    /**
+     * @param Reeks $reeks
+     * @param int $status
+     * @return JsonResponse
+     */
+    private function reeksResourceResponse(Reeks $reeks, int $status): JsonResponse
+    {
+        return response()->json(
+            new ReeksResource($reeks),
+            $status
+        );
     }
 }

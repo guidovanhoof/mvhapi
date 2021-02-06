@@ -100,6 +100,7 @@ function assertWedstrijdEquals(TestCase $tester, $data, Wedstrijd $wedstrijd): v
  */
 function assertReeksEquals(TestCase $tester, $data, Reeks $reeks): void
 {
+    $tester->assertEquals($data["id"], $reeks->id);
     $tester->assertEquals($data["wedstrijd_id"], $reeks->wedstrijd_id);
     $tester->assertEquals($data["nummer"], $reeks->nummer);
     $tester->assertEquals($data["aanvang"], $reeks->aanvang);
