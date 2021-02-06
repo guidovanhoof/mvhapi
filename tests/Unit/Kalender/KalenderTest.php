@@ -93,6 +93,7 @@ class KalenderTest extends TestCase
             [
                 "kalender_id" => $kalender->id,
                 "datum" => $kalender->jaar . "-05-28",
+                "wedstrijdtype_id" => $eersteWedstrijd->wedstrijdtype_id,
             ]
         );
 

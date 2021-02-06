@@ -38,6 +38,14 @@ class ReeksResourceTest extends TestCase
     }
 
     /** @test  */
+    public function heeftEenId()
+    {
+        $reeksResource = ReeksResource::collection(Reeks::first()->get())->resolve();
+
+        $this->assertEquals($this->reeks->id, $reeksResource[0]["id"]);
+    }
+
+    /** @test  */
     public function heeftEenWedstrijdId()
     {
         $reeksResource = ReeksResource::collection(Reeks::first()->get())->resolve();

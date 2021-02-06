@@ -16,6 +16,7 @@ class ReeksResource extends JsonResource
     public function toArray($request): array
     {
         return [
+            "id" => $this->id,
             "wedstrijd_id" => $this->wedstrijd_id,
             "nummer" => $this->nummer,
             "aanvang" => $this->aanvang,
