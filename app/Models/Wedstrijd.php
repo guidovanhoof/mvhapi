@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use function App\Helpers\verwijderAccenten;
 
 class Wedstrijd extends Model
@@ -38,6 +39,14 @@ class Wedstrijd extends Model
     public function kalender(): BelongsTo
     {
         return $this->belongsTo(Kalender::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function reeksen(): HasMany
+    {
+        return $this->hasMany(Reeks::class);
     }
 
     /**

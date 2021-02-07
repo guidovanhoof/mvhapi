@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ReeksResource;
 use App\Http\Resources\WedstrijdResource;
 use App\Models\Wedstrijd;
 use App\Rules\DatumInKalenderJaar;
@@ -18,7 +19,7 @@ use const App\Helpers\UPDATING;
 class WedstrijdenController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Tonen van alle wedstrijden.
      *
      * @return AnonymousResourceCollection
      */
@@ -28,7 +29,7 @@ class WedstrijdenController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Bewaren van een nieuwe wedstrijd.
      *
      * @param Request $request
      * @return JsonResponse
@@ -41,7 +42,7 @@ class WedstrijdenController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Tonen van een specifieke wedstrijd.
      *
      * @param $datum
      * @return WedstrijdResource|JsonResponse
@@ -57,7 +58,7 @@ class WedstrijdenController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Wijzigen van een specifieke wedstrijd.
      *
      * @param Request $request
      * @param $datum
@@ -76,9 +77,9 @@ class WedstrijdenController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijderen van een specifieke wedstrijd.
      *
-     * @param Wedstrijd $wedstrijd
+     * @param $datum
      * @return JsonResponse|Response
      */
     public function destroy($datum)
@@ -87,6 +88,22 @@ class WedstrijdenController extends Controller
             $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
             $wedstrijd->delete();
             return verwijderdResponse("Wedstrijd");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Wedstrijd");
+        }
+    }
+
+    /**
+     * Tonen alle reeksen van een wedstrijd
+     *
+     * @param $datum
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function reeksen($datum)
+    {
+        try {
+            $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
+            return ReeksResource::collection($wedstrijd->reeksen);
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Wedstrijd");
         }
