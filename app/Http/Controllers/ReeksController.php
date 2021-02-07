@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
 use const App\Helpers\STORING;
 use const App\Helpers\UPDATING;
 
@@ -80,12 +81,18 @@ class ReeksController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Reeks $reeks
-     * @return Response
+     * @param Reeks $id
+     * @return JsonResponse
      */
-    public function destroy(Reeks $reeks)
+    public function destroy($id): JsonResponse
     {
-        //
+        try {
+            $reeks = Reeks::where("id", $id)->firstOrFail();
+            $reeks->delete();
+            return verwijderdResponse("Reeks");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Reeks");
+        }
     }
 
     /**
