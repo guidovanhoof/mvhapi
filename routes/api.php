@@ -52,6 +52,13 @@ Route::group(
             ->middleware("auth:sanctum")
         ;
 
+        Route::get(
+            "wedstrijden/{datum}/reeksen",
+            [WedstrijdenController::class, "reeksen"]
+        )
+            ->middleware("auth:sanctum")
+        ;
+
         Route::apiResource(
             "reeksen",
             ReeksController::class
