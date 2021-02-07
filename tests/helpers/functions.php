@@ -179,3 +179,8 @@ function reeksToArray(Reeks $reeks): array
         'opmerkingen' => $reeks->opmerkingen,
     ];
 }
+
+function stdlog($omschrijving, $waarde)
+{
+    echo "\n### $omschrijving = '$waarde' ###\n";
+}
