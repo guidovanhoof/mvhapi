@@ -9,15 +9,18 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class NummerUniekPerWedstrijd implements Rule
 {
     private $westrijd_id;
+    private $reeks_id;
 
     /**
      * Create a new rule instance.
      *
-     * @return void
+     * @param $wedstrijd_id
+     * @param null $reeks_id
      */
-    public function __construct($wedstrijd_id)
+    public function __construct($wedstrijd_id, $reeks_id = null)
     {
         $this->westrijd_id = $wedstrijd_id;
+        $this->reeks_id = $reeks_id;
     }
 
     /**
@@ -30,12 +33,12 @@ class NummerUniekPerWedstrijd implements Rule
     public function passes($attribute, $value): bool
     {
         try {
-            Reeks::where(
-                [
-                    ["wedstrijd_id", "=", $this->westrijd_id],
-                    ["nummer", "=", $value]
-                ]
+            $reeks = Reeks::where(
+                $this->getWhereCriteria($value)
             )->firstOrFail();
+            if ($reeks->id == $this->reeks_id) {
+                return true;
+            }
             return false;
         } catch (ModelNotFoundException $modelNotFoundException) {
             return true;
@@ -50,5 +53,19 @@ class NummerUniekPerWedstrijd implements Rule
     public function message()
     {
         return trans('validation.nummer_uniek_per_wedstrijd');
+    }
+
+    /**
+     * @param $value
+     * @return array[]
+     */
+    private function getWhereCriteria($value): array
+    {
+        $whereUnique = [
+            ["wedstrijd_id", "=", $this->westrijd_id],
+            ["nummer", "=", $value],
+            //$this->reeks_id ? ["id", "<>", $this->reeks_id] : [],
+        ];
+        return $whereUnique;
     }
 }

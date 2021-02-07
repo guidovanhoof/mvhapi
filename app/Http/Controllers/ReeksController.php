@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
 use const App\Helpers\STORING;
+use const App\Helpers\UPDATING;
 
 class ReeksController extends Controller
 {
@@ -61,12 +62,19 @@ class ReeksController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Reeks $reeks
-     * @return Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, Reeks $reeks)
+    public function update(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $reeks = Reeks::where("id", $id)->firstOrFail();
+            $validData = $this->valideerReeks($request, $reeks, UPDATING);
+            $reeks->update($validData);
+            return $this->reeksResourceResponse($reeks, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Reeks");
+        }
     }
 
     /**
@@ -109,7 +117,7 @@ class ReeksController extends Controller
                     'required',
                     'numeric',
                     'between:1,255',
-                    new NummerUniekPerWedstrijd($request['wedstrijd_id']),
+                    new NummerUniekPerWedstrijd($request['wedstrijd_id'], $reeks->id),
                 ],
                 'aanvang' => 'bail|required|date_format:H:i:s',
                 'duur' => 'bail|nullable|date_format:H:i:s',
