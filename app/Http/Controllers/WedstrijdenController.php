@@ -7,11 +7,13 @@ use App\Http\Resources\WedstrijdResource;
 use App\Models\Wedstrijd;
 use App\Rules\DatumInKalenderJaar;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
 use const App\Helpers\STORING;
 use const App\Helpers\UPDATING;
@@ -86,7 +88,11 @@ class WedstrijdenController extends Controller
     {
         try {
             $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
-            $wedstrijd->delete();
+            try {
+                $wedstrijd->delete();
+            } catch (QueryException $queryException) {
+                return nietVerwijderdResponse("Wedstrijd", "reeksen");
+            }
             return verwijderdResponse("Wedstrijd");
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Wedstrijd");

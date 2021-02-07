@@ -43,6 +43,26 @@ class WedstrijdenDestroyTest extends TestCase
         ;
     }
 
+    /** @test */
+    public function nogReeksenGekoppeld()
+    {
+        $expectedMessage = "Wedstrijd niet verwijderd! Nog reeksen aanwezig!";
+        $wedstrijd = bewaarWedstrijd();
+        bewaarReeks(["wedstrijd_id" => $wedstrijd->id]);
+
+        $response = $this->verwijderWedstrijd($wedstrijd->datum);
+
+        $response->assertStatus(403);
+        $data = $response->json();
+        $this
+            ->assertDatabaseHas(
+                "wedstrijden",
+                wedstrijdToArray($wedstrijd)
+            )
+            ->assertEquals($expectedMessage, $data["message"])
+        ;
+    }
+
     /**
      * @param $datum
      * @return TestResponse
