@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\KalendersController;
+use App\Http\Controllers\PlaatsenController;
 use App\Http\Controllers\ReeksController;
 use App\Http\Controllers\WedstrijdenController;
 use App\Http\Controllers\WedstrijdtypesController;
@@ -65,6 +66,15 @@ Route::group(
         )
             ->parameters(["reeksen" => "id"])
             ->middleware("auth:sanctum")
+        ;
+
+        Route::apiResource(
+            "plaatsen",
+            PlaatsenController::class
+        )
+            ->parameters(["plaatsen" => "id"])
+            ->middleware("auth:sanctum")
+            ->only("index")
         ;
     }
 );

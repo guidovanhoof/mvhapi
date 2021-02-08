@@ -22,7 +22,7 @@ class WedstrijdtypeFactory extends Factory
     public function definition()
     {
         return [
-            "omschrijving" => $this->faker->text(10)
+            "omschrijving" => $this->faker->word . (int) microtime(true),
         ];
     }
 }

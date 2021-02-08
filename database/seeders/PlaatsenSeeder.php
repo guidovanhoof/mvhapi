@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Plaats;
 use App\Models\Reeks;
-use App\Models\Wedstrijd;
 use Illuminate\Database\Seeder;
 
-class ReeksenSeeder extends Seeder
+class PlaatsenSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,11 +15,11 @@ class ReeksenSeeder extends Seeder
      */
     public function run()
     {
-        foreach (Wedstrijd::all() as $wedstrijd) {
-            foreach (range(1, random_int(1, 3)) as $nummer) {
-                Reeks::factory()->create(
+        foreach (Reeks::all() as $reeks) {
+            foreach (range(1, random_int(1, 10)) as $nummer) {
+                Plaats::factory()->create(
                     [
-                        'wedstrijd_id' => $wedstrijd->id,
+                        'reeks_id' => $reeks->id,
                         'nummer' => $nummer,
                     ]
                 );

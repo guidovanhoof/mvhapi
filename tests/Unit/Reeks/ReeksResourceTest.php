@@ -29,9 +29,7 @@ class ReeksResourceTest extends TestCase
 
     public function tearDown(): void
     {
-        Reeks::query()->delete();
-        Wedstrijd::query()->delete();
-        Kalender::query()->delete();
+        cleanUpDb("reeksen");
         $this->reeks = null;
 
         parent::tearDown();

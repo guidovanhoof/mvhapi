@@ -29,9 +29,7 @@ class WedstrijdenReeksenTest extends TestCase
 
     public function tearDown(): void
     {
-        Reeks::query()->delete();
-        Wedstrijd::query()->delete();
-        Kalender::query()->delete();
+        cleanUpDb("reeksen");
 
         parent::tearDown();
     }
@@ -53,7 +51,7 @@ class WedstrijdenReeksenTest extends TestCase
         $response = $this->getWedstrijdReeksen($this->wedstrijd);
 
         $response->assertStatus(200);
-        $data = $response->json()["data"];
+        $data = $response->json();
         $this->assertCount(1, $data);
         assertReeksEquals($this, $data[0], $reeks);
     }

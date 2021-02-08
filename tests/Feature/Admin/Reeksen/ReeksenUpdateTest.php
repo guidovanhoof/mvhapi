@@ -31,9 +31,7 @@ class ReeksenUpdateTest extends TestCase
 
     public function tearDown(): void
     {
-        Reeks::query()->delete();
-        Wedstrijd::query()->delete();
-        Kalender::query()->delete();
+        cleanUpDb("reeksen");
         $this->wedstrijd = null;
         $this->reeks = null;
 

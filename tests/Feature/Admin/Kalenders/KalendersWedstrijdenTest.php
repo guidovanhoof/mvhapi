@@ -28,8 +28,7 @@ class KalendersWedstrijdenTest extends TestCase
 
     public function tearDown(): void
     {
-        Wedstrijd::query()->delete();
-        Kalender::query()->delete();
+        cleanUpDb("wedstrijden");
 
         parent::tearDown();
     }
@@ -51,7 +50,7 @@ class KalendersWedstrijdenTest extends TestCase
         $response = $this->getKalenderWedstrijden($this->kalender);
 
         $response->assertStatus(200);
-        $data = $response->json()["data"];
+        $data = $response->json();
         $this->assertCount(1, $data);
         assertWedstrijdEquals($this, $data[0], $wedstrijd);
     }

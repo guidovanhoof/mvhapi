@@ -27,7 +27,7 @@ class WedstrijdenIndexTest extends TestCase
         $response = $this->getWedstrijden();
 
         $response->assertStatus(200);
-        $data = $response->json()["data"];
+        $data = $response->json();
         $this->assertCount(1, $data);
         assertWedstrijdEquals($this, $data[0], $wedstrijd);
     }
@@ -53,7 +53,7 @@ class WedstrijdenIndexTest extends TestCase
         $response = $this->getWedstrijden();
 
         $response->assertStatus(200);
-        $data = $response->json()["data"];
+        $data = $response->json();
         $this->assertCount(2, $data);
         assertWedstrijdEquals($this, $data[0], $tweede_wedstrijd);
         assertWedstrijdEquals($this, $data[1], $eerste_wedstrijd);

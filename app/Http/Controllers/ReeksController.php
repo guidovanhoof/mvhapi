@@ -8,7 +8,6 @@ use App\Rules\NummerUniekPerWedstrijd;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
 use function App\Helpers\verwijderdResponse;
 use const App\Helpers\STORING;
