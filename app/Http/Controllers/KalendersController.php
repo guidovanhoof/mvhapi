@@ -21,11 +21,14 @@ class KalendersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection
+     * @return JsonResponse
      */
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return KalenderResource::collection(Kalender::all()->sortByDesc("jaar"));
+        return response()->json(
+            KalenderResource::collection(Kalender::all()->sortByDesc("jaar")),
+            200
+        );
     }
 
     /**
@@ -107,7 +110,10 @@ class KalendersController extends Controller
     {
         try {
             $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
-            return WedstrijdResource::collection($kalender->wedstrijden);
+            return response()->json(
+                WedstrijdResource::collection($kalender->wedstrijden)
+                ,200
+            );
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Kalender");
         }

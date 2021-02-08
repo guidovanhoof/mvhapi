@@ -28,7 +28,7 @@ class KalendersIndexTest extends TestCase
         $response = $this->getKalenders();
 
         $response->assertStatus(200);
-        $data = $response->json()["data"];
+        $data = $response->json();
         $this->assertCount(1, $data);
         assertKalenderEquals($this, $data[0], $kalender);
     }
@@ -42,7 +42,7 @@ class KalendersIndexTest extends TestCase
         $response = $this->getKalenders();
 
         $response->assertStatus(200);
-        $data = $response->json()["data"];
+        $data = $response->json();
         $this->assertCount(2, $data);
         assertKalenderEquals($this, $data[0], $tweede_kalender);
         assertKalenderEquals($this, $data[1], $eerste_kalender);

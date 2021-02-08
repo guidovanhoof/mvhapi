@@ -27,9 +27,7 @@ class NummerUniekPerWedstrijdTest extends TestCase
 
     public function tearDown(): void
     {
-        Reeks::query()->delete();
-        Wedstrijd::query()->delete();
-        Kalender::query()->delete();
+        cleanUpDb("reeksen");
 
         parent::tearDown();
     }

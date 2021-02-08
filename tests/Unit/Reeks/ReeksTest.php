@@ -33,9 +33,7 @@ class ReeksTest extends TestCase
 
     public function tearDown(): void
     {
-        Reeks::query()->delete();
-        Wedstrijd::query()->delete();
-        Kalender::query()->delete();
+        cleanUpDb("reeksen");
         $this->kalender = null;
         $this->wedstrijd = null;
         $this->reeks = null;
@@ -141,7 +139,7 @@ class ReeksTest extends TestCase
     }
 
     /** @test  */
-    public function nummerIsIniekPerWedstrijd()
+    public function nummerIsUniekPerWedstrijd()
     {
         $this->expectException(QueryException::class);
 

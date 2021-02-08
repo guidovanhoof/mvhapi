@@ -29,7 +29,7 @@ class WedstrijdtypesIndexTest extends TestCase
         $response = $this->getWedstrijdtypes();
 
         $response->assertStatus(200);
-        $data = $response->json()["data"];
+        $data = $response->json();
         $this->assertCount(1, $data);
         assertWedstrijdtypeEquals($this, $data[0], $wedstrijdtype);
     }

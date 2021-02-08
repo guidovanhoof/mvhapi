@@ -31,9 +31,8 @@ class WedstrijdenStoreTest extends TestCase
 
     public function tearDown(): void
     {
-        Wedstrijd::query()->delete();
+        cleanUpDb("wedstrijden");
         $this->wedstrijd = null;
-        Kalender::query()->delete();
         $this->kalender = null;
 
         parent::tearDown();

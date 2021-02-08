@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             WedstrijdtypesSeeder::class,
             WedstrijdenSeeder::class,
             ReeksenSeeder::class,
+            PlaatsenSeeder::class,
         ]);
     }
 }

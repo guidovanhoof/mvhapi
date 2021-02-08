@@ -23,11 +23,14 @@ class WedstrijdenController extends Controller
     /**
      * Tonen van alle wedstrijden.
      *
-     * @return AnonymousResourceCollection
+     * @return JsonResponse
      */
-    public function index(): AnonymousResourceCollection
+    public function index(): JsonResponse
     {
-        return WedstrijdResource::collection(Wedstrijd::all()->sortByDesc("datum"));
+        return response()->json(
+            WedstrijdResource::collection(Wedstrijd::all()->sortByDesc("datum")),
+            200
+        );
     }
 
     /**
@@ -109,7 +112,10 @@ class WedstrijdenController extends Controller
     {
         try {
             $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
-            return ReeksResource::collection($wedstrijd->reeksen);
+            return response()->json(
+                ReeksResource::collection($wedstrijd->reeksen),
+                200
+            );
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Wedstrijd");
         }

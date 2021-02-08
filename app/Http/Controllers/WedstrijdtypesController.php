@@ -25,7 +25,10 @@ class WedstrijdtypesController extends Controller
      */
     public function index()
     {
-        return WedstrijdtypeResource::collection(Wedstrijdtype::all());
+        return response()->json(
+            WedstrijdtypeResource::collection(Wedstrijdtype::all()),
+            200
+        );
     }
 
     /**

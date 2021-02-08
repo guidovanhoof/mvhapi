@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Kalender;
+use App\Models\Plaats;
 use App\Models\Reeks;
 use App\Models\User;
 use App\Models\Wedstrijd;
@@ -12,6 +13,7 @@ const URL_KALENDERS_ADMIN = "api/admin/kalenders/";
 const URL_WEDSTRIJDTYPES_ADMIN = "api/admin/wedstrijdtypes/";
 const URL_WEDSTRIJDEN_ADMIN = "api/admin/wedstrijden/";
 const URL_REEKSEN_ADMIN = "api/admin/reeksen/";
+const URL_PLAATSEN_ADMIN = "api/admin/plaatsen/";
 
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
@@ -94,19 +96,19 @@ function assertWedstrijdEquals(TestCase $tester, $data, Wedstrijd $wedstrijd): v
 }
 
 /**
- * @param TestCase $tester
+ * @param TestCase $testCase
  * @param $data
  * @param Reeks $reeks
  */
-function assertReeksEquals(TestCase $tester, $data, Reeks $reeks): void
+function assertReeksEquals(TestCase $testCase, $data, Reeks $reeks): void
 {
-    $tester->assertEquals($data["id"], $reeks->id);
-    $tester->assertEquals($data["wedstrijd_id"], $reeks->wedstrijd_id);
-    $tester->assertEquals($data["nummer"], $reeks->nummer);
-    $tester->assertEquals($data["aanvang"], $reeks->aanvang);
-    $tester->assertEquals($data["duur"], $reeks->duur);
-    $tester->assertEquals($data["gewicht_zak"], $reeks->gewicht_zak);
-    $tester->assertEquals($data["opmerkingen"], $reeks->opmerkingen);
+    $testCase->assertEquals($data["id"], $reeks->id);
+    $testCase->assertEquals($data["wedstrijd_id"], $reeks->wedstrijd_id);
+    $testCase->assertEquals($data["nummer"], $reeks->nummer);
+    $testCase->assertEquals($data["aanvang"], $reeks->aanvang);
+    $testCase->assertEquals($data["duur"], $reeks->duur);
+    $testCase->assertEquals($data["gewicht_zak"], $reeks->gewicht_zak);
+    $testCase->assertEquals($data["opmerkingen"], $reeks->opmerkingen);
 }
 
 /**
@@ -183,4 +185,90 @@ function reeksToArray(Reeks $reeks): array
 function stdlog($omschrijving, $waarde)
 {
     echo "\n### $omschrijving = '$waarde' ###\n";
+}
+
+
+function bewaarPlaats($velden = [])
+{
+    return Plaats::factory()->create($velden);
+}
+
+function maakPlaats($velden = [])
+{
+    return Plaats::factory()->make($velden);
+}
+
+
+/**
+ * @param TestCase $testCase
+ * @param $data
+ * @param Plaats $plaats
+ */
+function assertPlaatsEquals(TestCase $testCase, $data, Plaats $plaats): void
+{
+    $testCase->assertEquals($data["id"], $plaats->id);
+    $testCase->assertEquals($data["reeks_id"], $plaats->reeks_id);
+    $testCase->assertEquals($data["nummer"], $plaats->nummer);
+    $testCase->assertEquals($data["opmerkingen"], $plaats->opmerkingen);
+}
+
+/**
+ * Maak de nodige tabellen leeg
+ *
+ * @param string $actie
+ */
+function cleanUpDb(string $actie)
+{
+    $verwijderActies = getVerwijderActies();
+    foreach ($verwijderActies[$actie] as $verwijderActie) {
+        $verwijderActie();
+    }
+}
+
+/**
+ * Lijst met leeg te maken tabellen
+ * @return string[][]
+ */
+function getVerwijderActies(): array
+{
+    return [
+        "plaatsen" => [
+            "cleanUpPlaatsen",
+            "cleanUpReeksen",
+            "cleanUpWedstrijden",
+            "cleanUpKalenders",
+        ],
+        "reeksen" => [
+            "cleanUpReeksen",
+            "cleanUpWedstrijden",
+            "cleanUpKalenders",
+        ],
+        "wedstrijden" => [
+            "cleanUpWedstrijden",
+            "cleanUpKalenders",
+        ],
+        "kalenders" => [
+            "cleanUpKalenders",
+        ],
+    ];
+}
+
+function cleanUpPlaatsen()
+{
+    Plaats::query()->delete();
+}
+
+function cleanUpKalenders(): void
+{
+    Kalender::query()->delete();
+}
+
+function cleanUpWedstrijden(): void
+{
+    Wedstrijd::query()->delete();
+}
+
+function cleanUpReeksen(): void
+{
+    Reeks::query()->delete();
 }
