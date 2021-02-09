@@ -3,7 +3,6 @@
 namespace Tests\Feature\Admin\Kalenders;
 
 use App\Models\Kalender;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;

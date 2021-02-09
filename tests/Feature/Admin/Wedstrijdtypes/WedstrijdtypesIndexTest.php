@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Admin\Wedstrijdtypes;
 
-use App\Models\Kalender;
-use App\Models\Wedstrijdtype;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;

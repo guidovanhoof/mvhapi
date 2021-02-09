@@ -3,9 +3,7 @@
 namespace Tests\Unit\Wedstrijdtype;
 
 
-use App\Http\Resources\KalenderResource;
 use App\Http\Resources\WedstrijdtypeResource;
-use App\Models\Kalender;
 use App\Models\Wedstrijdtype;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Admin\Wedstrijden;
 
-use App\Models\Kalender;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;

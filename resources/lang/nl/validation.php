@@ -16,6 +16,7 @@ return [
     ],
     'datum_in_kalender_jaar' => 'Datum niet in kalenderjaar!',
     'nummer_uniek_per_wedstrijd' => 'Nummer bestaat reeds voor wedstrijd!',
+    'nummer_uniek_per_reeks' => 'Nummer bestaat reeds voor reeks!',
     'attributes' => [
         'jaar' => 'Jaar',
         'email' => 'Email',
@@ -29,5 +30,6 @@ return [
         'wedstrijd_id' => 'Wedstrijd_id',
         'duur' => 'Duur',
         'gewicht_zak' => 'Gewicht zak',
+        'reeks_id' => 'Reeks_id',
     ],
 ];

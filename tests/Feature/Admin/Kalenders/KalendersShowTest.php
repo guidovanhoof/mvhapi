@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Admin\Kalenders;
 
-use App\Models\Kalender;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
@@ -32,7 +31,7 @@ class KalendersShowTest extends TestCase
         $data = $response->json();
         assertKalenderEquals($this, $data, $kalender);
     }
-    
+
     /**
      * @param $jaar
      * @return TestResponse

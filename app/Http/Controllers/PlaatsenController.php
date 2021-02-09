@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PlaatsResource;
 use App\Models\Plaats;
+use App\Rules\NummerUniekPerReeks;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,11 +29,13 @@ class PlaatsenController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        $validData = $this->valideerReeks($request, new Plaats());
+
+        return $this->plaatsResourceResponse(Plaats::create($validData), 201);
     }
 
     /**
@@ -49,17 +52,6 @@ class PlaatsenController extends Controller
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Plaats");
         }
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Plaats $plaats
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Plaats $plaats)
-    {
-        //
     }
 
     /**
@@ -95,6 +87,28 @@ class PlaatsenController extends Controller
         return response()->json(
             new PlaatsResource($plaats),
             $status
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param Plaats $plaats
+     * @return array
+     */
+    private function valideerReeks(Request $request, Plaats $plaats): array
+    {
+        return $request->validate(
+            [
+                "reeks_id" => "bail|required|exists:reeksen,id",
+                "nummer" => [
+                    "bail",
+                    "required",
+                    "numeric",
+                    "between:1,255",
+                    new NummerUniekPerReeks($request['reeks_id']),
+                ],
+                "opmerkingen" => "nullable"
+            ]
         );
     }
 }
