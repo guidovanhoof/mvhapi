@@ -2,10 +2,6 @@
 
 namespace Tests\Feature\Admin\Plaatsen;
 
-use App\Models\Kalender;
-use App\Models\Plaats;
-use App\Models\Reeks;
-use App\Models\Wedstrijd;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;

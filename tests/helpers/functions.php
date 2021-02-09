@@ -237,18 +237,22 @@ function getVerwijderActies(): array
             "cleanUpReeksen",
             "cleanUpWedstrijden",
             "cleanUpKalenders",
+            "cleanUpWedstrijdtypes",
         ],
         "reeksen" => [
             "cleanUpReeksen",
             "cleanUpWedstrijden",
             "cleanUpKalenders",
+            "cleanUpWedstrijdtypes",
         ],
         "wedstrijden" => [
             "cleanUpWedstrijden",
             "cleanUpKalenders",
+            "cleanUpWedstrijdtypes",
         ],
         "kalenders" => [
             "cleanUpKalenders",
+            "cleanUpWedstrijdtypes",
         ],
     ];
 }
@@ -271,4 +275,9 @@ function cleanUpWedstrijden(): void
 function cleanUpReeksen(): void
 {
     Reeks::query()->delete();
+}
+
+function cleanUpWedstrijdtypes(): void
+{
+    Wedstrijdtype::query()->delete();
 }
