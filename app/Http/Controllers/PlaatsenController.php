@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PlaatsResource;
 use App\Models\Plaats;
-use http\Env\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use function App\Helpers\nietGevondenResponse;
 
 class PlaatsenController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Tonen lijst met plaatsen.
      *
      * @return JsonResponse
      */
@@ -22,16 +22,6 @@ class PlaatsenController extends Controller
             PlaatsResource::collection(Plaats::all()->sortBy(["reeks_id", "nummer"])),
             200
         );
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -46,20 +36,25 @@ class PlaatsenController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Tonen van een specifieke plaats.
      *
-     * @param  \App\Models\Plaats  $plaats
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function show(Plaats $plaats)
+    public function show($id): JsonResponse
     {
-        //
+        try {
+            $plaats = Plaats::where("id", $id)->firstOrFail();
+            return $this->plaatsResourceResponse($plaats, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Plaats");
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Plaats  $plaats
+     * @param Plaats $plaats
      * @return \Illuminate\Http\Response
      */
     public function edit(Plaats $plaats)
@@ -71,7 +66,7 @@ class PlaatsenController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Plaats  $plaats
+     * @param Plaats $plaats
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Plaats $plaats)
@@ -82,11 +77,24 @@ class PlaatsenController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Plaats  $plaats
+     * @param Plaats $plaats
      * @return \Illuminate\Http\Response
      */
     public function destroy(Plaats $plaats)
     {
         //
+    }
+
+    /**
+     * @param Plaats $plaats
+     * @param int $status
+     * @return JsonResponse
+     */
+    private function plaatsResourceResponse(Plaats $plaats, int $status): JsonResponse
+    {
+        return response()->json(
+            new PlaatsResource($plaats),
+            $status
+        );
     }
 }

@@ -18,7 +18,7 @@ class KalendersUpdateTest extends TestCase
     {
         parent::setUp();
 
-        $this->kalender = bewaarKalender();
+        $this->kalender = bewaarKalender(["jaar" => date("Y")]);
         $this->jaar = $this->kalender->jaar;
     }
 
@@ -87,7 +87,7 @@ class KalendersUpdateTest extends TestCase
     /** @test */
     public function jaarIsUniek() {
         $expectedErrorMessage = "Jaar bestaat reeds!";
-        $bestaandeKalender = bewaarKalender();
+        $bestaandeKalender = bewaarKalender(["jaar" => date("Y") + 1]);
         $this->kalender->jaar = $bestaandeKalender->jaar;
 
         $response = $this->wijzigKalender($this->kalender, $this->jaar);
