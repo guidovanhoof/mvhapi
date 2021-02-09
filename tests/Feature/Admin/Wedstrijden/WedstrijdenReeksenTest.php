@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Admin\Wedstrijden;
 
-use App\Models\Kalender;
-use App\Models\Reeks;
 use App\Models\Wedstrijd;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

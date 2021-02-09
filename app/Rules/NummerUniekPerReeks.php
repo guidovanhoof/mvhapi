@@ -2,41 +2,41 @@
 
 namespace App\Rules;
 
-use App\Models\Reeks;
+use App\Models\Plaats;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class NummerUniekPerWedstrijd implements Rule
+class NummerUniekPerReeks implements Rule
 {
-    private $westrijd_id;
     private $reeks_id;
+    private $plaats_id;
 
     /**
      * Create a new rule instance.
      *
-     * @param $wedstrijd_id
-     * @param null $reeks_id
+     * @param $reeks_id
+     * @param null $plaats_id
      */
-    public function __construct($wedstrijd_id, $reeks_id = null)
+    public function __construct($reeks_id, $plaats_id = null)
     {
-        $this->westrijd_id = $wedstrijd_id;
         $this->reeks_id = $reeks_id;
+        $this->plaats_id = $plaats_id;
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
+     * @param  $attribute
      * @param  mixed  $value
      * @return bool
      */
     public function passes($attribute, $value): bool
     {
         try {
-            $reeks = Reeks::where(
+            $plaats = Plaats::where(
                 $this->getWhereCriteria($value)
             )->firstOrFail();
-            if ($reeks->id == $this->reeks_id) {
+            if ($plaats->id == $this->plaats_id) {
                 return true;
             }
             return false;
@@ -52,7 +52,7 @@ class NummerUniekPerWedstrijd implements Rule
      */
     public function message()
     {
-        return trans('validation.nummer_uniek_per_wedstrijd');
+        return trans('validation.nummer_uniek_per_reeks');
     }
 
     /**
@@ -62,7 +62,7 @@ class NummerUniekPerWedstrijd implements Rule
     private function getWhereCriteria($value): array
     {
         $whereUnique = [
-            ["wedstrijd_id", "=", $this->westrijd_id],
+            ["reeks_id", "=", $this->reeks_id],
             ["nummer", "=", $value],
         ];
         return $whereUnique;

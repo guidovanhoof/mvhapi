@@ -74,7 +74,7 @@ Route::group(
         )
             ->parameters(["plaatsen" => "id"])
             ->middleware("auth:sanctum")
-            ->only("index", "show")
+            ->only("index", "show", "store")
         ;
     }
 );

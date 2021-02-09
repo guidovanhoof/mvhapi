@@ -3,12 +3,10 @@
 namespace Tests\Unit\Rules;
 
 use App\Rules\DatumInKalenderJaar;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use function App\Helpers\verwijderAccenten;
 
-class InKalenderJaarTest extends TestCase
+class DatumInKalenderJaarTest extends TestCase
 {
     use RefreshDatabase;
 

@@ -167,7 +167,6 @@ function wedstrijdToArray(Wedstrijd $wedstrijd): array
 
 /**
  * @param Reeks $reeks
- * @param bool $metId
  * @return array
  */
 function reeksToArray(Reeks $reeks): array
@@ -179,6 +178,20 @@ function reeksToArray(Reeks $reeks): array
         'duur' => $reeks->duur,
         'gewicht_zak' => $reeks->gewicht_zak,
         'opmerkingen' => $reeks->opmerkingen,
+    ];
+}
+
+/**
+ * @param Plaats $plaats
+ * @return array
+ */
+function plaatsToArray(Plaats $plaats): array
+{
+    return [
+//        'id' => $plaats->id,
+        'reeks_id' => $plaats->reeks_id,
+        'nummer' => $plaats->nummer,
+        'opmerkingen' => $plaats->opmerkingen,
     ];
 }
 

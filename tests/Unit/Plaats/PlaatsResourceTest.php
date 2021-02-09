@@ -4,10 +4,7 @@ namespace Tests\Unit\Plaats;
 
 
 use App\Http\Resources\PlaatsResource;
-use App\Models\Kalender;
 use App\Models\Plaats;
-use App\Models\Reeks;
-use App\Models\Wedstrijd;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;

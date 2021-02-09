@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Admin\Wedstrijden;
 
-use App\Models\Kalender;
 use App\Models\Wedstrijd;
 use Faker\Factory;
 use Illuminate\Database\Eloquent\Collection;

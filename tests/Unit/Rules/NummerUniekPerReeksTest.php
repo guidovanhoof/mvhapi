@@ -2,29 +2,31 @@
 
 namespace Tests\Unit\Rules;
 
-use App\Rules\NummerUniekPerWedstrijd;
+use App\Rules\NummerUniekPerReeks;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class NummerUniekPerWedstrijdTest extends TestCase
+class NummerUniekPerReeksTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
+     * @var Collection|Model|mixed
      */
-    private $reeks;
+    private $plaats;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->reeks = bewaarReeks(["nummer" => 66]);
+        $this->plaats = bewaarPlaats(["nummer" => 66]);
     }
 
     public function tearDown(): void
     {
-        cleanUpDb("reeksen");
+        cleanUpDb("plaatsen");
 
         parent::tearDown();
     }
@@ -33,16 +35,16 @@ class NummerUniekPerWedstrijdTest extends TestCase
     /** @test  */
     public function validationFails()
     {
-        $validationRule = new NummerUniekPerWedstrijd($this->reeks->wedstrijd_id);
+        $validationRule = new NummerUniekPerReeks($this->plaats->reeks_id);
 
         $this->assertFalse($validationRule->passes("nummer", 66));
-        $this->assertEquals($validationRule->message(), "Nummer bestaat reeds voor wedstrijd!");
+        $this->assertEquals($validationRule->message(), "Nummer bestaat reeds voor reeks!");
     }
 
     /** @test  */
     public function validationSucceeds()
     {
-        $validationRule = new NummerUniekPerWedstrijd($this->reeks->wedstrijd_id);
+        $validationRule = new NummerUniekPerReeks($this->plaats->reeks_id);
 
         $this->assertTrue($validationRule->passes("nummer", "67"));
     }
