@@ -69,8 +69,9 @@ class ReeksController extends Controller
     {
         try {
             $reeks = Reeks::where("id", $id)->firstOrFail();
-            $validData = $this->valideerReeks($request, $reeks, UPDATING);
-            $reeks->update($validData);
+            $reeks->update(
+                $this->valideerReeks($request, $reeks, UPDATING)
+            );
             return $this->reeksResourceResponse($reeks, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Reeks");
