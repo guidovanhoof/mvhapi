@@ -26,14 +26,14 @@ class PlaatsenController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Bewaren nieuwe plaats.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        $validData = $this->valideerReeks($request, new Plaats());
+        $validData = $this->valideerPlaats($request, new Plaats());
 
         return $this->plaatsResourceResponse(Plaats::create($validData), 201);
     }
@@ -55,15 +55,23 @@ class PlaatsenController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Wijzigen van een bestaande plaats.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param Plaats $plaats
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, Plaats $plaats)
+    public function update(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $plaats = Plaats::where("id", $id)->firstOrFail();
+            $plaats->update(
+                $this->valideerPlaats($request, $plaats)
+            );
+            return $this->plaatsResourceResponse($plaats, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Plaats");
+        }
     }
 
     /**
@@ -95,7 +103,7 @@ class PlaatsenController extends Controller
      * @param Plaats $plaats
      * @return array
      */
-    private function valideerReeks(Request $request, Plaats $plaats): array
+    private function valideerPlaats(Request $request, Plaats $plaats): array
     {
         return $request->validate(
             [
@@ -105,7 +113,7 @@ class PlaatsenController extends Controller
                     "required",
                     "numeric",
                     "between:1,255",
-                    new NummerUniekPerReeks($request['reeks_id']),
+                    new NummerUniekPerReeks($request['reeks_id'], $plaats->id),
                 ],
                 "opmerkingen" => "nullable"
             ]

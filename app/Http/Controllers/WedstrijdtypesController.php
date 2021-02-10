@@ -71,8 +71,9 @@ class WedstrijdtypesController extends Controller
     {
         try {
             $wedstrijdtype = Wedstrijdtype::where("id", $id)->firstOrFail();
-            $validData = $this->valideerWedstrijdtype($request, $wedstrijdtype, UPDATING);
-            $wedstrijdtype->update($validData);
+            $wedstrijdtype->update(
+                $this->valideerWedstrijdtype($request, $wedstrijdtype, UPDATING)
+            );
             return $this->wedstrijdtypeResourceResponse($wedstrijdtype, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Wedstrijdtype");

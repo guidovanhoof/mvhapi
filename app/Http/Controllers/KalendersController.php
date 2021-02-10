@@ -71,8 +71,9 @@ class KalendersController extends Controller
     {
         try {
             $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
-            $validData = $this->valideerKalender($request, $kalender, UPDATING);
-            $kalender->update($validData);
+            $kalender->update(
+                $this->valideerKalender($request, $kalender, UPDATING)
+            );
             return $this->kalenderResourceResponse($kalender, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Kalender");

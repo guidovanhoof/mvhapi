@@ -73,8 +73,9 @@ class WedstrijdenController extends Controller
     {
         try {
             $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
-            $validData = $this->valideerWedstrijd($request, $wedstrijd, UPDATING);
-            $wedstrijd->update($validData);
+            $wedstrijd->update(
+                $this->valideerWedstrijd($request, $wedstrijd, UPDATING)
+            );
             return $this->wedstrijdResourceResponse($wedstrijd, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Wedstrijd");
