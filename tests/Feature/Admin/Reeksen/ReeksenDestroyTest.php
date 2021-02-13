@@ -38,6 +38,26 @@ class ReeksenDestroyTest extends TestCase
         ;
     }
 
+    /** @test */
+    public function nogPlaatsenGekoppeld()
+    {
+        $expectedMessage = "Reeks niet verwijderd! Nog plaatsen aanwezig!";
+        $reeks = bewaarReeks();
+        bewaarPlaats(["reeks_id" => $reeks->id]);
+
+        $response = $this->verwijderReeks($reeks->id);
+
+        $response->assertStatus(403);
+        $data = $response->json();
+        $this
+            ->assertDatabaseHas(
+                "reeksen",
+                reeksToArray($reeks)
+            )
+            ->assertEquals($expectedMessage, $data["message"])
+        ;
+    }
+
     /**
      * @param $id
      * @return TestResponse

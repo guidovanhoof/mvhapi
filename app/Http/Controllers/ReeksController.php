@@ -7,9 +7,11 @@ use App\Http\Resources\ReeksResource;
 use App\Models\Reeks;
 use App\Rules\NummerUniekPerWedstrijd;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
 use const App\Helpers\STORING;
 use const App\Helpers\UPDATING;
@@ -89,7 +91,11 @@ class ReeksController extends Controller
     {
         try {
             $reeks = Reeks::where("id", $id)->firstOrFail();
-            $reeks->delete();
+            try {
+                $reeks->delete();
+            } catch(QueryException $queryException) {
+                return nietVerwijderdResponse("Reeks", "plaatsen");
+            }
             return verwijderdResponse("Reeks");
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Reeks");
