@@ -68,6 +68,13 @@ Route::group(
             ->middleware("auth:sanctum")
         ;
 
+        Route::get(
+            "reeksen/{id}/plaatsen",
+            [ReeksController::class, "plaatsen"]
+        )
+            ->middleware("auth:sanctum")
+        ;
+
         Route::apiResource(
             "plaatsen",
             PlaatsenController::class

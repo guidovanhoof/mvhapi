@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PlaatsResource;
 use App\Http\Resources\ReeksResource;
 use App\Models\Reeks;
 use App\Rules\NummerUniekPerWedstrijd;
@@ -90,6 +91,19 @@ class ReeksController extends Controller
             $reeks = Reeks::where("id", $id)->firstOrFail();
             $reeks->delete();
             return verwijderdResponse("Reeks");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Reeks");
+        }
+    }
+
+    public function plaatsen($id)
+    {
+        try {
+            $reeks = Reeks::where("id", $id)->firstOrFail();
+            return response()->json(
+                PlaatsResource::collection($reeks->plaatsen),
+                200
+            );
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Reeks");
         }
