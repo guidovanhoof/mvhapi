@@ -30,7 +30,7 @@ class ReeksTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("reeksen");
+        cleanUpDb("plaatsen");
         $this->kalender = null;
         $this->wedstrijd = null;
         $this->reeks = null;
@@ -147,6 +147,18 @@ class ReeksTest extends TestCase
                 "nummer" => $this->reeks->nummer,
             ]
         );
+    }
+
+    /** @test  */
+    public function heeftPlaatsen()
+    {
+        $this->bewaarReeks();
+        $expectPlaats = bewaarPlaats(["reeks_id" => $this->reeks->id]);
+
+        $actualPlaatsen = $this->reeks->plaatsen;
+
+        $this->assertCount(1, $actualPlaatsen);
+        assertPlaatsEquals($this, $actualPlaatsen[0], $expectPlaats);
     }
 
     private function bewaarReeks(): void

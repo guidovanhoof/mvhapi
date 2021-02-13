@@ -210,12 +210,6 @@ class WedstrijdTest extends TestCase
         $actualReeksen = $wedstrijd->reeksen;
 
         $this->assertCount(1, $actualReeksen);
-        $this->assertEquals($expectedReeks->id, $actualReeksen[0]->id);
-        $this->assertEquals($expectedReeks->wedstrijd_id, $actualReeksen[0]->wedstrijd_id);
-        $this->assertEquals($expectedReeks->nummer, $actualReeksen[0]->nummer);
-        $this->assertEquals($expectedReeks->aanvang, $actualReeksen[0]->aanvang);
-        $this->assertEquals($expectedReeks->duur, $actualReeksen[0]->duur);
-        $this->assertEquals($expectedReeks->gewicht_zak, $actualReeksen[0]->gewicht_zak);
-        $this->assertEquals($expectedReeks->opmerkingen, $actualReeksen[0]->opmerkingen);
+        assertReeksEquals($this, $actualReeksen[0], $expectedReeks);
     }
 }
