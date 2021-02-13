@@ -9,6 +9,8 @@ use App\Models\Wedstrijdtype;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
+use Illuminate\Foundation\Testing\Concerns\InteractsWithDatabase;
+
 const URL_KALENDERS_ADMIN = "api/admin/kalenders/";
 const URL_WEDSTRIJDTYPES_ADMIN = "api/admin/wedstrijdtypes/";
 const URL_WEDSTRIJDEN_ADMIN = "api/admin/wedstrijden/";

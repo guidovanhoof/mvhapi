@@ -64,7 +64,6 @@ class WedstrijdenUpdateTest extends TestCase
         $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->wedstrijd);
     }
 
     /** @test */
