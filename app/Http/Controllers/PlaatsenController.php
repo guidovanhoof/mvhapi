@@ -8,7 +8,9 @@ use App\Rules\NummerUniekPerReeks;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
 
 class PlaatsenController extends Controller
 {
@@ -77,12 +79,18 @@ class PlaatsenController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Plaats $plaats
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy(Plaats $plaats)
+    public function destroy($id): JsonResponse
     {
-        //
+        try {
+            $plaats = Plaats::where("id", $id)->firstOrFail();
+            $plaats->delete();
+            return verwijderdResponse("Plaats");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Plaats");
+        }
     }
 
     /**
