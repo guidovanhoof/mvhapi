@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\GewichtResource;
 use App\Models\Gewicht;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use function App\Helpers\nietGevondenResponse;
 
 class GewichtenController extends Controller
 {
@@ -23,16 +25,6 @@ class GewichtenController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -44,14 +36,19 @@ class GewichtenController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Ophalen één gewicht.
      *
-     * @param  \App\Models\Gewicht  $gewicht
-     * @return Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function show(Gewicht $gewicht)
+    public function show($id): JsonResponse
     {
-        //
+        try {
+            $gewicht = Gewicht::where("id", $id)->firstOrFail();
+            return $this->gewichtResourceResponse($gewicht, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Gewicht");
+        }
     }
 
     /**
@@ -86,5 +83,18 @@ class GewichtenController extends Controller
     public function destroy(Gewicht $gewicht)
     {
         //
+    }
+
+    /**
+     * @param $gewicht
+     * @param int $status
+     * @return JsonResponse
+     */
+    private function gewichtResourceResponse($gewicht, int $status): JsonResponse
+    {
+        return response()->json(
+            new GewichtResource($gewicht),
+            $status
+        );
     }
 }
