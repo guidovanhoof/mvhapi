@@ -45,8 +45,8 @@ class PlaatsenUpdateTest extends TestCase
         $response = $this->wijzigPlaats($this->plaats);
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals($expectedErrorMessage, $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals($expectedErrorMessage, $errorMessage);
     }
 
     /** @test */

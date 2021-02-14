@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
 
 class GewichtenController extends Controller
 {
@@ -69,18 +70,23 @@ class GewichtenController extends Controller
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Gewicht");
         }
-
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijderen bestaand gewicht.
      *
-     * @param  \App\Models\Gewicht  $gewicht
-     * @return Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy(Gewicht $gewicht)
+    public function destroy($id): JsonResponse
     {
-        //
+        try {
+            $gewicht = Gewicht::where("id", $id)->firstOrFail();
+            $gewicht->delete();
+            return verwijderdResponse("Gewicht");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Gewicht");
+        }
     }
 
     /**

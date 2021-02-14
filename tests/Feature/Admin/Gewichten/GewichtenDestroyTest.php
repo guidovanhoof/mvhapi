@@ -1,40 +1,40 @@
 <?php
 
-namespace Tests\Feature\Admin\Reeksen;
+namespace Tests\Feature\Admin\Gewichten;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class PlaatsenDestroyTest extends TestCase
+class GewichtenDestroyTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function plaatsNietAanwezig()
+    public function gewichtNietAanwezig()
     {
-        $response = $this->verwijderPlaats(666);
+        $response = $this->verwijderGewicht(666);
 
         $response->assertStatus(404);
         $errorMessage = $response->json()["message"];
-        $this->assertEquals("Plaats niet gevonden!", $errorMessage);
+        $this->assertEquals("Gewicht niet gevonden!", $errorMessage);
     }
 
     /** @test */
-    public function plaatsAanwezig()
+    public function gewichtAanwezig()
     {
-        $plaats = bewaarPlaats();
+        $gewicht = bewaarGewicht();
 
-        $response = $this->verwijderPlaats($plaats->id);
+        $response = $this->verwijderGewicht($gewicht->id);
 
         $response->assertStatus(200);
         $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseMissing(
-                "plaatsen",
-                plaatsToArray($plaats)
+                "gewichten",
+                gewichtToArry($gewicht)
             )
-            ->assertEquals("Plaats verwijderd!", $errorMessage)
+            ->assertEquals("Gewicht verwijderd!", $errorMessage)
         ;
     }
 
@@ -42,7 +42,7 @@ class PlaatsenDestroyTest extends TestCase
      * @param $id
      * @return TestResponse
      */
-    private function verwijderPlaats($id): TestResponse
+    private function verwijderGewicht($id): TestResponse
     {
         $plainToken = createUserAndToken();
 
@@ -51,7 +51,7 @@ class PlaatsenDestroyTest extends TestCase
                 ->withHeader('Authorization', 'Bearer ' . $plainToken)
                 ->json(
                     'DELETE',
-                    URL_PLAATSEN_ADMIN . $id
+                    URL_GEWICHTEN_ADMIN . $id
                 )
             ;
     }

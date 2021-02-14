@@ -16,8 +16,8 @@ class WedstrijdenDestroyTest extends TestCase
         $response = $this->verwijderWedstrijd('1900-01-01');
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Wedstrijd niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Wedstrijd niet gevonden!", $errorMessage);
     }
 
     /** @test */
@@ -28,7 +28,7 @@ class WedstrijdenDestroyTest extends TestCase
         $response = $this->verwijderWedstrijd($wedstrijd->datum);
 
         $response->assertStatus(200);
-        $data = $response->json();
+        $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseMissing(
                 "wedstrijden",
@@ -39,7 +39,7 @@ class WedstrijdenDestroyTest extends TestCase
                     "aanvang" => $wedstrijd->aanvang,
                 ]
             )
-            ->assertEquals("Wedstrijd verwijderd!", $data["message"])
+            ->assertEquals("Wedstrijd verwijderd!", $errorMessage)
         ;
     }
 
@@ -53,13 +53,13 @@ class WedstrijdenDestroyTest extends TestCase
         $response = $this->verwijderWedstrijd($wedstrijd->datum);
 
         $response->assertStatus(403);
-        $data = $response->json();
+        $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseHas(
                 "wedstrijden",
                 wedstrijdToArray($wedstrijd)
             )
-            ->assertEquals($expectedMessage, $data["message"])
+            ->assertEquals($expectedMessage, $errorMessage)
         ;
     }
 

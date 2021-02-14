@@ -16,8 +16,8 @@ class PlaatsenShowTest extends TestCase
         $response = $this->getPlaats(666);
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Plaats niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Plaats niet gevonden!", $errorMessage);
     }
 
     /** @test */

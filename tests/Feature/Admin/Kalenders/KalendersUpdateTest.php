@@ -35,8 +35,8 @@ class KalendersUpdateTest extends TestCase
         $response = $this->wijzigKalender($this->kalender, 1900);
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Kalender niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Kalender niet gevonden!", $errorMessage);
     }
 
     /** @test */

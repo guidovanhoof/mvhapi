@@ -20,8 +20,8 @@ class WedstrijdtypesUpdateTest extends TestCase
         $response = $this->wijzigWedstrijdtype($wedstrijdtype);
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Wedstrijdtype niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Wedstrijdtype niet gevonden!", $errorMessage);
     }
 
     /** @test */
