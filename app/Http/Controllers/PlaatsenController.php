@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GewichtResource;
 use App\Http\Resources\PlaatsResource;
 use App\Models\Plaats;
 use App\Rules\NummerUniekPerReeks;
@@ -17,7 +18,7 @@ use function App\Helpers\verwijderdResponse;
 class PlaatsenController extends Controller
 {
     /**
-     * Tonen lijst met plaatsen.
+     * Ophalen alle plaatsen.
      *
      * @return JsonResponse
      */
@@ -43,7 +44,7 @@ class PlaatsenController extends Controller
     }
 
     /**
-     * Tonen van een specifieke plaats.
+     * Ophalen één plaats.
      *
      * @param $id
      * @return JsonResponse
@@ -79,7 +80,7 @@ class PlaatsenController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijderen bestaande plaats.
      *
      * @param $id
      * @return JsonResponse
@@ -94,6 +95,25 @@ class PlaatsenController extends Controller
                 return nietVerwijderdResponse("Plaats", "gewichten");
             }
             return verwijderdResponse("Plaats");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Plaats");
+        }
+    }
+
+    /**
+     * Ophalen gewichten voor één plaats.
+     *
+     * @param $id
+     * @return JsonResponse
+     */
+    public function gewichten($id): JsonResponse
+    {
+        try {
+            $plaats = Plaats::where("id", $id)->firstOrFail();
+            return response()->json(
+                GewichtResource::collection($plaats->gewichten),
+                200
+            );
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Plaats");
         }

@@ -29,7 +29,7 @@ class PlaatsTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("plaatsen");
+        cleanUpDb("gewichten");
         $this->reeks = null;
         $this->plaats = null;
 
@@ -102,6 +102,17 @@ class PlaatsTest extends TestCase
             ]
         );
     }
+
+    /** @test  */
+    public function heeftGewichten()
+    {
+        $this->bewaarPlaats();
+        $expectGewicht = bewaarGewicht(["plaats_id" => $this->plaats->id]);
+
+        $actualGewichten = $this->plaats->gewichten;
+
+        $this->assertCount(1, $actualGewichten);
+        assertGewichtEquals($this, $actualGewichten[0], $expectGewicht);    }
 
     private function bewaarPlaats(): void
     {
