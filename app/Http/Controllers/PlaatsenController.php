@@ -6,10 +6,12 @@ use App\Http\Resources\PlaatsResource;
 use App\Models\Plaats;
 use App\Rules\NummerUniekPerReeks;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
 
 class PlaatsenController extends Controller
@@ -86,7 +88,11 @@ class PlaatsenController extends Controller
     {
         try {
             $plaats = Plaats::where("id", $id)->firstOrFail();
-            $plaats->delete();
+            try {
+                $plaats->delete();
+            } catch (QueryException $queryException) {
+                return nietVerwijderdResponse("Plaats", "gewichten");
+            }
             return verwijderdResponse("Plaats");
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Plaats");
