@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Gewicht;
 use App\Models\Kalender;
 use App\Models\Plaats;
 use App\Models\Reeks;
@@ -16,6 +17,7 @@ const URL_WEDSTRIJDTYPES_ADMIN = "api/admin/wedstrijdtypes/";
 const URL_WEDSTRIJDEN_ADMIN = "api/admin/wedstrijden/";
 const URL_REEKSEN_ADMIN = "api/admin/reeksen/";
 const URL_PLAATSEN_ADMIN = "api/admin/plaatsen/";
+const URL_GEWICHTEN_ADMIN = "api/admin/gewichten/";
 
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
@@ -190,7 +192,6 @@ function reeksToArray(Reeks $reeks): array
 function plaatsToArray(Plaats $plaats): array
 {
     return [
-//        'id' => $plaats->id,
         'reeks_id' => $plaats->reeks_id,
         'nummer' => $plaats->nummer,
         'opmerkingen' => $plaats->opmerkingen,
@@ -212,7 +213,6 @@ function maakPlaats($velden = [])
 {
     return Plaats::factory()->make($velden);
 }
-
 
 /**
  * @param TestCase $testCase
@@ -247,6 +247,14 @@ function cleanUpDb(string $actie)
 function getVerwijderActies(): array
 {
     return [
+        "gewichten" => [
+            "cleanUpGewichten",
+            "cleanUpPlaatsen",
+            "cleanUpReeksen",
+            "cleanUpWedstrijden",
+            "cleanUpKalenders",
+            "cleanUpWedstrijdtypes",
+        ],
         "plaatsen" => [
             "cleanUpPlaatsen",
             "cleanUpReeksen",
@@ -295,4 +303,44 @@ function cleanUpReeksen(): void
 function cleanUpWedstrijdtypes(): void
 {
     Wedstrijdtype::query()->delete();
+}
+
+function cleanUpGewichten(): void
+{
+    Gewicht::query()->delete();
+}
+
+function bewaarGewicht($velden = [])
+{
+    return Gewicht::factory()->create($velden);
+}
+
+function maakGewicht($velden = [])
+{
+    return Gewicht::factory()->make($velden);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param $data
+ * @param Gewicht $gewicht
+ */
+function assertGewichtEquals(TestCase $testCase, $data, Gewicht $gewicht): void
+{
+    $testCase->assertEquals($data["id"], $gewicht->id);
+    $testCase->assertEquals($data["plaats_id"], $gewicht->plaats_id);
+    $testCase->assertEquals($data["gewicht"], $gewicht->gewicht);
+    $testCase->assertEquals($data["is_geldig"], $gewicht->is_geldig);
+}
+
+/**
+ * @param Gewicht $gewicht
+ */
+function gewichtToArry(Gewicht $gewicht): array
+{
+    return [
+        'plaats_id' => $gewicht->plaats_id,
+//        'gewicht' => $gewicht->gewicht,
+//        'is_geldig' => $gewicht->is_geldig,
+    ];
 }

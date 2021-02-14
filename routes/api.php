@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\GewichtenController;
 use App\Http\Controllers\KalendersController;
 use App\Http\Controllers\PlaatsenController;
 use App\Http\Controllers\ReeksController;
@@ -81,6 +82,15 @@ Route::group(
         )
             ->parameters(["plaatsen" => "id"])
             ->middleware("auth:sanctum")
+        ;
+
+        Route::apiResource(
+            "gewichten",
+            GewichtenController::class
+        )
+            ->parameters(["gewichten" => "id"])
+            ->middleware("auth:sanctum")
+            ->only('index')
         ;
     }
 );
