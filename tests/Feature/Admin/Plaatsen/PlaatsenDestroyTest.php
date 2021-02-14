@@ -38,6 +38,26 @@ class PlaatsenDestroyTest extends TestCase
         ;
     }
 
+    /** @test */
+    public function nogGewichtenGekoppeld()
+    {
+        $expectedMessage = "Plaats niet verwijderd! Nog gewichten aanwezig!";
+        $plaats = bewaarPlaats();
+        bewaarGewicht(["plaats_id" => $plaats->id]);
+
+        $response = $this->verwijderPlaats($plaats->id);
+
+        $response->assertStatus(403);
+        $errorMessage = $response->json()["message"];
+        $this
+            ->assertDatabaseHas(
+                "plaatsen",
+                plaatsToArray($plaats)
+            )
+            ->assertEquals($expectedMessage, $errorMessage)
+        ;
+    }
+
     /**
      * @param $id
      * @return TestResponse
