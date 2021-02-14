@@ -27,12 +27,14 @@ class GewichtenController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validData = $this->valideerGewicht($request, new Gewicht());
+
+        return $this->gewichtResourceResponse(Gewicht::create($validData), 201);
     }
 
     /**
@@ -52,20 +54,9 @@ class GewichtenController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Gewicht  $gewicht
-     * @return Response
-     */
-    public function edit(Gewicht $gewicht)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Gewicht  $gewicht
      * @return Response
      */
@@ -95,6 +86,22 @@ class GewichtenController extends Controller
         return response()->json(
             new GewichtResource($gewicht),
             $status
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param Gewicht $param
+     * @return array
+     */
+    private function valideerGewicht(Request $request, Gewicht $param): array
+    {
+        return $request->validate(
+            [
+                "plaats_id" => "bail|required|exists:plaatsen,id",
+                "gewicht" => "bail|required|numeric|gt:0",
+                "is_geldig" => "required|boolean"
+            ]
         );
     }
 }
