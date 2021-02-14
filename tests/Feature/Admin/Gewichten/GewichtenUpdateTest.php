@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class GewichtenStoreTest extends TestCase
+class GewichtenUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -25,7 +25,7 @@ class GewichtenStoreTest extends TestCase
         parent::setUp();
 
         $this->plaats = bewaarPlaats();
-        $this->gewicht = maakGewicht(["plaats_id" => $this->plaats->id]);
+        $this->gewicht = bewaarGewicht(["plaats_id" => $this->plaats->id]);
     }
 
     public function tearDown(): void
@@ -38,11 +38,29 @@ class GewichtenStoreTest extends TestCase
     }
 
     /** @test */
-    public function gewichtAanmaken()
+    public function gewichtNietAanwezig()
     {
-        $response = $this->bewaarGewicht($this->gewicht);
+        $expectedErrorMessage = "Gewicht niet gevonden!";
+        $this->gewicht->id = 666;
 
-        $response->assertStatus(201);
+        $response = $this->wijzigGewicht($this->gewicht);
+
+        $response->assertStatus(404);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals($expectedErrorMessage, $errorMessage);
+    }
+
+    /** @test */
+    public function gewichtWijzigen()
+    {
+        $plaats = bewaarPlaats();
+        $this->gewicht->plaats_id = $plaats->id;
+        $this->gewicht->gewicht = 666;
+        $this->gewicht->is_gelidg = false;
+
+        $response = $this->wijzigGewicht($this->gewicht);
+
+        $response->assertStatus(200);
         $this->assertInDatabase($this->gewicht);
     }
 
@@ -51,7 +69,7 @@ class GewichtenStoreTest extends TestCase
         $expectedErrorMessage = "Plaats_id is verplicht!";
         $this->gewicht->plaats_id = null;
 
-        $response = $this->bewaarGewicht($this->gewicht);
+        $response = $this->wijzigGewicht($this->gewicht);
 
         assertErrorMessage($this, "plaats_id", $response, $expectedErrorMessage);
     }
@@ -61,7 +79,7 @@ class GewichtenStoreTest extends TestCase
         $expectedErrorMessage = "Plaats_id niet gevonden!";
         $this->gewicht->plaats_id = 666;
 
-        $response = $this->bewaarGewicht($this->gewicht);
+        $response = $this->wijzigGewicht($this->gewicht);
 
         assertErrorMessage($this, "plaats_id", $response, $expectedErrorMessage);
     }
@@ -71,7 +89,7 @@ class GewichtenStoreTest extends TestCase
         $expectedErrorMessage = "Gewicht is verplicht!";
         $this->gewicht->gewicht = null;
 
-        $response = $this->bewaarGewicht($this->gewicht);
+        $response = $this->wijzigGewicht($this->gewicht);
 
         assertErrorMessage($this, "gewicht", $response, $expectedErrorMessage);
     }
@@ -81,7 +99,7 @@ class GewichtenStoreTest extends TestCase
         $expectedErrorMessage = "Gewicht is niet numeriek!";
         $this->gewicht->gewicht = "abcd";
 
-        $response = $this->bewaarGewicht($this->gewicht);
+        $response = $this->wijzigGewicht($this->gewicht);
 
         assertErrorMessage($this, "gewicht", $response, $expectedErrorMessage);
     }
@@ -91,7 +109,7 @@ class GewichtenStoreTest extends TestCase
         $expectedErrorMessage = "Gewicht moet groter dan 0 zijn!";
         $this->gewicht->gewicht = 0;
 
-        $response = $this->bewaarGewicht($this->gewicht);
+        $response = $this->wijzigGewicht($this->gewicht);
 
         assertErrorMessage($this, "gewicht", $response, $expectedErrorMessage);
     }
@@ -101,7 +119,7 @@ class GewichtenStoreTest extends TestCase
         $expectedErrorMessage = "Geldigheid is verplicht!";
         $this->gewicht->is_geldig = null;
 
-        $response = $this->bewaarGewicht($this->gewicht);
+        $response = $this->wijzigGewicht($this->gewicht);
 
         assertErrorMessage($this, "is_geldig", $response, $expectedErrorMessage);
     }
@@ -111,7 +129,7 @@ class GewichtenStoreTest extends TestCase
         $expectedErrorMessage = 'Geldigheid moet 1 of true (voor ja) of 0 of false (voor nee) zijn!';
         $this->gewicht->is_geldig = "abc";
 
-        $response = $this->bewaarGewicht($this->gewicht);
+        $response = $this->wijzigGewicht($this->gewicht);
 
         assertErrorMessage($this, "is_geldig", $response, $expectedErrorMessage);
     }
@@ -120,7 +138,7 @@ class GewichtenStoreTest extends TestCase
      * @param Gewicht $gewicht
      * @return TestResponse
      */
-    private function bewaarGewicht(Gewicht $gewicht): TestResponse
+    private function wijzigGewicht(Gewicht $gewicht): TestResponse
     {
         $plainToken = createUserAndToken();
 
@@ -128,8 +146,8 @@ class GewichtenStoreTest extends TestCase
             $this
                 ->withHeader('Authorization', 'Bearer ' . $plainToken)
                 ->json(
-                    'POST',
-                    URL_GEWICHTEN_ADMIN,
+                    'PUT',
+                    URL_GEWICHTEN_ADMIN . $gewicht->id,
                     gewichtToArry($gewicht)
                 )
         ;

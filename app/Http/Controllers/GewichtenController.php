@@ -25,7 +25,7 @@ class GewichtenController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Bewaren nieuw gewicht.
      *
      * @param Request $request
      * @return JsonResponse
@@ -54,15 +54,22 @@ class GewichtenController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Wijzig bestaand gewicht.
      *
      * @param Request $request
-     * @param  \App\Models\Gewicht  $gewicht
-     * @return Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, Gewicht $gewicht)
+    public function update(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $gewicht = Gewicht::where("id", $id)->firstOrFail();
+            $gewicht->update($this->valideerGewicht($request, $gewicht));
+            return $this->gewichtResourceResponse($gewicht, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Gewicht");
+        }
+
     }
 
     /**
