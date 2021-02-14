@@ -90,7 +90,7 @@ Route::group(
         )
             ->parameters(["gewichten" => "id"])
             ->middleware("auth:sanctum")
-            ->only('index')
+            ->only('index', 'show')
         ;
     }
 );

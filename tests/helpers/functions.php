@@ -340,7 +340,7 @@ function gewichtToArry(Gewicht $gewicht): array
 {
     return [
         'plaats_id' => $gewicht->plaats_id,
-//        'gewicht' => $gewicht->gewicht,
-//        'is_geldig' => $gewicht->is_geldig,
+        'gewicht' => $gewicht->gewicht,
+        'is_geldig' => $gewicht->is_geldig,
     ];
 }
