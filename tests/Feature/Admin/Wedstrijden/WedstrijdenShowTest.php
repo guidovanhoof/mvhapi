@@ -16,8 +16,8 @@ class WedstrijdenShowTest extends TestCase
         $response = $this->getWedstrijd('1900-01-01');
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Wedstrijd niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Wedstrijd niet gevonden!", $errorMessage);
     }
 
     /** @test */

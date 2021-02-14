@@ -16,8 +16,8 @@ class GewichtenShowTest extends TestCase
         $response = $this->getGewicht(666);
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Gewicht niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Gewicht niet gevonden!", $errorMessage);
     }
 
     /** @test */

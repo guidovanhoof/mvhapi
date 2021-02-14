@@ -50,8 +50,8 @@ class WedstrijdenUpdateTest extends TestCase
         $response = $this->updateWedstrijd($this->wedstrijd, "1900-04-28");
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals($expectedErrorMessage, $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals($expectedErrorMessage, $errorMessage);
     }
 
     /** @test */

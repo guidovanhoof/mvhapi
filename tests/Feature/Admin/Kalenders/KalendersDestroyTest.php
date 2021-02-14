@@ -17,8 +17,8 @@ class KalendersDestroyTest extends TestCase
         $response = $this->deleteKalender(1900);
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Kalender niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Kalender niet gevonden!", $errorMessage);
     }
 
     /** @test */
@@ -29,13 +29,13 @@ class KalendersDestroyTest extends TestCase
         $response = $this->deleteKalender($kalender->jaar);
 
         $response->assertStatus(200);
-        $data = $response->json();
+        $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseMissing(
                 "kalenders",
                 $this->dataToArray($kalender)
             )
-            ->assertEquals("Kalender verwijderd!", $data["message"])
+            ->assertEquals("Kalender verwijderd!", $errorMessage)
         ;
     }
 
@@ -49,13 +49,13 @@ class KalendersDestroyTest extends TestCase
         $response = $this->deleteKalender($kalender->jaar);
 
         $response->assertStatus(403);
-        $data = $response->json();
+        $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseHas(
                 "kalenders",
                 $this->dataToArray($kalender)
             )
-            ->assertEquals($expectedMessage, $data["message"])
+            ->assertEquals($expectedMessage, $errorMessage)
         ;
     }
 

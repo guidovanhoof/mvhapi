@@ -16,8 +16,8 @@ class ReeksenDestroyTest extends TestCase
         $response = $this->verwijderReeks(666);
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Reeks niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Reeks niet gevonden!", $errorMessage);
     }
 
     /** @test */
@@ -28,13 +28,13 @@ class ReeksenDestroyTest extends TestCase
         $response = $this->verwijderReeks($reeks->id);
 
         $response->assertStatus(200);
-        $data = $response->json();
+        $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseMissing(
                 "reeksen",
                 reeksToArray($reeks)
             )
-            ->assertEquals("Reeks verwijderd!", $data["message"])
+            ->assertEquals("Reeks verwijderd!", $errorMessage)
         ;
     }
 
@@ -48,13 +48,13 @@ class ReeksenDestroyTest extends TestCase
         $response = $this->verwijderReeks($reeks->id);
 
         $response->assertStatus(403);
-        $data = $response->json();
+        $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseHas(
                 "reeksen",
                 reeksToArray($reeks)
             )
-            ->assertEquals($expectedMessage, $data["message"])
+            ->assertEquals($expectedMessage, $errorMessage)
         ;
     }
 

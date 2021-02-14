@@ -16,8 +16,8 @@ class WedstrijdtypesShowTest extends TestCase
         $response = $this->getWedstrijdtype('666');
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Wedstrijdtype niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Wedstrijdtype niet gevonden!", $errorMessage);
     }
 
     /** @test */

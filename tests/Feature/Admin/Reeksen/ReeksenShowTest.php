@@ -16,8 +16,8 @@ class ReeksenShowTest extends TestCase
         $response = $this->getReeks('666');
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Reeks niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Reeks niet gevonden!", $errorMessage);
     }
 
     /** @test */

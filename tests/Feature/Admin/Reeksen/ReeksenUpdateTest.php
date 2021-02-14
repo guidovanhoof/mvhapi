@@ -45,8 +45,8 @@ class ReeksenUpdateTest extends TestCase
         $response = $this->wijzigReeks($this->reeks);
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals($expectedErrorMessage, $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals($expectedErrorMessage, $errorMessage);
     }
 
     /** @test */

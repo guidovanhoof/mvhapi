@@ -16,8 +16,8 @@ class WedstrijdtypesDestroyTest extends TestCase
         $response = $this->deleteWedstrijdtype(666);
 
         $response->assertStatus(404);
-        $data = $response->json();
-        $this->assertEquals("Wedstrijdtype niet gevonden!", $data["message"]);
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals("Wedstrijdtype niet gevonden!", $errorMessage);
     }
 
     /** @test */
@@ -28,13 +28,13 @@ class WedstrijdtypesDestroyTest extends TestCase
         $response = $this->deleteWedstrijdtype($wedstrijdtype->id);
 
         $response->assertStatus(200);
-        $data = $response->json();
+        $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseMissing(
                 "wedstrijdtypes",
                 ["id" => $wedstrijdtype->id, "omschrijving" => $wedstrijdtype->omschrijving]
             )
-            ->assertEquals("Wedstrijdtype verwijderd!", $data["message"])
+            ->assertEquals("Wedstrijdtype verwijderd!", $errorMessage)
         ;
     }
 
@@ -48,13 +48,13 @@ class WedstrijdtypesDestroyTest extends TestCase
         $response = $this->deleteWedstrijdtype($wedstrijdtype->id);
 
         $response->assertStatus(403);
-        $data = $response->json();
+        $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseHas(
                 "wedstrijdtypes",
                 ["id" => $wedstrijdtype->id, "omschrijving" => $wedstrijdtype->omschrijving]
             )
-            ->assertEquals($expectedMessage, $data["message"])
+            ->assertEquals($expectedMessage, $errorMessage)
         ;
     }
 
