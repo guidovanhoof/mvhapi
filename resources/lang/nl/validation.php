@@ -14,6 +14,10 @@ return [
     'gte' => [
         'numeric' => ':attribute moet groter of gelijk aan :value zijn!',
     ],
+    'gt' => [
+        'numeric' => ':attribute moet groter dan :value zijn!',
+    ],
+    'boolean' => ':attribute moet 1 of true (voor ja) of 0 of false (voor nee) zijn!',
     'datum_in_kalender_jaar' => 'Datum niet in kalenderjaar!',
     'nummer_uniek_per_wedstrijd' => 'Nummer bestaat reeds voor wedstrijd!',
     'nummer_uniek_per_reeks' => 'Nummer bestaat reeds voor reeks!',
@@ -31,5 +35,8 @@ return [
         'duur' => 'Duur',
         'gewicht_zak' => 'Gewicht zak',
         'reeks_id' => 'Reeks_id',
+        'plaats_id' => 'Plaats_id',
+        'gewicht' => 'Gewicht',
+        'is_geldig' => 'Geldigheid',
     ],
 ];
