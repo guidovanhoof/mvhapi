@@ -84,6 +84,13 @@ Route::group(
             ->middleware("auth:sanctum")
         ;
 
+        Route::get(
+            "plaatsen/{id}/gewichten",
+            [PlaatsenController::class, "gewichten"]
+        )
+            ->middleware("auth:sanctum")
+        ;
+
         Route::apiResource(
             "gewichten",
             GewichtenController::class

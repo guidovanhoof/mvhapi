@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plaats extends Model
 {
+    use HasFactory;
+
     protected $table = "plaatsen";
     protected $fillable = [
         "reeks_id", "nummer", "opmerkingen"
     ];
 
-    use HasFactory;
+    public function gewichten()
+    {
+        return $this->hasMany(Gewicht::class);
+    }
 }
