@@ -2,6 +2,8 @@
 
 namespace Tests\Unit\Gewicht;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -11,12 +13,9 @@ class GewichtTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @var \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
+     * @var Collection|Model|mixed
      */
     private $plaats;
-    /**
-     * @var \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
-     */
     private $gewicht;
 
     public function setUp(): void
