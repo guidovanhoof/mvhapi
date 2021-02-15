@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Deelnemer;
 use App\Models\Gewicht;
 use App\Models\Kalender;
 use App\Models\Plaats;
@@ -18,6 +19,7 @@ const URL_WEDSTRIJDEN_ADMIN = "api/admin/wedstrijden/";
 const URL_REEKSEN_ADMIN = "api/admin/reeksen/";
 const URL_PLAATSEN_ADMIN = "api/admin/plaatsen/";
 const URL_GEWICHTEN_ADMIN = "api/admin/gewichten/";
+const URL_DEELNEMERS_ADMIN = "api/admin/deelnemers/";
 
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
@@ -277,6 +279,9 @@ function getVerwijderActies(): array
             "cleanUpKalenders",
             "cleanUpWedstrijdtypes",
         ],
+        "deelnemers" => [
+            "cleanUpDeelnemers",
+        ],
     ];
 }
 
@@ -310,6 +315,11 @@ function cleanUpGewichten(): void
     Gewicht::query()->delete();
 }
 
+function cleanUpDeelnemers(): void
+{
+    Deelnemer::query()->delete();
+}
+
 function bewaarGewicht($velden = [])
 {
     return Gewicht::factory()->create($velden);
@@ -335,6 +345,7 @@ function assertGewichtEquals(TestCase $testCase, $data, Gewicht $gewicht): void
 
 /**
  * @param Gewicht $gewicht
+ * @return array
  */
 function gewichtToArry(Gewicht $gewicht): array
 {
@@ -342,5 +353,38 @@ function gewichtToArry(Gewicht $gewicht): array
         'plaats_id' => $gewicht->plaats_id,
         'gewicht' => $gewicht->gewicht,
         'is_geldig' => $gewicht->is_geldig,
+    ];
+}
+
+function bewaarDeelnemer($velden = [])
+{
+    return Deelnemer::factory()->create($velden);
+}
+
+function maakDeelnemer($velden = [])
+{
+    return Deelnemer::factory()->make($velden);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param $data
+ * @param Deelnemer $deelnemer
+ */
+function assertDeelnemerEquals(TestCase $testCase, $data, Deelnemer $deelnemer): void
+{
+    $testCase->assertEquals($data["nummer"], $deelnemer->nummer);
+    $testCase->assertEquals($data["naam"], $deelnemer->naam);
+}
+
+/**
+ * @param Deelnemer $deelnemer
+ * @return array
+ */
+function deelnemerToArry(Deelnemer $deelnemer): array
+{
+    return [
+        'nummer' => $deelnemer->nummer,
+        'naam' => $deelnemer->naam,
     ];
 }
