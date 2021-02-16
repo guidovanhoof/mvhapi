@@ -22,4 +22,9 @@ class Deelnemer extends Model
     {
         $this->attributes["naam"] = strtoupper(verwijderAccenten($value));
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'nummer';
+    }
 }

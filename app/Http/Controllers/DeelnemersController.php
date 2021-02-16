@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DeelnemerResource;
 use App\Models\Deelnemer;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use function App\Helpers\nietGevondenResponse;
 
 class DeelnemersController extends Controller
 {
@@ -34,16 +36,21 @@ class DeelnemersController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Ophalen één deelnemer.
      *
-     * @param  \App\Models\Deelnemer  $deelnemer
-     * @return \Illuminate\Http\Response
+     * @param  $nummer
+     * @return JsonResponse
      */
-    public function show(Deelnemer $deelnemer)
+    public function show($nummer): JsonResponse
     {
-        //
+        try {
+            $deelnemer = Deelnemer::where("nummer", $nummer)->firstOrFail();
+            return $this->deelnemerResourceResponse($deelnemer, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Deelnemer");
+        }
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -65,5 +72,18 @@ class DeelnemersController extends Controller
     public function destroy(Deelnemer $deelnemer)
     {
         //
+    }
+
+    /**
+     * @param $deelnemer
+     * @param int $status
+     * @return JsonResponse
+     */
+    private function deelnemerResourceResponse($deelnemer, int $status): JsonResponse
+    {
+        return response()->json(
+            new DeelnemerResource($deelnemer),
+            $status
+        );
     }
 }
