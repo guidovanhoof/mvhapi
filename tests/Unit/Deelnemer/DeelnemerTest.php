@@ -54,6 +54,12 @@ class DeelnemerTest extends TestCase
     }
 
     /** @test  */
+    public function heefNummerRouteKeyName()
+    {
+        $this->assertEquals("nummer", $this->deelnemer->getRouteKeyName());
+    }
+
+    /** @test  */
     public function heeftEenNaam()
     {
         $this->deelnemer->naam = self::NAAM_VOORNAAM;
