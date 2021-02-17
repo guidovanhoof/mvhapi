@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Admin\Reeksen;
+namespace Tests\Feature\Admin\Plaatsen;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
