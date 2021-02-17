@@ -33,7 +33,7 @@ class GewichtenController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validData = $this->valideerGewicht($request, new Gewicht());
+        $validData = $this->valideerGewicht($request);
 
         return $this->gewichtResourceResponse(Gewicht::create($validData), 201);
     }
@@ -65,7 +65,7 @@ class GewichtenController extends Controller
     {
         try {
             $gewicht = Gewicht::where("id", $id)->firstOrFail();
-            $gewicht->update($this->valideerGewicht($request, $gewicht));
+            $gewicht->update($this->valideerGewicht($request));
             return $this->gewichtResourceResponse($gewicht, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Gewicht");
@@ -104,10 +104,9 @@ class GewichtenController extends Controller
 
     /**
      * @param Request $request
-     * @param Gewicht $param
      * @return array
      */
-    private function valideerGewicht(Request $request, Gewicht $param): array
+    private function valideerGewicht(Request $request): array
     {
         return $request->validate(
             [

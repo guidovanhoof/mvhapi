@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Admin\Wedstrijdtypes;
 
-use App\Models\Wedstrijdtype;
+use  App\Models\Wedstrijdtype;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
@@ -11,6 +11,11 @@ class WedstrijdtypesUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function tearDown(): void
+    {
+        cleanUpDb("wedstrijdtypes");
+        parent::tearDown();
+    }
 
     /** @test */
     public function wedstrijdtypeNietAanwezig()

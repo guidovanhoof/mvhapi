@@ -38,5 +38,7 @@ return [
         'plaats_id' => 'Plaats_id',
         'gewicht' => 'Gewicht',
         'is_geldig' => 'Geldigheid',
+        'naam' => 'Naam',
+
     ],
 ];

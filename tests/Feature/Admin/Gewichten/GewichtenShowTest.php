@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Admin\Plaatsen;
+namespace Tests\Feature\Admin\Gewichten;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;

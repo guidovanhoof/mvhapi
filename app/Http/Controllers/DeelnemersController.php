@@ -25,14 +25,17 @@ class DeelnemersController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Bewaren nieuwe deelnemer.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validData = $this->valideerDeelnemer($request);
+
+        $deelnemer = Deelnemer::create($validData);
+        return $this->deelnemerResourceResponse($deelnemer, 201);
     }
 
     /**
@@ -52,9 +55,9 @@ class DeelnemersController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Bewaren bestaande deelnemer.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Deelnemer  $deelnemer
      * @return \Illuminate\Http\Response
      */
@@ -75,15 +78,29 @@ class DeelnemersController extends Controller
     }
 
     /**
-     * @param $deelnemer
+     * @param Deelnemer $deelnemer
      * @param int $status
      * @return JsonResponse
      */
-    private function deelnemerResourceResponse($deelnemer, int $status): JsonResponse
+    private function deelnemerResourceResponse(Deelnemer $deelnemer, int $status): JsonResponse
     {
         return response()->json(
             new DeelnemerResource($deelnemer),
             $status
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function valideerDeelnemer(Request $request): array
+    {
+        return $request->validate(
+            [
+                "nummer" => "bail|required|numeric|gt:0|unique:deelnemers,nummer",
+                "naam" => "bail|required|unique:deelnemers,naam"
+            ]
         );
     }
 }
