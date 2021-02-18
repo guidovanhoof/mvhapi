@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
 
 class DeelnemersController extends Controller
 {
@@ -68,19 +69,25 @@ class DeelnemersController extends Controller
             $deelnemer->update($this->valideerDeelnemer($request, $deelnemer));
             return $this->deelnemerResourceResponse($deelnemer, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return nietGevondenResponse("Deelenemer");
+            return nietGevondenResponse("Deelnemer");
         }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijderen bestaande deelnemer.
      *
-     * @param  \App\Models\Deelnemer  $deelnemer
-     * @return \Illuminate\Http\Response
+     * @param   $nummer
+     * @return JsonResponse
      */
-    public function destroy(Deelnemer $deelnemer)
+    public function destroy($nummer): JsonResponse
     {
-        //
+        try {
+            $deelnemer = Deelnemer::where("nummer", $nummer)->firstOrFail();
+            $deelnemer->delete();
+            return verwijderdResponse("Deelnemer");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Deelnemer");
+        }
     }
 
     /**

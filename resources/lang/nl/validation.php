@@ -39,6 +39,7 @@ return [
         'gewicht' => 'Gewicht',
         'is_geldig' => 'Geldigheid',
         'naam' => 'Naam',
+        'deelnemer' => 'Deelnemer',
 
     ],
 ];
