@@ -13,8 +13,6 @@ use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
 use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
-use const App\Helpers\STORING;
-use const App\Helpers\UPDATING;
 
 class WedstrijdtypesController extends Controller
 {
@@ -39,7 +37,7 @@ class WedstrijdtypesController extends Controller
      */
     public function store(Request $request)
     {
-        $validData = $this->valideerWedstrijdtype($request, new Wedstrijdtype(), STORING);
+        $validData = $this->valideerWedstrijdtype($request, new Wedstrijdtype());
 
         return $this->wedstrijdtypeResourceResponse(Wedstrijdtype::create($validData), 201);
     }
@@ -72,7 +70,7 @@ class WedstrijdtypesController extends Controller
         try {
             $wedstrijdtype = Wedstrijdtype::where("id", $id)->firstOrFail();
             $wedstrijdtype->update(
-                $this->valideerWedstrijdtype($request, $wedstrijdtype, UPDATING)
+                $this->valideerWedstrijdtype($request, $wedstrijdtype)
             );
             return $this->wedstrijdtypeResourceResponse($wedstrijdtype, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
@@ -117,14 +115,13 @@ class WedstrijdtypesController extends Controller
     /**
      * @param Request $request
      * @param $wedstrijdtype
-     * @param $updating
      * @return array
      */
-    private function valideerWedstrijdtype(Request $request, Wedstrijdtype $wedstrijdtype, $updating): array
+    private function valideerWedstrijdtype(Request $request, Wedstrijdtype $wedstrijdtype): array
     {
         return $request->validate(
             [
-                'omschrijving' => 'required|unique:wedstrijdtypes,omschrijving' . ($updating ? (',' . $wedstrijdtype->id . ',id') : ''),
+                'omschrijving' => 'required|unique:wedstrijdtypes,omschrijving' . ($wedstrijdtype->id ? (',' . $wedstrijdtype->id . ',id') : ''),
             ]
         );
     }

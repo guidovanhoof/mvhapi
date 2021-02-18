@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class DeelnemersStoreTest extends TestCase
+class DeelnemersUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -17,12 +17,14 @@ class DeelnemersStoreTest extends TestCase
      * @var Collection|Model|mixed
      */
     private $deelnemer;
+    private $nummer;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->deelnemer = maakDeelnemer();
+        $this->deelnemer = bewaarDeelnemer(["nummer" => 66]);
+        $this->nummer = $this->deelnemer->nummer;
     }
 
     public function tearDown(): void
@@ -34,10 +36,14 @@ class DeelnemersStoreTest extends TestCase
     }
 
     /** @test */
-    public function deelnemerAanmaken()
+    public function deelnemerWijzigen()
     {
-        $response = $this->bewaarDeelnemer($this->deelnemer);
-        $response->assertStatus(201);
+        $this->deelnemer->nummer = 666;
+        $this->deelnemer->naam = "nieuwe naam";
+
+        $response = $this->wijzigDeelnemer($this->deelnemer, $this->nummer);
+
+        $response->assertStatus(200);
         $this->assertInDatabase($this->deelnemer);
     }
 
@@ -46,7 +52,7 @@ class DeelnemersStoreTest extends TestCase
         $expectedErrorMessage = "Nummer is verplicht!";
         $this->deelnemer->nummer = null;
 
-        $response = $this->bewaarDeelnemer($this->deelnemer);
+        $response = $this->wijzigDeelnemer($this->deelnemer, $this->nummer);
 
         assertErrorMessage($this, "nummer", $response, $expectedErrorMessage);
     }
@@ -56,7 +62,7 @@ class DeelnemersStoreTest extends TestCase
         $expectedErrorMessage = "Nummer is niet numeriek!";
         $this->deelnemer->nummer = "abcd";
 
-        $response = $this->bewaarDeelnemer($this->deelnemer);
+        $response = $this->wijzigDeelnemer($this->deelnemer, $this->nummer);
 
         assertErrorMessage($this, "nummer", $response, $expectedErrorMessage);
     }
@@ -66,7 +72,7 @@ class DeelnemersStoreTest extends TestCase
         $expectedErrorMessage = "Nummer moet groter dan 0 zijn!";
         $this->deelnemer->nummer = 0;
 
-        $response = $this->bewaarDeelnemer($this->deelnemer);
+        $response = $this->wijzigDeelnemer($this->deelnemer, $this->nummer);
 
         assertErrorMessage($this, "nummer", $response, $expectedErrorMessage);
     }
@@ -77,7 +83,7 @@ class DeelnemersStoreTest extends TestCase
         $deelnemer = bewaarDeelnemer();
         $this->deelnemer->nummer = $deelnemer->nummer;
 
-        $response = $this->bewaarDeelnemer($this->deelnemer);
+        $response = $this->wijzigDeelnemer($this->deelnemer, $this->nummer);
 
         assertErrorMessage($this, "nummer", $response, $expectedErrorMessage);
     }
@@ -87,7 +93,7 @@ class DeelnemersStoreTest extends TestCase
         $expectedErrorMessage = "Naam is verplicht!";
         $this->deelnemer->naam = null;
 
-        $response = $this->bewaarDeelnemer($this->deelnemer);
+        $response = $this->wijzigDeelnemer($this->deelnemer, $this->nummer);
 
         assertErrorMessage($this, "naam", $response, $expectedErrorMessage);
     }
@@ -98,16 +104,17 @@ class DeelnemersStoreTest extends TestCase
         $deelnemer = bewaarDeelnemer();
         $this->deelnemer->naam = $deelnemer->naam;
 
-        $response = $this->bewaarDeelnemer($this->deelnemer);
+        $response = $this->wijzigDeelnemer($this->deelnemer, $this->nummer);
 
         assertErrorMessage($this, "naam", $response, $expectedErrorMessage);
     }
 
     /**
      * @param Deelnemer $deelnemer
+     * @param int $nummer
      * @return TestResponse
      */
-    private function bewaarDeelnemer(Deelnemer $deelnemer): TestResponse
+    private function wijzigDeelnemer(Deelnemer $deelnemer, int $nummer): TestResponse
     {
         $plainToken = createUserAndToken();
 
@@ -115,8 +122,8 @@ class DeelnemersStoreTest extends TestCase
             $this
                 ->withHeader('Authorization', 'Bearer ' . $plainToken)
                 ->json(
-                    'POST',
-                    URL_DEELNEMERS_ADMIN,
+                    'PUT',
+                    URL_DEELNEMERS_ADMIN . $nummer,
                     deelnemerToArry($deelnemer)
                 )
         ;

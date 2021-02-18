@@ -15,8 +15,6 @@ use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
 use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
-use const App\Helpers\STORING;
-use const App\Helpers\UPDATING;
 
 class WedstrijdenController extends Controller
 {
@@ -41,7 +39,7 @@ class WedstrijdenController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validData = $this->valideerWedstrijd($request, new Wedstrijd(), STORING);
+        $validData = $this->valideerWedstrijd($request, new Wedstrijd());
 
         return $this->wedstrijdResourceResponse(Wedstrijd::create($validData), 201);
     }
@@ -74,7 +72,7 @@ class WedstrijdenController extends Controller
         try {
             $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
             $wedstrijd->update(
-                $this->valideerWedstrijd($request, $wedstrijd, UPDATING)
+                $this->valideerWedstrijd($request, $wedstrijd)
             );
             return $this->wedstrijdResourceResponse($wedstrijd, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
@@ -125,10 +123,9 @@ class WedstrijdenController extends Controller
     /**
      * @param Request $request
      * @param $wedstrijd
-     * @param $update
      * @return array
      */
-    private function valideerWedstrijd(Request $request, $wedstrijd, $update): array
+    private function valideerWedstrijd(Request $request, $wedstrijd): array
     {
         return $request->validate(
             [
@@ -137,7 +134,7 @@ class WedstrijdenController extends Controller
                     'bail',
                     'required',
                     'date',
-                    'unique:wedstrijden,datum' . ($update ? ',' . $wedstrijd->datum . ',datum' : ''),
+                    'unique:wedstrijden,datum' . ($wedstrijd->id ? ',' . $wedstrijd->id . ',id' : ''),
                     new DatumInKalenderJaar($request["kalender_id"])
                 ],
                 'nummer' => 'nullable|numeric|between:1,65535',

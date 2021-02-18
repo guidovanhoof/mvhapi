@@ -16,6 +16,7 @@ class WedstrijdResource extends JsonResource
     public function toArray($request): array
     {
         return [
+            'id' => $this->id,
             'kalender_id' => $this->kalender_id,
             'datum' => $this->datum,
             'nummer' => $this->nummer,
