@@ -121,9 +121,7 @@ function assertReeksEquals(TestCase $testCase, $data, Reeks $reeks): void
  * @param TestResponse $response
  * @param string $expectedErrorMessage
  */
-function assertErrorMessage(
-    TestCase $testcase, string $veld, TestResponse $response, string $expectedErrorMessage
-): void
+function assertErrorMessage(TestCase $testcase, string $veld, TestResponse $response, string $expectedErrorMessage): void
 {
     $response->assertStatus(422);
     $testcase->assertEquals(errorMessage($veld, $response), $expectedErrorMessage);

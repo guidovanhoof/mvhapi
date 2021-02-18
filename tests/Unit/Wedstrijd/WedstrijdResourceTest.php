@@ -12,6 +12,17 @@ class WedstrijdResourceTest extends TestCase
     use RefreshDatabase;
 
     /** @test  */
+    public function heeftEenId()
+    {
+        $kalender = bewaarKalender();
+        $wedstrijd = bewaarWedstrijd(['kalender_id' => $kalender->id]);
+
+        $wedstrijdResource = WedstrijdResource::collection(Wedstrijd::first()->get())->resolve();
+
+        $this->assertEquals($wedstrijd->id, $wedstrijdResource[0]["id"]);
+    }
+
+    /** @test  */
     public function heeftEenKalenderId()
     {
         $kalender = bewaarKalender();

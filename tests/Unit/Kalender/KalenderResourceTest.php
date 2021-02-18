@@ -13,6 +13,17 @@ class KalenderResourceTest extends TestCase
     use RefreshDatabase;
 
     /** @test  */
+    public function heeftEenId()
+    {
+        $jaar = date('Y');
+        $kalender = bewaarKalender(['jaar' => $jaar]);
+
+        $kalenderResource = KalenderResource::collection(Kalender::first()->get())->resolve();
+
+        $this->assertEquals($kalender->id, $kalenderResource[0]["id"]);
+    }
+
+    /** @test  */
     public function heeftEenJaar()
     {
         $jaar = date('Y');

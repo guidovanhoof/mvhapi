@@ -4,9 +4,6 @@ namespace App\Helpers;
 
 use Illuminate\Http\JsonResponse;
 
-const STORING = false;
-const UPDATING = true;
-
 /**
  * @param $tekst
  * @return string|string[]

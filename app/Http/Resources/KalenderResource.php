@@ -15,6 +15,7 @@ class KalenderResource extends JsonResource
     public function toArray($request)
     {
         return [
+            "id" => $this->id,
             "jaar" => $this->jaar,
             "omschrijving" => $this->omschrijving(),
             "opmerkingen" => $this->opmerkingen,

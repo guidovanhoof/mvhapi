@@ -32,7 +32,7 @@ class DeelnemersController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validData = $this->valideerDeelnemer($request);
+        $validData = $this->valideerDeelnemer($request, new Deelnemer());
 
         $deelnemer = Deelnemer::create($validData);
         return $this->deelnemerResourceResponse($deelnemer, 201);
@@ -58,12 +58,18 @@ class DeelnemersController extends Controller
      * Bewaren bestaande deelnemer.
      *
      * @param Request $request
-     * @param  \App\Models\Deelnemer  $deelnemer
-     * @return \Illuminate\Http\Response
+     * @param  $nummer
+     * @return JsonResponse
      */
-    public function update(Request $request, Deelnemer $deelnemer)
+    public function update(Request $request, $nummer): JsonResponse
     {
-        //
+        try {
+            $deelnemer = Deelnemer::where("nummer", $nummer)->firstOrFail();
+            $deelnemer->update($this->valideerDeelnemer($request, $deelnemer));
+            return $this->deelnemerResourceResponse($deelnemer, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Deelenemer");
+        }
     }
 
     /**
@@ -92,14 +98,17 @@ class DeelnemersController extends Controller
 
     /**
      * @param Request $request
+     * @param Deelnemer $deelnemer
      * @return array
      */
-    private function valideerDeelnemer(Request $request): array
+    private function valideerDeelnemer(Request $request, Deelnemer $deelnemer): array
     {
         return $request->validate(
             [
-                "nummer" => "bail|required|numeric|gt:0|unique:deelnemers,nummer",
-                "naam" => "bail|required|unique:deelnemers,naam"
+                "nummer" => "bail|required|numeric|gt:0|unique:deelnemers,nummer" .
+                    ($deelnemer->id ? (',' . $deelnemer->id . ',id') : ''),
+                "naam" => "bail|required|unique:deelnemers,naam" .
+                    ($deelnemer->naam ? (',' . $deelnemer->naam . ',naam') : '')
             ]
         );
     }

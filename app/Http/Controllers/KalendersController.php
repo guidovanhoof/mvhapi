@@ -13,8 +13,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use function App\Helpers\nietGevondenResponse;
 use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
-use const App\Helpers\STORING;
-use const App\Helpers\UPDATING;
 
 class KalendersController extends Controller
 {
@@ -39,7 +37,7 @@ class KalendersController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validData = $this->valideerKalender($request, new Kalender(), STORING);
+        $validData = $this->valideerKalender($request, new Kalender());
 
         return $this->kalenderResourceResponse(Kalender::create($validData), 201);
     }
@@ -72,7 +70,7 @@ class KalendersController extends Controller
         try {
             $kalender = Kalender::where("jaar", $jaar)->firstOrFail();
             $kalender->update(
-                $this->valideerKalender($request, $kalender, UPDATING)
+                $this->valideerKalender($request, $kalender)
             );
             return $this->kalenderResourceResponse($kalender, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
@@ -136,14 +134,13 @@ class KalendersController extends Controller
     /**
      * @param Request $request
      * @param Kalender $kalender
-     * @param $updating
      * @return array
      */
-    private function valideerKalender(Request $request, Kalender $kalender, $updating): array
+    private function valideerKalender(Request $request, Kalender $kalender): array
     {
         return $request->validate(
             [
-                'jaar' => 'required|unique:kalenders,jaar' . ($updating ? (',' . $kalender->jaar . ',jaar'): ''),
+                'jaar' => 'required|unique:kalenders,jaar' . ($kalender->id ? (',' . $kalender->id . ',id'): ''),
                 'opmerkingen' => 'nullable'
             ]
         );

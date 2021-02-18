@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 use function App\Helpers\nietGevondenResponse;
 use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
-use const App\Helpers\STORING;
-use const App\Helpers\UPDATING;
 
 class ReeksController extends Controller
 {
@@ -40,7 +38,7 @@ class ReeksController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
-        $validData = $this->valideerReeks($request, new Reeks(), STORING);
+        $validData = $this->valideerReeks($request, new Reeks());
 
         return $this->reeksResourceResponse(Reeks::create($validData), 201);
     }
@@ -73,7 +71,7 @@ class ReeksController extends Controller
         try {
             $reeks = Reeks::where("id", $id)->firstOrFail();
             $reeks->update(
-                $this->valideerReeks($request, $reeks, UPDATING)
+                $this->valideerReeks($request, $reeks)
             );
             return $this->reeksResourceResponse($reeks, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
@@ -131,10 +129,9 @@ class ReeksController extends Controller
     /**
      * @param Request $request
      * @param Reeks $reeks
-     * @param bool $updating
      * @return array
      */
-    private function valideerReeks(Request $request, Reeks $reeks, bool $updating): array
+    private function valideerReeks(Request $request, Reeks $reeks): array
     {
         return $request->validate(
             [
