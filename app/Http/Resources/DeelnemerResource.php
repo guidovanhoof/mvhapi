@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DeelnemerResource extends JsonResource
@@ -16,6 +15,7 @@ class DeelnemerResource extends JsonResource
     public function toArray($request): array
     {
         return [
+            "id" => $this->id,
             "nummer" => $this->nummer,
             "naam" => $this->naam,
         ];

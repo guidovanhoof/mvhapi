@@ -17,7 +17,7 @@ class CreateGewichtenTable extends Migration
             $table->id();
             $table->unsignedBigInteger("plaats_id");
             $table->unsignedInteger("gewicht");
-            $table->boolean("is_geldig");
+            $table->unsignedTinyInteger("is_geldig");
             $table->timestamps();
 
             $table->foreign("plaats_id")->references("id")->on("plaatsen");

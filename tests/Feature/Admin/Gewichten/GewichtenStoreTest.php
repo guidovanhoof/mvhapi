@@ -107,9 +107,19 @@ class GewichtenStoreTest extends TestCase
     }
 
     /** @test */
-    public function geldigheidIsEenBoolean() {
-        $expectedErrorMessage = 'Geldigheid moet 1 of true (voor ja) of 0 of false (voor nee) zijn!';
+    public function geldigheidIsNumeriek() {
+        $expectedErrorMessage = 'Geldigheid is niet numeriek!';
         $this->gewicht->is_geldig = "abc";
+
+        $response = $this->bewaarGewicht($this->gewicht);
+
+        assertErrorMessage($this, "is_geldig", $response, $expectedErrorMessage);
+    }
+
+    /** @test */
+    public function geldigheidTussen0En1() {
+        $expectedErrorMessage = 'Geldigheid moet liggen tussen 0 en 1!';
+        $this->gewicht->is_geldig = 2;
 
         $response = $this->bewaarGewicht($this->gewicht);
 

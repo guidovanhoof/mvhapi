@@ -112,7 +112,7 @@ class GewichtenController extends Controller
             [
                 "plaats_id" => "bail|required|exists:plaatsen,id",
                 "gewicht" => "bail|required|numeric|gt:0",
-                "is_geldig" => "required|boolean"
+                "is_geldig" => "required|numeric|between:0,1"
             ]
         );
     }

@@ -70,7 +70,7 @@ class GewichtTest extends TestCase
     /** @test */
     public function heeftEenGeldigheid()
     {
-        $this->gewicht->is_geldig = true;
+        $this->gewicht->is_geldig = 1;
 
         $this->bewaarGewicht();
 

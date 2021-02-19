@@ -4,15 +4,30 @@ namespace Tests\Unit\Deelnemer;
 
 
 use App\Http\Resources\DeelnemerResource;
-use App\Http\Resources\WedstrijdtypeResource;
 use App\Models\Deelnemer;
-use App\Models\Wedstrijdtype;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class DeelnemerResourceTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function tearDown(): void
+    {
+        cleanUpDb("deelnemers");
+
+        parent::tearDown();
+    }
+
+    /** @test */
+    public function heeftEenId()
+    {
+        $deelnemer = bewaarDeelnemer();
+
+        $deelnemerResource = DeelnemerResource::collection(Deelnemer::first()->get())->resolve();
+
+        $this->assertEquals($deelnemer->id, $deelnemerResource[0]["id"]);
+    }
 
     /** @test */
     public function heeftEenNummer()

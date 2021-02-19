@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             PlaatsenSeeder::class,
             GewichtSeeder::class,
             DeelnemersSeeder::class,
+            WedstrijddeelnemerSeeder::class,
         ]);
     }
 }
