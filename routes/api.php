@@ -6,6 +6,7 @@ use App\Http\Controllers\GewichtenController;
 use App\Http\Controllers\KalendersController;
 use App\Http\Controllers\PlaatsenController;
 use App\Http\Controllers\ReeksController;
+use App\Http\Controllers\WedstrijddeelnemersController;
 use App\Http\Controllers\WedstrijdenController;
 use App\Http\Controllers\WedstrijdtypesController;
 use Illuminate\Support\Facades\Route;
@@ -105,6 +106,14 @@ Route::group(
             DeelnemersController::class
         )
             ->parameters(["deelnemers" => "nummer"])
+            ->middleware("auth:sanctum")
+        ;
+
+        Route::apiResource(
+            "wedstrijddeelnemers",
+            WedstrijddeelnemersController::class
+        )
+            ->parameters(["wedstrijddeelnemers" => "id"])
             ->middleware("auth:sanctum")
         ;
     }

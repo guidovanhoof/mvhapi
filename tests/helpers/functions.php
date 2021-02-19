@@ -7,6 +7,7 @@ use App\Models\Plaats;
 use App\Models\Reeks;
 use App\Models\User;
 use App\Models\Wedstrijd;
+use App\Models\Wedstrijddeelnemer;
 use App\Models\Wedstrijdtype;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
@@ -18,6 +19,7 @@ const URL_REEKSEN_ADMIN = "api/admin/reeksen/";
 const URL_PLAATSEN_ADMIN = "api/admin/plaatsen/";
 const URL_GEWICHTEN_ADMIN = "api/admin/gewichten/";
 const URL_DEELNEMERS_ADMIN = "api/admin/deelnemers/";
+const URL_WEDSTRIJDDEELNEMERS_ADMIN = "api/admin/wedstrijddeelnemers/";
 
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
@@ -278,6 +280,12 @@ function getVerwijderActies(): array
         "deelnemers" => [
             "cleanUpDeelnemers",
         ],
+        "wedstrijddeelnemers" => [
+            "cleanUpWedstrijddeelnemers",
+            "cleanUpDeelnemers",
+            "cleanUpWedstrijden",
+            "cleanUpKalenders",
+        ],
         "wedstrijdtypes" => [
             "cleanUpWedstrijdtypes",
         ],
@@ -317,6 +325,11 @@ function cleanUpGewichten(): void
 function cleanUpDeelnemers(): void
 {
     Deelnemer::query()->delete();
+}
+
+function cleanUpWedstrijddeelnemers(): void
+{
+    Wedstrijddeelnemer::query()->delete();
 }
 
 function bewaarGewicht($velden = [])
@@ -385,5 +398,42 @@ function deelnemerToArry(Deelnemer $deelnemer): array
     return [
         'nummer' => $deelnemer->nummer,
         'naam' => $deelnemer->naam,
+    ];
+}
+
+function bewaarWedstrijddeelnemer($velden = [])
+{
+    return Wedstrijddeelnemer::factory()->create($velden);
+}
+
+function maakWedstrijddeelnemer($velden = [])
+{
+    return Wedstrijddeelnemer::factory()->make($velden);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param $data
+ * @param Wedstrijddeelnemer $wedstrijddeelnemer
+ */
+function assertWedstrijddeelnemerEquals(TestCase $testCase, $data, Wedstrijddeelnemer $wedstrijddeelnemer): void
+{
+    $testCase->assertEquals($data["wedstrijd_id"], $wedstrijddeelnemer->wedstrijd_id);
+    $testCase->assertEquals($data["deelnemer_id"], $wedstrijddeelnemer->deelnemer_id);
+    $testCase->assertEquals($data["is_gediskwalificeerd"], $wedstrijddeelnemer->is_gediskwalificeerd);
+    $testCase->assertEquals($data["opmerkingen"], $wedstrijddeelnemer->opmerkingen);
+}
+
+/**
+ * @param Wedstrijddeelnemer $wedstrijddeelnemer
+ * @return array
+ */
+function wedstrijddeelnemerToArry(Wedstrijddeelnemer $wedstrijddeelnemer): array
+{
+    return [
+        'wedstrijd_id' => $wedstrijddeelnemer->wedstrijd_id,
+        'deelnemer_id' => $wedstrijddeelnemer->deelnemer_id,
+        'is_gediskwalificeerd' => $wedstrijddeelnemer->is_gediskwalificeerd,
+        'opmerkingen' => $wedstrijddeelnemer->opmerkingen,
     ];
 }
