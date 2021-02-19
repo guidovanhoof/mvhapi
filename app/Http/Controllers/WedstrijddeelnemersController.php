@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\WedstrijddeelnemerResource;
 use App\Models\Wedstrijddeelnemer;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use function App\Helpers\nietGevondenResponse;
 
 class WedstrijddeelnemersController extends Controller
 {
@@ -23,16 +25,6 @@ class WedstrijddeelnemersController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -44,25 +36,19 @@ class WedstrijddeelnemersController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Ophalen één wedstrijddeelnemer.
      *
-     * @param  \App\Models\Wedstrijddeelnemer  $wedstrijddeelnemer
-     * @return \Illuminate\Http\Response
+     * @param  $id
+     * @return JsonResponse
      */
-    public function show(Wedstrijddeelnemer $wedstrijddeelnemer)
+    public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Wedstrijddeelnemer  $wedstrijddeelnemer
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Wedstrijddeelnemer $wedstrijddeelnemer)
-    {
-        //
+        try {
+            $wedstrijddeelnemer = Wedstrijddeelnemer::where("id", $id)->firstOrFail();
+            return $this->wedstrijddeelnemerResourceResponse($wedstrijddeelnemer, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Wedstrijddeelnemer");
+        }
     }
 
     /**
@@ -86,5 +72,18 @@ class WedstrijddeelnemersController extends Controller
     public function destroy(Wedstrijddeelnemer $wedstrijddeelnemer)
     {
         //
+    }
+
+    /**
+     * @param $wedstrijddeelnemer
+     * @param int $status
+     * @return JsonResponse
+     */
+    private function wedstrijddeelnemerResourceResponse($wedstrijddeelnemer, int $status): JsonResponse
+    {
+        return response()->json(
+          new WedstrijddeelnemerResource($wedstrijddeelnemer),
+          $status
+        );
     }
 }
