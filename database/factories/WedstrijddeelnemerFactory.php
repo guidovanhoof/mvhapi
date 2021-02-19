@@ -30,7 +30,7 @@ class WedstrijddeelnemerFactory extends Factory
             'deelnemer_id' => function() {
                 return Deelnemer::factory()->create()->id;
             },
-            'is_gediskwalificeerd' => false,
+            'is_gediskwalificeerd' => 0,
             'opmerkingen' => null,
         ];
     }

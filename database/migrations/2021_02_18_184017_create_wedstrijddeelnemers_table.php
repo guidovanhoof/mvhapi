@@ -17,7 +17,7 @@ class CreateWedstrijddeelnemersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('wedstrijd_id');
             $table->unsignedBigInteger('deelnemer_id');
-            $table->boolean('is_gediskwalificeerd');
+            $table->unsignedTinyInteger('is_gediskwalificeerd');
             $table->text('opmerkingen')->nullable();
             $table->timestamps();
 

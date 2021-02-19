@@ -56,7 +56,7 @@ class GewichtenUpdateTest extends TestCase
         $plaats = bewaarPlaats();
         $this->gewicht->plaats_id = $plaats->id;
         $this->gewicht->gewicht = 666;
-        $this->gewicht->is_gelidg = false;
+        $this->gewicht->is_gelidg = 0;
 
         $response = $this->wijzigGewicht($this->gewicht);
 
@@ -125,9 +125,19 @@ class GewichtenUpdateTest extends TestCase
     }
 
     /** @test */
-    public function geldigheidIsEenBoolean() {
-        $expectedErrorMessage = 'Geldigheid moet 1 of true (voor ja) of 0 of false (voor nee) zijn!';
+    public function geldigheidIsNumeriek() {
+        $expectedErrorMessage = 'Geldigheid is niet numeriek!';
         $this->gewicht->is_geldig = "abc";
+
+        $response = $this->wijzigGewicht($this->gewicht);
+
+        assertErrorMessage($this, "is_geldig", $response, $expectedErrorMessage);
+    }
+
+    /** @test */
+    public function geldigheidTussen0En1() {
+        $expectedErrorMessage = 'Geldigheid moet liggen tussen 0 en 1!';
+        $this->gewicht->is_geldig = 2;
 
         $response = $this->wijzigGewicht($this->gewicht);
 

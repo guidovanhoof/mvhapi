@@ -58,7 +58,7 @@ class WedstrijddeelnemerTest extends TestCase
     /** @test  */
     public function heeftEenDiskwalificatie()
     {
-        $this->wedstrijddeelnemer->is_gediskwalificeerd = true;
+        $this->wedstrijddeelnemer->is_gediskwalificeerd = 1;
 
         $this->bewaarWedstrijddeelnemer();
 

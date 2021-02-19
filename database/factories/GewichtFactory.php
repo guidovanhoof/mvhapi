@@ -27,7 +27,7 @@ class GewichtFactory extends Factory
                 return Plaats::factory()->create()->id;
             },
             "gewicht" => $this->faker->numberBetween(1, 66666),
-            "is_geldig" => true,
+            "is_geldig" => 1,
         ];
     }
 }
