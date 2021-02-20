@@ -34,7 +34,10 @@ class NummerUniekPerReeks implements Rule
     {
         try {
             $plaats = Plaats::where(
-                $this->getWhereCriteria($value)
+                [
+                    ["reeks_id", "=", $this->reeks_id],
+                    ["nummer", "=", $value],
+                ]
             )->firstOrFail();
             if ($plaats->id == $this->plaats_id) {
                 return true;
@@ -50,21 +53,8 @@ class NummerUniekPerReeks implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return trans('validation.nummer_uniek_per_reeks');
-    }
-
-    /**
-     * @param $value
-     * @return array[]
-     */
-    private function getWhereCriteria($value): array
-    {
-        $whereUnique = [
-            ["reeks_id", "=", $this->reeks_id],
-            ["nummer", "=", $value],
-        ];
-        return $whereUnique;
     }
 }

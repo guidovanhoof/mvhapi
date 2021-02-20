@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\WedstrijddeelnemerResource;
 use App\Models\Wedstrijddeelnemer;
+use App\Rules\DeelnemerUniekPerWedstrijd;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,14 +26,18 @@ class WedstrijddeelnemersController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Bewaren nieuwe deelnemer.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validData = $this->valideerWedstrijddeelnemer($request, new Wedstrijddeelnemer());
+
+        return $this->wedstrijddeelnemerResourceResponse(
+            Wedstrijddeelnemer::create($validData),201
+        );
     }
 
     /**
@@ -54,7 +59,7 @@ class WedstrijddeelnemersController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Wedstrijddeelnemer  $wedstrijddeelnemer
      * @return \Illuminate\Http\Response
      */
@@ -84,6 +89,23 @@ class WedstrijddeelnemersController extends Controller
         return response()->json(
           new WedstrijddeelnemerResource($wedstrijddeelnemer),
           $status
+        );
+    }
+
+    private function valideerWedstrijddeelnemer(Request $request, Wedstrijddeelnemer $wedstrijddeelnemer)
+    {
+        return $request->validate(
+            [
+                "wedstrijd_id" => "bail|required|exists:wedstrijden,id",
+                "deelnemer_id" => [
+                    "bail",
+                    "required",
+                    "exists:deelnemers,id",
+                    new DeelnemerUniekPerWedstrijd($request["wedstrijd_id"], $wedstrijddeelnemer->id)
+                ],
+                "is_gediskwalificeerd" => "bail|required|numeric|between:0,1",
+                "opmerkingen" => "bail|nullable",
+            ]
         );
     }
 }

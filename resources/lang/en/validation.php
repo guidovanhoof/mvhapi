@@ -46,7 +46,8 @@ return [
     'filled' => 'The :attribute field must have a value.',
     'datum_in_kalender_jaar' => 'Datum niet in kalenderjaar!',
     'nummer_uniek_per_wedstrijd' => 'Nummer bestaat reeds voor wedstrijd!',
-    'inkalenderjaar' => 'Date not within calendar year',
+    'nummer_uniek_per_reeks' => 'Nummer bestaat reeds voor reeks!',
+    'deelnemer_uniek_per_wedstrijd' => 'Deelnemer bestaat reeds voor wedstrijd!',
     'gt' => [
         'numeric' => 'The :attribute must be greater than :value.',
         'file' => 'The :attribute must be greater than :value kilobytes.',

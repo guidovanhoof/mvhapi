@@ -2,44 +2,44 @@
 
 namespace App\Rules;
 
-use App\Models\Reeks;
+use App\Models\Wedstrijddeelnemer;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class NummerUniekPerWedstrijd implements Rule
+class DeelnemerUniekPerWedstrijd implements Rule
 {
-    private $westrijd_id;
-    private $reeks_id;
+    private $wedstrijd_id;
+    private $wedstrijddeelnemer_id;
 
     /**
      * Create a new rule instance.
      *
      * @param $wedstrijd_id
-     * @param null $reeks_id
+     * @param null $wedstrijddeelnemer_id
      */
-    public function __construct($wedstrijd_id, $reeks_id = null)
+    public function __construct($wedstrijd_id, $wedstrijddeelnemer_id = null)
     {
-        $this->westrijd_id = $wedstrijd_id;
-        $this->reeks_id = $reeks_id;
+        $this->wedstrijd_id = $wedstrijd_id;
+        $this->wedstrijddeelnemer_id = $wedstrijddeelnemer_id;
     }
 
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param $attribute
+     * @param mixed $value
      * @return bool
      */
     public function passes($attribute, $value): bool
     {
         try {
-            $reeks = Reeks::where(
+            $wedstrijddeelnemer = Wedstrijddeelnemer::where(
                 [
-                    ["wedstrijd_id", "=", $this->westrijd_id],
-                    ["nummer", "=", $value],
+                    ["wedstrijd_id", "=", $this->wedstrijd_id],
+                    ["deelnemer_id", "=", $value],
                 ]
             )->firstOrFail();
-            if ($reeks->id == $this->reeks_id) {
+            if ($wedstrijddeelnemer->id == $this->wedstrijddeelnemer_id) {
                 return true;
             }
             return false;
@@ -55,6 +55,6 @@ class NummerUniekPerWedstrijd implements Rule
      */
     public function message()
     {
-        return trans('validation.nummer_uniek_per_wedstrijd');
+        return trans('validation.deelnemer_uniek_per_wedstrijd');
     }
 }
