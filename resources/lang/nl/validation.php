@@ -21,6 +21,7 @@ return [
     'datum_in_kalender_jaar' => 'Datum niet in kalenderjaar!',
     'nummer_uniek_per_wedstrijd' => 'Nummer bestaat reeds voor wedstrijd!',
     'nummer_uniek_per_reeks' => 'Nummer bestaat reeds voor reeks!',
+    'deelnemer_uniek_per_wedstrijd' => 'Deelnemer bestaat reeds voor wedstrijd!',
     'attributes' => [
         'jaar' => 'Jaar',
         'email' => 'Email',
@@ -40,6 +41,7 @@ return [
         'is_geldig' => 'Geldigheid',
         'naam' => 'Naam',
         'deelnemer' => 'Deelnemer',
-
+        'deelnemer_id' => 'Deelnemer_id',
+        'is_gediskwalificeerd' => 'Diskwalificatie',
     ],
 ];
