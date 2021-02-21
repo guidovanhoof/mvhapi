@@ -145,7 +145,7 @@ class WedstrijdenUpdateTest extends TestCase
         $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->wedstrijd);
+        assertWedstrijdInDatabase($this, $this->wedstrijd);
     }
 
     /** @test */
@@ -185,7 +185,7 @@ class WedstrijdenUpdateTest extends TestCase
         $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->wedstrijd);
+        assertWedstrijdInDatabase($this, $this->wedstrijd);
     }
 
     /** @test */
@@ -235,7 +235,7 @@ class WedstrijdenUpdateTest extends TestCase
         $response = $this->updateWedstrijd($this->wedstrijd, $this->datum);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->wedstrijd);
+        assertWedstrijdInDatabase($this, $this->wedstrijd);
     }
 
     /**
@@ -283,18 +283,5 @@ class WedstrijdenUpdateTest extends TestCase
             maakWedstrijd(
                 array_merge(["kalender_id" => $kalender->id], $velden)
             );
-    }
-
-    /**
-     * @param Wedstrijd $wedstrijd
-     */
-    private function assertInDatabase(Wedstrijd $wedstrijd): void
-    {
-        $this
-            ->assertDatabaseHas(
-                'wedstrijden',
-                wedstrijdToArray($wedstrijd)
-            )
-            ->assertJson($wedstrijd->toJson());
     }
 }

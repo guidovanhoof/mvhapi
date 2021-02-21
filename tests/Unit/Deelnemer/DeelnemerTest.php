@@ -39,7 +39,7 @@ class DeelnemerTest extends TestCase
 
         $this->bewaarDeelnemer();
 
-        $this->assertInDatabase();
+        assertDeelnemerInDatabase($this, $this->deelnemer);
     }
 
     /** @test  */
@@ -66,7 +66,7 @@ class DeelnemerTest extends TestCase
 
         $this->bewaarDeelnemer();
 
-        $this->assertInDatabase();
+        assertDeelnemerInDatabase($this, $this->deelnemer);
     }
 
     /** @test  */
@@ -88,7 +88,7 @@ class DeelnemerTest extends TestCase
         $this->bewaarDeelnemer();
 
         $this->assertEquals(self::NAAM_VOORNAAM, $this->deelnemer->naam);
-        $this->assertInDatabase();
+        assertDeelnemerInDatabase($this, $this->deelnemer);
     }
 
     /** @test  */
@@ -100,20 +100,12 @@ class DeelnemerTest extends TestCase
         $this->bewaarDeelnemer();
 
         $this->assertEquals($expectedNaam, $this->deelnemer->naam);
-        $this->assertInDatabase();
+        assertDeelnemerInDatabase($this, $this->deelnemer);
     }
 
     private function bewaarDeelnemer()
     {
         $this->deelnemer->save();
         $this->deelnemer->fresh();
-    }
-
-    private function assertInDatabase(): void
-    {
-        $this->assertDatabaseHas(
-            "deelnemers",
-            deelnemerToArry($this->deelnemer)
-        );
     }
 }

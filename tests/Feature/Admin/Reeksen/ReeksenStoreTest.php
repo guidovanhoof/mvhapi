@@ -42,7 +42,7 @@ class ReeksenStoreTest extends TestCase
         $response = $this->bewaarReeks($this->reeks);
 
         $response->assertStatus(201);
-        $this->assertInDatabase($this->reeks);
+        assertReeksInDatabase($this, $this->reeks);
     }
 
     /** @test */
@@ -134,7 +134,7 @@ class ReeksenStoreTest extends TestCase
 
         $response = $this->bewaarReeks($this->reeks);
 
-        $this->assertInDatabase($this->reeks);
+        assertReeksInDatabase($this, $this->reeks);
     }
 
     /** @test */
@@ -184,7 +184,7 @@ class ReeksenStoreTest extends TestCase
         $response = $this->bewaarReeks($this->reeks);
 
         $response->assertStatus(201);
-        $this->assertInDatabase($this->reeks);
+        assertReeksInDatabase($this, $this->reeks);
     }
 
     /**
@@ -203,20 +203,6 @@ class ReeksenStoreTest extends TestCase
                     URL_REEKSEN_ADMIN,
                     reeksToArray($reeks)
                 )
-        ;
-    }
-
-/**
- * @param Reeks $reeks
- */
-    private function assertInDatabase(Reeks $reeks): void
-    {
-        $this
-            ->assertDatabaseHas(
-                'reeksen',
-                reeksToArray($reeks)
-            )
-            ->assertJson($reeks->toJson())
         ;
     }
 }

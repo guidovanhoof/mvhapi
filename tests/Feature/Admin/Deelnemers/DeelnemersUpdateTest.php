@@ -44,7 +44,7 @@ class DeelnemersUpdateTest extends TestCase
         $response = $this->wijzigDeelnemer($this->deelnemer, $this->nummer);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->deelnemer);
+        assertDeelnemerInDatabase($this, $this->deelnemer);
     }
 
     /** @test */
@@ -126,20 +126,6 @@ class DeelnemersUpdateTest extends TestCase
                     URL_DEELNEMERS_ADMIN . $nummer,
                     deelnemerToArry($deelnemer)
                 )
-        ;
-    }
-
-    /**
-     * @param Deelnemer $deelnemer
-     */
-    private function assertInDatabase(Deelnemer $deelnemer): void
-    {
-        $this
-            ->assertDatabaseHas(
-                'deelnemers',
-                deelnemerToArry($deelnemer)
-            )
-            ->assertJson($deelnemer->toJson())
         ;
     }
 }

@@ -42,7 +42,7 @@ class PlaatsenStoreTest extends TestCase
         $response = $this->bewaarPlaats($this->plaats);
 
         $response->assertStatus(201);
-        $this->assertInDatabase($this->plaats);
+        assertPlaatsInDatabase($this, $this->plaats);
     }
 
     /** @test */
@@ -115,7 +115,7 @@ class PlaatsenStoreTest extends TestCase
         $response = $this->bewaarPlaats($this->plaats);
 
         $response->assertStatus(201);
-        $this->assertInDatabase($this->plaats);
+        assertPlaatsInDatabase($this, $this->plaats);
     }
 
     /**
@@ -134,20 +134,6 @@ class PlaatsenStoreTest extends TestCase
                     URL_PLAATSEN_ADMIN,
                     plaatsToArray($plaats)
                 )
-        ;
-    }
-
-    /**
-     * @param Plaats $plaats
-     */
-    private function assertInDatabase(Plaats $plaats): void
-    {
-        $this
-            ->assertDatabaseHas(
-                'plaatsen',
-                plaatsToArray($plaats)
-            )
-            ->assertJson($plaats->toJson())
         ;
     }
 }
