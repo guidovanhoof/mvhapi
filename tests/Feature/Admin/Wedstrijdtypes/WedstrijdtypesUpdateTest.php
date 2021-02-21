@@ -24,9 +24,7 @@ class WedstrijdtypesUpdateTest extends TestCase
 
         $response = $this->wijzigWedstrijdtype($wedstrijdtype);
 
-        $response->assertStatus(404);
-        $errorMessage = $response->json()["message"];
-        $this->assertEquals("Wedstrijdtype niet gevonden!", $errorMessage);
+        assertNietGevonden($this, $response, "Wedstrijdtype");
     }
 
     /** @test */
@@ -38,7 +36,7 @@ class WedstrijdtypesUpdateTest extends TestCase
         $response = $this->wijzigWedstrijdtype($wedstrijdtype);
 
         $response->assertStatus(200);
-        $this->assertWedstrijdtypeInDatabase($wedstrijdtype);
+        assertWedstrijdtypeInDatabase($this, $wedstrijdtype);
     }
 
     /** @test */
@@ -62,28 +60,6 @@ class WedstrijdtypesUpdateTest extends TestCase
         $response = $this->wijzigWedstrijdtype($wedstrijdtype2);
 
         assertErrorMessage($this, "omschrijving", $response, $expectedErrorMessage);
-    }
-
-    /**
-     * @param Wedstrijdtype $wedstrijdtype
-     * @return array
-     */
-    private function dataToArray(Wedstrijdtype $wedstrijdtype): array
-    {
-        return ["id" => $wedstrijdtype->id, "omschrijving" => $wedstrijdtype->omschrijving];
-    }
-
-    /**
-     * @param Wedstrijdtype $wedstrijdtype
-     */
-    private function assertWedstrijdtypeInDatabase(Wedstrijdtype $wedstrijdtype): void
-    {
-        $this
-            ->assertDatabaseHas(
-                'wedstrijdtypes',
-                $this->dataToArray($wedstrijdtype)
-            )
-            ->assertJson($wedstrijdtype->toJson());
     }
 
     /**

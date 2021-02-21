@@ -8,7 +8,9 @@ use App\Rules\DeelnemerUniekPerWedstrijd;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
 
 class WedstrijddeelnemersController extends Controller
 {
@@ -46,7 +48,7 @@ class WedstrijddeelnemersController extends Controller
      * @param  $id
      * @return JsonResponse
      */
-    public function show($id)
+    public function show($id): JsonResponse
     {
         try {
             $wedstrijddeelnemer = Wedstrijddeelnemer::where("id", $id)->firstOrFail();
@@ -75,14 +77,20 @@ class WedstrijddeelnemersController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijderen bestaande wedstrijddeelnemer.
      *
-     * @param Wedstrijddeelnemer $wedstrijddeelnemer
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy(Wedstrijddeelnemer $wedstrijddeelnemer)
+    public function destroy($id): JsonResponse
     {
-        //
+        try {
+            $wedstrijddeelnemerid = Wedstrijddeelnemer::where("id", $id)->firstOrFail();
+            $wedstrijddeelnemerid->delete();
+            return verwijderdResponse("Wedstrijddeelnemer");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Wedstrijddeelnemer");
+        }
     }
 
     /**

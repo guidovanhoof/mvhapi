@@ -15,9 +15,7 @@ class KalendersShowTest extends TestCase
     {
         $response = $this->getKalender('1900');
 
-        $response->assertStatus(404);
-        $errorMessage = $response->json()["message"];
-        $this->assertEquals("Kalender niet gevonden!", $errorMessage);
+        assertNietGevonden($this, $response, "Kalender");
     }
 
     /** @test */

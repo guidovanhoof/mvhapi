@@ -39,10 +39,7 @@ class GewichtTest extends TestCase
 
         $this->bewaarGewicht();
 
-        $this->assertDatabaseHas(
-            'gewichten',
-            gewichtToArry($this->gewicht)
-        );
+        $this->AssertInDatabase();
     }
 
     /** @test */
@@ -61,10 +58,7 @@ class GewichtTest extends TestCase
 
         $this->bewaarGewicht();
 
-        $this->assertDatabaseHas(
-            'gewichten',
-            gewichtToArry($this->gewicht)
-        );
+        $this->AssertInDatabase();
     }
 
     /** @test */
@@ -74,15 +68,20 @@ class GewichtTest extends TestCase
 
         $this->bewaarGewicht();
 
-        $this->assertDatabaseHas(
-            'gewichten',
-            gewichtToArry($this->gewicht)
-        );
+        $this->AssertInDatabase();
     }
 
     private function bewaarGewicht(): void
     {
         $this->gewicht->save();
         $this->gewicht->fresh();
+    }
+
+    private function AssertInDatabase(): void
+    {
+        $this->assertDatabaseHas(
+            'gewichten',
+            gewichtToArry($this->gewicht)
+        );
     }
 }

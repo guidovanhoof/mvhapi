@@ -15,9 +15,7 @@ class ReeksenDestroyTest extends TestCase
     {
         $response = $this->verwijderReeks(666);
 
-        $response->assertStatus(404);
-        $errorMessage = $response->json()["message"];
-        $this->assertEquals("Reeks niet gevonden!", $errorMessage);
+        assertNietGevonden($this, $response, "Reeks");
     }
 
     /** @test */
