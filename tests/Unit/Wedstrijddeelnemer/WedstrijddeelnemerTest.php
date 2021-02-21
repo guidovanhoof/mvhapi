@@ -41,7 +41,7 @@ class WedstrijddeelnemerTest extends TestCase
 
         $this->bewaarWedstrijddeelnemer();
 
-        $this->assertInDatabase();
+        assertWedstrijddeelnemerInDatabase($this, $this->wedstrijddeelnemer);
     }
 
     /** @test  */
@@ -52,7 +52,7 @@ class WedstrijddeelnemerTest extends TestCase
 
         $this->bewaarWedstrijddeelnemer();
 
-        $this->assertInDatabase();
+        assertWedstrijddeelnemerInDatabase($this, $this->wedstrijddeelnemer);
     }
 
     /** @test  */
@@ -62,7 +62,7 @@ class WedstrijddeelnemerTest extends TestCase
 
         $this->bewaarWedstrijddeelnemer();
 
-        $this->assertInDatabase();
+        assertWedstrijddeelnemerInDatabase($this, $this->wedstrijddeelnemer);
     }
 
     /** @test  */
@@ -72,7 +72,7 @@ class WedstrijddeelnemerTest extends TestCase
 
         $this->bewaarWedstrijddeelnemer();
 
-        $this->assertInDatabase();
+        assertWedstrijddeelnemerInDatabase($this, $this->wedstrijddeelnemer);
     }
 
     /** @test  */
@@ -82,7 +82,7 @@ class WedstrijddeelnemerTest extends TestCase
 
         $this->bewaarWedstrijddeelnemer();
 
-        $this->assertInDatabase();
+        assertWedstrijddeelnemerInDatabase($this, $this->wedstrijddeelnemer);
     }
 
     /** @test */
@@ -121,13 +121,5 @@ class WedstrijddeelnemerTest extends TestCase
     {
         $this->wedstrijddeelnemer->save();
         $this->wedstrijddeelnemer->fresh();
-    }
-
-    private function assertInDatabase(): void
-    {
-        $this->assertDatabaseHas(
-            "wedstrijddeelnemers",
-            wedstrijddeelnemerToArry($this->wedstrijddeelnemer)
-        );
     }
 }

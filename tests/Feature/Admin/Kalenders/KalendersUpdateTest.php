@@ -125,7 +125,7 @@ class KalendersUpdateTest extends TestCase
         $this
             ->assertDatabaseHas(
                 'kalenders',
-                $this->dataToArray($kalender)
+                kalenderToArray($kalender)
             )
             ->assertJson($kalender->toJson());
     }
@@ -145,7 +145,7 @@ class KalendersUpdateTest extends TestCase
                 ->json(
                     'PUT',
                     URL_KALENDERS_ADMIN . $jaar,
-                    $this->dataToArray($kalender)
+                    kalenderToArray($kalender)
                 )
             ;
     }

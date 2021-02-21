@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class WedstrijddeelnemersStoreTest extends TestCase
+class WedstrijddeelnemersUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -22,7 +22,7 @@ class WedstrijddeelnemersStoreTest extends TestCase
     {
         parent::setUp();
 
-        $this->wedstrijddeelnemer = maakWedstrijddeelnemer();
+        $this->wedstrijddeelnemer = bewaarWedstrijddeelnemer();
     }
 
     public function tearDown(): void
@@ -34,11 +34,18 @@ class WedstrijddeelnemersStoreTest extends TestCase
     }
 
     /** @test */
-    public function wedstrijddeelnemerAanmaken()
+    public function wedstrijddeelnemerWijzigen()
     {
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $wedstrijd = bewaarWedstrijd();
+        $deelnemer = bewaarDeelnemer();
+        $this->wedstrijddeelnemer->wedstrijd_id = $wedstrijd->id;
+        $this->wedstrijddeelnemer->deelnemer_id = $deelnemer->id;
+        $this->wedstrijddeelnemer->is_gediskwalificeerd = 1;
+        $this->wedstrijddeelnemer->opmerkingen = "gewijzigd";
 
-        $response->assertStatus(201);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
+
+        $response->assertStatus(200);
         assertWedstrijddeelnemerInDatabase($this, $this->wedstrijddeelnemer);
     }
 
@@ -47,7 +54,7 @@ class WedstrijddeelnemersStoreTest extends TestCase
         $expectedErrorMessage = "Wedstrijd_id is verplicht!";
         $this->wedstrijddeelnemer->wedstrijd_id = null;
 
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
 
         assertErrorMessage($this, "wedstrijd_id", $response, $expectedErrorMessage);
     }
@@ -57,7 +64,7 @@ class WedstrijddeelnemersStoreTest extends TestCase
         $expectedErrorMessage = "Wedstrijd_id niet gevonden!";
         $this->wedstrijddeelnemer->wedstrijd_id = 666;
 
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
 
         assertErrorMessage($this, "wedstrijd_id", $response, $expectedErrorMessage);
     }
@@ -67,7 +74,7 @@ class WedstrijddeelnemersStoreTest extends TestCase
         $expectedErrorMessage = "Deelnemer_id is verplicht!";
         $this->wedstrijddeelnemer->deelnemer_id = null;
 
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
 
         assertErrorMessage($this, "deelnemer_id", $response, $expectedErrorMessage);
     }
@@ -77,7 +84,7 @@ class WedstrijddeelnemersStoreTest extends TestCase
         $expectedErrorMessage = "Deelnemer_id niet gevonden!";
         $this->wedstrijddeelnemer->deelnemer_id = 666;
 
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
 
         assertErrorMessage($this, "deelnemer_id", $response, $expectedErrorMessage);
     }
@@ -85,9 +92,11 @@ class WedstrijddeelnemersStoreTest extends TestCase
     /** @test */
     public function deelnemerIsUniekPerWedstrijd() {
         $expectedErrorMessage = "Deelnemer bestaat reeds voor wedstrijd!";
+        $wedstrijddeelnemer = bewaarWedstrijddeelnemer();
+        $this->wedstrijddeelnemer->wedstrijd_id = $wedstrijddeelnemer->wedstrijd_id;
+        $this->wedstrijddeelnemer->deelnemer_id = $wedstrijddeelnemer->deelnemer_id;
 
-        $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
 
         assertErrorMessage($this, "deelnemer_id", $response, $expectedErrorMessage);
     }
@@ -97,7 +106,7 @@ class WedstrijddeelnemersStoreTest extends TestCase
         $expectedErrorMessage = "Diskwalificatie is verplicht!";
         $this->wedstrijddeelnemer->is_gediskwalificeerd = null;
 
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
 
         assertErrorMessage($this, "is_gediskwalificeerd", $response, $expectedErrorMessage);
     }
@@ -107,7 +116,7 @@ class WedstrijddeelnemersStoreTest extends TestCase
         $expectedErrorMessage = 'Diskwalificatie is niet numeriek!';
         $this->wedstrijddeelnemer->is_gediskwalificeerd = "abc";
 
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
 
         assertErrorMessage($this, "is_gediskwalificeerd", $response, $expectedErrorMessage);
     }
@@ -117,7 +126,7 @@ class WedstrijddeelnemersStoreTest extends TestCase
         $expectedErrorMessage = 'Diskwalificatie moet liggen tussen 0 en 1!';
         $this->wedstrijddeelnemer->is_gediskwalificeerd = 2;
 
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
 
         assertErrorMessage($this, "is_gediskwalificeerd", $response, $expectedErrorMessage);
     }
@@ -126,9 +135,9 @@ class WedstrijddeelnemersStoreTest extends TestCase
     public function opmerkingenIsOptioneel() {
         $this->wedstrijddeelnemer->opmerkingen = null;
 
-        $response = $this->bewaarWedstrijddeelnemer($this->wedstrijddeelnemer);
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         assertWedstrijddeelnemerInDatabase($this, $this->wedstrijddeelnemer);
     }
 
@@ -136,7 +145,7 @@ class WedstrijddeelnemersStoreTest extends TestCase
      * @param Wedstrijddeelnemer $wedstrijddeelnemer
      * @return TestResponse
      */
-    private function bewaarWedstrijddeelnemer(Wedstrijddeelnemer $wedstrijddeelnemer): TestResponse
+    private function wijzigWedstrijddeelnemer(Wedstrijddeelnemer $wedstrijddeelnemer): TestResponse
     {
         $plainToken = createUserAndToken();
 
@@ -144,8 +153,8 @@ class WedstrijddeelnemersStoreTest extends TestCase
             $this
                 ->withHeader('Authorization', 'Bearer ' . $plainToken)
                 ->json(
-                    'POST',
-                    URL_WEDSTRIJDDEELNEMERS_ADMIN,
+                    'PUT',
+                    URL_WEDSTRIJDDEELNEMERS_ADMIN . $wedstrijddeelnemer->id,
                     wedstrijddeelnemerToArry($wedstrijddeelnemer)
                 )
         ;

@@ -437,3 +437,113 @@ function wedstrijddeelnemerToArry(Wedstrijddeelnemer $wedstrijddeelnemer): array
         'opmerkingen' => $wedstrijddeelnemer->opmerkingen,
     ];
 }
+
+/**
+ * @param TestCase $testCase
+ * @param Wedstrijddeelnemer $wedstrijddeelnemer
+ */
+function assertWedstrijddeelnemerInDatabase(TestCase $testCase, Wedstrijddeelnemer $wedstrijddeelnemer): void
+{
+    $testCase->assertEquals(
+        1,
+        Wedstrijddeelnemer::where(wedstrijddeelnemerToArry($wedstrijddeelnemer))->count()
+    );
+    $testCase->assertJson($wedstrijddeelnemer->toJson())
+    ;
+}
+
+/**
+ * @param TestCase $testCase
+ * @param Deelnemer $deelnemer
+ */
+function assertDeelnemerInDatabase(TestCase $testCase, Deelnemer $deelnemer): void
+{
+    $testCase->assertEquals(
+        1,
+        Deelnemer::where(deelnemerToArry($deelnemer))->count()
+    );
+    $testCase->assertJson($deelnemer->toJson())
+    ;
+}
+
+/**
+ * @param TestCase $testCase
+ * @param Gewicht $gewicht
+ */
+function assertGewichtInDatabase(TestCase $testCase, Gewicht $gewicht): void
+{
+    $testCase->assertEquals(
+        1,
+        Gewicht::where(gewichtToArry($gewicht))->count()
+    );
+    $testCase->assertJson($gewicht->toJson())
+    ;
+}
+
+/**
+ * @param Kalender $kalender
+ * @return array
+ */
+function kalenderToArray(Kalender $kalender): array
+{
+    return [
+        "jaar" => $kalender->jaar,
+        "opmerkingen" => $kalender->opmerkingen
+    ];
+}
+
+/**
+ * @param TestCase $testCase
+ * @param Kalender $kalender
+ */
+function assertKalenderInDatabase(TestCase $testCase, Kalender $kalender): void
+{
+    $testCase->assertEquals(
+        1,
+        Kalender::where(kalenderToArray($kalender))->count()
+    );
+    $testCase->assertJson($kalender->toJson())
+    ;
+}
+
+/**
+ * @param TestCase $testCase
+ * @param Plaats $plaats
+ */
+function assertPlaatsInDatabase(TestCase $testCase, Plaats $plaats): void
+{
+    $testCase->assertEquals(
+        1,
+        Plaats::where(plaatsToArray($plaats))->count()
+    );
+    $testCase->assertJson($plaats->toJson())
+    ;
+}
+
+/**
+ * @param TestCase $testCase
+ * @param Reeks $reeks
+ */
+function assertReeksInDatabase(TestCase $testCase, Reeks $reeks): void
+{
+    $testCase->assertEquals(
+        1,
+        Reeks::where(reeksToArray($reeks))->count()
+    );
+    $testCase->assertJson($reeks->toJson())
+    ;
+}
+
+/**
+ * @param TestCase $testCase
+ * @param Wedstrijd $wedstrijd
+ */
+function assertWedstrijdInDatabase(TestCase $testCase, Wedstrijd $wedstrijd): void
+{
+    $testCase->assertEquals(
+        1,
+        Wedstrijd::where(wedstrijdToArray($wedstrijd))->count()
+    );
+    $testCase->assertJson($wedstrijd->toJson())
+    ;
+}

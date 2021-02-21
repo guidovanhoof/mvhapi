@@ -60,7 +60,7 @@ class PlaatsenUpdateTest extends TestCase
         $response = $this->wijzigPlaats($this->plaats);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->plaats);
+        assertPlaatsInDatabase($this, $this->plaats);
     }
 
     /** @test */
@@ -133,21 +133,7 @@ class PlaatsenUpdateTest extends TestCase
         $response = $this->wijzigPlaats($this->plaats);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->plaats);
-    }
-
-    /**
-     * @param Plaats $plaats
-     */
-    private function assertInDatabase(Plaats $plaats): void
-    {
-        $this
-            ->assertDatabaseHas(
-                'plaatsen',
-                plaatsToArray($plaats)
-            )
-            ->assertJson($plaats->toJson())
-        ;
+        assertPlaatsInDatabase($this, $this->plaats);
     }
 
     /**

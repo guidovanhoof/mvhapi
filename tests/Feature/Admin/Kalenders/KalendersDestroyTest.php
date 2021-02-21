@@ -33,7 +33,7 @@ class KalendersDestroyTest extends TestCase
         $this
             ->assertDatabaseMissing(
                 "kalenders",
-                $this->dataToArray($kalender)
+                kalenderToArray($kalender)
             )
             ->assertEquals("Kalender verwijderd!", $errorMessage)
         ;
@@ -53,7 +53,7 @@ class KalendersDestroyTest extends TestCase
         $this
             ->assertDatabaseHas(
                 "kalenders",
-                $this->dataToArray($kalender)
+                kalenderToArray($kalender)
             )
             ->assertEquals($expectedMessage, $errorMessage)
         ;

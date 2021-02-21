@@ -155,7 +155,7 @@ class ReeksenUpdateTest extends TestCase
         $response = $this->wijzigReeks($this->reeks);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->reeks);
+        assertReeksInDatabase($this, $this->reeks);
     }
 
     /** @test */
@@ -205,7 +205,7 @@ class ReeksenUpdateTest extends TestCase
         $response = $this->wijzigReeks($this->reeks);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->reeks);
+        assertReeksInDatabase($this, $this->reeks);
     }
 
     /**
@@ -224,20 +224,6 @@ class ReeksenUpdateTest extends TestCase
                     URL_REEKSEN_ADMIN . $reeks->id,
                     reeksToArray($reeks)
                 )
-        ;
-    }
-
-/**
- * @param Reeks $reeks
- */
-    private function assertInDatabase(Reeks $reeks): void
-    {
-        $this
-            ->assertDatabaseHas(
-                'reeksen',
-                reeksToArray($reeks)
-            )
-            ->assertJson($reeks->toJson())
         ;
     }
 }

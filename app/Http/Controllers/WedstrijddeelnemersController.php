@@ -26,7 +26,7 @@ class WedstrijddeelnemersController extends Controller
     }
 
     /**
-     * Bewaren nieuwe deelnemer.
+     * Bewaren nieuwe wedstrijddeelnemer.
      *
      * @param Request $request
      * @return JsonResponse
@@ -57,21 +57,27 @@ class WedstrijddeelnemersController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Wijzigen bestaande wedstrijddeelnemer..
      *
      * @param Request $request
-     * @param  \App\Models\Wedstrijddeelnemer  $wedstrijddeelnemer
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, Wedstrijddeelnemer $wedstrijddeelnemer)
+    public function update(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $wedstrijddeelnemer = Wedstrijddeelnemer::where("id", $id)->firstOrFail();
+            $wedstrijddeelnemer->update($this->valideerWedstrijddeelnemer($request, $wedstrijddeelnemer));
+            return $this->wedstrijddeelnemerResourceResponse($wedstrijddeelnemer, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Wedstrijddeelnemer");
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Wedstrijddeelnemer  $wedstrijddeelnemer
+     * @param Wedstrijddeelnemer $wedstrijddeelnemer
      * @return \Illuminate\Http\Response
      */
     public function destroy(Wedstrijddeelnemer $wedstrijddeelnemer)
@@ -92,7 +98,12 @@ class WedstrijddeelnemersController extends Controller
         );
     }
 
-    private function valideerWedstrijddeelnemer(Request $request, Wedstrijddeelnemer $wedstrijddeelnemer)
+    /**
+     * @param Request $request
+     * @param Wedstrijddeelnemer $wedstrijddeelnemer
+     * @return array
+     */
+    private function valideerWedstrijddeelnemer(Request $request, Wedstrijddeelnemer $wedstrijddeelnemer): array
     {
         return $request->validate(
             [

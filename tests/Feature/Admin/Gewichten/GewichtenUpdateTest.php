@@ -61,7 +61,7 @@ class GewichtenUpdateTest extends TestCase
         $response = $this->wijzigGewicht($this->gewicht);
 
         $response->assertStatus(200);
-        $this->assertInDatabase($this->gewicht);
+        assertGewichtInDatabase($this, $this->gewicht);
     }
 
     /** @test */
@@ -160,20 +160,6 @@ class GewichtenUpdateTest extends TestCase
                     URL_GEWICHTEN_ADMIN . $gewicht->id,
                     gewichtToArry($gewicht)
                 )
-        ;
-    }
-
-    /**
-     * @param Gewicht $gewicht
-     */
-    private function assertInDatabase(Gewicht $gewicht): void
-    {
-        $this
-            ->assertDatabaseHas(
-                'gewichten',
-                gewichtToArry($gewicht)
-            )
-            ->assertJson($gewicht->toJson())
         ;
     }
 }
