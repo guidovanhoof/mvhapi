@@ -15,9 +15,7 @@ class WedstrijdtypesDestroyTest extends TestCase
     {
         $response = $this->deleteWedstrijdtype(666);
 
-        $response->assertStatus(404);
-        $errorMessage = $response->json()["message"];
-        $this->assertEquals("Wedstrijdtype niet gevonden!", $errorMessage);
+        assertNietGevonden($this, $response, "Wedstrijdtype");
     }
 
     /** @test */
@@ -32,7 +30,7 @@ class WedstrijdtypesDestroyTest extends TestCase
         $this
             ->assertDatabaseMissing(
                 "wedstrijdtypes",
-                ["id" => $wedstrijdtype->id, "omschrijving" => $wedstrijdtype->omschrijving]
+                wedstrijdtypeToArray($wedstrijdtype)
             )
             ->assertEquals("Wedstrijdtype verwijderd!", $errorMessage)
         ;
@@ -52,7 +50,7 @@ class WedstrijdtypesDestroyTest extends TestCase
         $this
             ->assertDatabaseHas(
                 "wedstrijdtypes",
-                ["id" => $wedstrijdtype->id, "omschrijving" => $wedstrijdtype->omschrijving]
+                wedstrijdtypeToArray($wedstrijdtype)
             )
             ->assertEquals($expectedMessage, $errorMessage)
         ;

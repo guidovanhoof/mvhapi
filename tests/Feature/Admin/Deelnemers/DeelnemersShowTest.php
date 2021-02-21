@@ -22,9 +22,7 @@ class DeelnemersShowTest extends TestCase
     {
         $response = $this->getDeelnemer(666);
 
-        $response->assertStatus(404);
-        $errorMessage = $response->json()["message"];
-        $this->assertEquals("Deelnemer niet gevonden!", $errorMessage);
+        assertNietGevonden($this, $response, "Deelnemer");
     }
 
     /** @test */

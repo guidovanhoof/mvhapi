@@ -16,9 +16,7 @@ class KalendersDestroyTest extends TestCase
     {
         $response = $this->deleteKalender(1900);
 
-        $response->assertStatus(404);
-        $errorMessage = $response->json()["message"];
-        $this->assertEquals("Kalender niet gevonden!", $errorMessage);
+        assertNietGevonden($this, $response, "Kalender");
     }
 
     /** @test */

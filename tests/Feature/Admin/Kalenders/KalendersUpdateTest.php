@@ -34,9 +34,7 @@ class KalendersUpdateTest extends TestCase
     {
         $response = $this->wijzigKalender($this->kalender, 1900);
 
-        $response->assertStatus(404);
-        $errorMessage = $response->json()["message"];
-        $this->assertEquals("Kalender niet gevonden!", $errorMessage);
+        assertNietGevonden($this, $response, "Kalender");
     }
 
     /** @test */
@@ -47,7 +45,7 @@ class KalendersUpdateTest extends TestCase
         $response = $this->wijzigKalender($this->kalender, $this->jaar);
 
         $response->assertStatus(200);
-        $this->assertKalenderInDatabase($this->kalender);
+        assertKalenderInDatabase($this, $this->kalender);
     }
 
     /** @test */
@@ -58,7 +56,7 @@ class KalendersUpdateTest extends TestCase
         $response = $this->wijzigKalender($this->kalender, $this->jaar);
 
         $response->assertStatus(200);
-        $this->assertKalenderInDatabase($this->kalender);
+        assertKalenderInDatabase($this, $this->kalender);
     }
 
     /** @test */
@@ -70,7 +68,7 @@ class KalendersUpdateTest extends TestCase
         $response = $this->wijzigKalender($this->kalender, $this->jaar);
 
         $response->assertStatus(200);
-        $this->assertKalenderInDatabase($this->kalender);
+        assertKalenderInDatabase($this, $this->kalender);
     }
 
     /** @test */
@@ -102,7 +100,7 @@ class KalendersUpdateTest extends TestCase
         $response = $this->wijzigKalender($this->kalender, $this->jaar);
 
         $response->assertStatus(200);
-        $this->assertKalenderInDatabase($this->kalender);
+        assertKalenderInDatabase($this, $this->kalender);
     }
 
     /**
@@ -115,19 +113,6 @@ class KalendersUpdateTest extends TestCase
             "jaar" => $kalender->jaar,
             "opmerkingen" => $kalender->opmerkingen
         ];
-    }
-
-    /**
-     * @param Kalender $kalender
-     */
-    private function assertKalenderInDatabase(Kalender $kalender): void
-    {
-        $this
-            ->assertDatabaseHas(
-                'kalenders',
-                kalenderToArray($kalender)
-            )
-            ->assertJson($kalender->toJson());
     }
 
     /**

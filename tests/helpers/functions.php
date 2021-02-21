@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Wedstrijd;
 use App\Models\Wedstrijddeelnemer;
 use App\Models\Wedstrijdtype;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
@@ -546,4 +547,51 @@ function assertWedstrijdInDatabase(TestCase $testCase, Wedstrijd $wedstrijd): vo
     );
     $testCase->assertJson($wedstrijd->toJson())
     ;
+}
+
+/**
+ * @param TestCase $testCase
+ * @param Wedstrijdtype $wedstrijdtype
+ */
+function assertWedstrijdtypeInDatabase(TestCase $testCase, Wedstrijdtype $wedstrijdtype): void
+{
+    $testCase->assertEquals(
+        1,
+        Wedstrijdtype::where(wedstrijdtypeToArray($wedstrijdtype))->count()
+    );
+    $testCase->assertJson($wedstrijdtype->toJson())
+    ;
+}
+
+function assertNietGevonden(TestCase $testCase, TestResponse $response, $entiteit)
+{
+    $response->assertStatus(404);
+    $errorMessage = $response->json()["message"];
+    $testCase->assertEquals("$entiteit niet gevonden!", $errorMessage);
+}
+
+/**
+ * @param Wedstrijdtype $wedstrijdtype
+ * @return array
+ */
+function wedstrijdtypeToArray(Wedstrijdtype $wedstrijdtype): array
+{
+    return ["id" => $wedstrijdtype->id, "omschrijving" => $wedstrijdtype->omschrijving];
+}
+
+/**
+ * @param TestCase $testCase
+ * @param TestResponse $response
+ * @param string $table
+ * @param Model $model
+ */
+function assertDataseMissing(TestCase $testCase, TestResponse $response, string $table, Model $model)
+{
+    $response->assertStatus(200);
+    $errorMessage = $response->json()["message"];
+    $testCase->assertEquals(
+            0,
+            get_class($model)::where($model)->count()
+    );
+    $testCase->assertEquals("Deelnemer verwijderd!", $errorMessage);
 }

@@ -22,9 +22,7 @@ class WedstrijddeelnemersShowTest extends TestCase
     {
         $response = $this->getWedstrijddeelnemer(666);
 
-        $response->assertStatus(404);
-        $errorMessage = $response->json()["message"];
-        $this->assertEquals("Wedstrijddeelnemer niet gevonden!", $errorMessage);
+        assertNietGevonden($this, $response, "Wedstrijddeelnemer");
     }
 
     /** @test */

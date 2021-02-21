@@ -15,9 +15,7 @@ class PlaatsenDestroyTest extends TestCase
     {
         $response = $this->verwijderPlaats(666);
 
-        $response->assertStatus(404);
-        $errorMessage = $response->json()["message"];
-        $this->assertEquals("Plaats niet gevonden!", $errorMessage);
+        assertNietGevonden($this, $response, "Plaats");
     }
 
     /** @test */
