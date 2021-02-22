@@ -45,7 +45,7 @@ class ReeksenDestroyTest extends TestCase
 
         $response = $this->verwijderReeks($reeks->id);
 
-        $response->assertStatus(403);
+        $response->assertStatus(405);
         $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseHas(

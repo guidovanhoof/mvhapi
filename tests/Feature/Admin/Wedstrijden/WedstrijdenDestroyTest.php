@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin\Wedstrijden;
 
+use App\Models\Wedstrijd;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
@@ -9,6 +10,25 @@ use Tests\TestCase;
 class WedstrijdenDestroyTest extends TestCase
 {
     use RefreshDatabase;
+
+    /**
+     * @var \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|mixed
+     */
+    private $wedstrijd;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->wedstrijd = bewaarWedstrijd();
+    }
+
+    public function tearDown(): void
+    {
+        cleanUpDb("wedstrijden");
+
+        parent::tearDown();
+    }
 
     /** @test */
     public function wedstrijdNietAanwezig()
@@ -44,21 +64,27 @@ class WedstrijdenDestroyTest extends TestCase
     /** @test */
     public function nogReeksenGekoppeld()
     {
-        $expectedMessage = "Wedstrijd niet verwijderd! Nog reeksen aanwezig!";
-        $wedstrijd = bewaarWedstrijd();
-        bewaarReeks(["wedstrijd_id" => $wedstrijd->id]);
+        $expectedMessage = "Wedstrijd niet verwijderd! Nog deelnemers en/of reeksen aanwezig!";
+        bewaarReeks(["wedstrijd_id" => $this->wedstrijd->id]);
 
-        $response = $this->verwijderWedstrijd($wedstrijd->datum);
+        $response = $this->verwijderWedstrijd($this->wedstrijd->datum);
 
-        $response->assertStatus(403);
-        $errorMessage = $response->json()["message"];
-        $this
-            ->assertDatabaseHas(
-                "wedstrijden",
-                wedstrijdToArray($wedstrijd)
-            )
-            ->assertEquals($expectedMessage, $errorMessage)
-        ;
+        $response->assertStatus(405);
+        $this->assertErrorMessageIs($response, $expectedMessage);
+        assertWedstrijdInDatabase($this, $this->wedstrijd);
+    }
+
+    /** @test */
+    public function nogDeelnemersGekoppeld()
+    {
+        $expectedMessage = "Wedstrijd niet verwijderd! Nog deelnemers en/of reeksen aanwezig!";
+        bewaarWedstrijddeelnemer(["wedstrijd_id" => $this->wedstrijd->id]);
+
+        $response = $this->verwijderWedstrijd($this->wedstrijd->datum);
+
+        $response->assertStatus(405);
+        $this->assertErrorMessageIs($response, $expectedMessage);
+        assertWedstrijdInDatabase($this, $this->wedstrijd,);
     }
 
     /**
@@ -77,5 +103,15 @@ class WedstrijdenDestroyTest extends TestCase
                     URL_WEDSTRIJDEN_ADMIN . $datum
                 )
             ;
+    }
+
+    /**
+     * @param TestResponse $response
+     * @param string $expectedMessage
+     */
+    private function assertErrorMessageIs(TestResponse $response, string $expectedMessage): void
+    {
+        $errorMessage = $response->json()["message"];
+        $this->assertEquals($expectedMessage, $errorMessage);
     }
 }

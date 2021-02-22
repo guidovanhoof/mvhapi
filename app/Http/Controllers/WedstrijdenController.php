@@ -93,7 +93,7 @@ class WedstrijdenController extends Controller
             try {
                 $wedstrijd->delete();
             } catch (QueryException $queryException) {
-                return nietVerwijderdResponse("Wedstrijd", "reeksen");
+                return nietVerwijderdResponse("Wedstrijd", "deelnemers en/of reeksen");
             }
             return verwijderdResponse("Wedstrijd");
         } catch (ModelNotFoundException $modelNotFoundException) {

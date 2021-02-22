@@ -45,7 +45,7 @@ class WedstrijdtypesDestroyTest extends TestCase
 
         $response = $this->deleteWedstrijdtype($wedstrijdtype->id);
 
-        $response->assertStatus(403);
+        $response->assertStatus(405);
         $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseHas(

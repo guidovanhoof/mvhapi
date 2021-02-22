@@ -270,6 +270,8 @@ function getVerwijderActies(): array
             "cleanUpWedstrijdtypes",
         ],
         "wedstrijden" => [
+            "cleanUpWedstrijddeelnemers",
+            "cleanUpReeksen",
             "cleanUpWedstrijden",
             "cleanUpKalenders",
             "cleanUpWedstrijdtypes",

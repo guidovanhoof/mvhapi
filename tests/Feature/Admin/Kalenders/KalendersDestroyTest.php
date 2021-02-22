@@ -46,7 +46,7 @@ class KalendersDestroyTest extends TestCase
 
         $response = $this->deleteKalender($kalender->jaar);
 
-        $response->assertStatus(403);
+        $response->assertStatus(405);
         $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseHas(

@@ -45,7 +45,7 @@ class PlaatsenDestroyTest extends TestCase
 
         $response = $this->verwijderPlaats($plaats->id);
 
-        $response->assertStatus(403);
+        $response->assertStatus(405);
         $errorMessage = $response->json()["message"];
         $this
             ->assertDatabaseHas(
