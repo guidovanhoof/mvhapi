@@ -202,7 +202,7 @@ class WedstrijdTest extends TestCase
     }
 
     /** @test  */
-    public function heefReeksen()
+    public function heeftReeksen()
     {
         $wedstrijd = bewaarWedstrijd();
         $expectedReeks = bewaarReeks(["wedstrijd_id" => $wedstrijd->id]);
@@ -211,5 +211,17 @@ class WedstrijdTest extends TestCase
 
         $this->assertCount(1, $actualReeksen);
         assertReeksEquals($this, $actualReeksen[0], $expectedReeks);
+    }
+
+    /** @test  */
+    public function heeftDeelnemers()
+    {
+        $wedstrijd = bewaarWedstrijd();
+        $expectedDeelnemer = bewaarWedstrijddeelnemer(["wedstrijd_id" => $wedstrijd->id]);
+
+        $actualDeelnemers = $wedstrijd->deelnemers;
+
+        $this->assertCount(1, $actualDeelnemers);
+        assertWedstrijddeelnemerEquals($this, $actualDeelnemers[0], $expectedDeelnemer);
     }
 }

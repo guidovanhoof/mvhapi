@@ -50,6 +50,14 @@ class Wedstrijd extends Model
     }
 
     /**
+     * @return HasMany
+     */
+    public function deelnemers(): HasMany
+    {
+        return $this->hasMany(Wedstrijddeelnemer::class);
+    }
+
+    /**
      * @return string
      */
     public function getRouteKeyName(): string

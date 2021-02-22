@@ -63,6 +63,13 @@ Route::group(
             ->middleware("auth:sanctum")
         ;
 
+        Route::get(
+            "wedstrijden/{datum}/deelnemers",
+            [WedstrijdenController::class, "deelnemers"]
+        )
+            ->middleware("auth:sanctum")
+        ;
+
         Route::apiResource(
             "reeksen",
             ReeksController::class

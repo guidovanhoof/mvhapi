@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ReeksResource;
+use App\Http\Resources\WedstrijddeelnemerResource;
 use App\Http\Resources\WedstrijdResource;
 use App\Models\Wedstrijd;
 use App\Rules\DatumInKalenderJaar;
@@ -113,6 +114,25 @@ class WedstrijdenController extends Controller
             $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
             return response()->json(
                 ReeksResource::collection($wedstrijd->reeksen),
+                200
+            );
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Wedstrijd");
+        }
+    }
+
+    /**
+     * Tonen alle deelnemers van een wedstrijd
+     *
+     * @param $datum
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function deelnemers($datum)
+    {
+        try {
+            $wedstrijd = Wedstrijd::where("datum", $datum)->firstOrFail();
+            return response()->json(
+                WedstrijddeelnemerResource::collection($wedstrijd->deelnemers),
                 200
             );
         } catch (ModelNotFoundException $modelNotFoundException) {
