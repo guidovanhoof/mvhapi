@@ -4,6 +4,7 @@ use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\DeelnemersController;
 use App\Http\Controllers\GewichtenController;
 use App\Http\Controllers\KalendersController;
+use App\Http\Controllers\PlaatsdeelnemersController;
 use App\Http\Controllers\PlaatsenController;
 use App\Http\Controllers\ReeksController;
 use App\Http\Controllers\WedstrijddeelnemersController;
@@ -114,6 +115,14 @@ Route::group(
             WedstrijddeelnemersController::class
         )
             ->parameters(["wedstrijddeelnemers" => "id"])
+            ->middleware("auth:sanctum")
+        ;
+
+        Route::apiResource(
+            "plaatsdeelnemers",
+            PlaatsdeelnemersController::class
+        )
+            ->parameters(["plaatsdeelnemers" => "id"])
             ->middleware("auth:sanctum")
         ;
     }
