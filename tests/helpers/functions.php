@@ -4,6 +4,7 @@ use App\Models\Deelnemer;
 use App\Models\Gewicht;
 use App\Models\Kalender;
 use App\Models\Plaats;
+use App\Models\Plaatsdeelnemer;
 use App\Models\Reeks;
 use App\Models\User;
 use App\Models\Wedstrijd;
@@ -21,6 +22,7 @@ const URL_PLAATSEN_ADMIN = "api/admin/plaatsen/";
 const URL_GEWICHTEN_ADMIN = "api/admin/gewichten/";
 const URL_DEELNEMERS_ADMIN = "api/admin/deelnemers/";
 const URL_WEDSTRIJDDEELNEMERS_ADMIN = "api/admin/wedstrijddeelnemers/";
+const URL_PLAATSDEELNEMERS_ADMIN = "api/admin/plaatsdeelnemers/";
 
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
@@ -248,49 +250,58 @@ function cleanUpDb(string $actie)
 function getVerwijderActies(): array
 {
     return [
-        "gewichten" => [
-            "cleanUpGewichten",
-            "cleanUpPlaatsen",
-            "cleanUpReeksen",
-            "cleanUpWedstrijden",
-            "cleanUpKalenders",
-            "cleanUpWedstrijdtypes",
+        'gewichten' => [
+            'cleanUpGewichten',
+            'cleanUpPlaatsen',
+            'cleanUpReeksen',
+            'cleanUpWedstrijden',
+            'cleanUpKalenders',
+            'cleanUpWedstrijdtypes',
         ],
-        "plaatsen" => [
-            "cleanUpPlaatsen",
-            "cleanUpReeksen",
-            "cleanUpWedstrijden",
-            "cleanUpKalenders",
-            "cleanUpWedstrijdtypes",
+        'plaatsen' => [
+            'cleanUpPlaatsen',
+            'cleanUpReeksen',
+            'cleanUpWedstrijden',
+            'cleanUpKalenders',
+            'cleanUpWedstrijdtypes',
         ],
-        "reeksen" => [
-            "cleanUpReeksen",
-            "cleanUpWedstrijden",
-            "cleanUpKalenders",
-            "cleanUpWedstrijdtypes",
+        'reeksen' => [
+            'cleanUpReeksen',
+            'cleanUpWedstrijden',
+            'cleanUpKalenders',
+            'cleanUpWedstrijdtypes',
         ],
-        "wedstrijden" => [
-            "cleanUpWedstrijddeelnemers",
-            "cleanUpReeksen",
-            "cleanUpWedstrijden",
-            "cleanUpKalenders",
-            "cleanUpWedstrijdtypes",
+        'wedstrijden' => [
+            'cleanUpWedstrijddeelnemers',
+            'cleanUpReeksen',
+            'cleanUpWedstrijden',
+            'cleanUpKalenders',
+            'cleanUpWedstrijdtypes',
         ],
-        "kalenders" => [
-            "cleanUpKalenders",
-            "cleanUpWedstrijdtypes",
+        'kalenders' => [
+            'cleanUpKalenders',
+            'cleanUpWedstrijdtypes',
         ],
-        "deelnemers" => [
-            "cleanUpDeelnemers",
+        'deelnemers' => [
+            'cleanUpDeelnemers',
         ],
-        "wedstrijddeelnemers" => [
-            "cleanUpWedstrijddeelnemers",
-            "cleanUpDeelnemers",
-            "cleanUpWedstrijden",
-            "cleanUpKalenders",
+        'wedstrijddeelnemers' => [
+            'cleanUpWedstrijddeelnemers',
+            'cleanUpDeelnemers',
+            'cleanUpWedstrijden',
+            'cleanUpKalenders',
         ],
-        "wedstrijdtypes" => [
-            "cleanUpWedstrijdtypes",
+        'plaatsdeelnemers' => [
+            'cleanUpPlaatsdeelnemers',
+            'cleanUpPlaatsen',
+            'cleanUpReeksen',
+            'cleanUpWedstrijddeelnemers',
+            'cleanUpDeelnemers',
+            'cleanUpWedstrijden',
+            'cleanUpKalenders',
+        ],
+        'wedstrijdtypes' => [
+            'cleanUpWedstrijdtypes',
         ],
     ];
 }
@@ -333,6 +344,11 @@ function cleanUpDeelnemers(): void
 function cleanUpWedstrijddeelnemers(): void
 {
     Wedstrijddeelnemer::query()->delete();
+}
+
+function cleanUpPlaatsdeelnemers(): void
+{
+    Plaatsdeelnemer::query()->delete();
 }
 
 function bewaarGewicht($velden = [])
@@ -596,4 +612,54 @@ function assertDataseMissing(TestCase $testCase, TestResponse $response, string 
             get_class($model)::where($model)->count()
     );
     $testCase->assertEquals("Deelnemer verwijderd!", $errorMessage);
+}
+
+
+function bewaarPlaatsdeelnemer($velden = [])
+{
+    return Plaatsdeelnemer::factory()->create($velden);
+}
+
+function maakPlaatsdeelnemer($velden = [])
+{
+    return Plaatsdeelnemer::factory()->make($velden);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param $data
+ * @param Plaatsdeelnemer $plaatsdeelnemer
+ */
+function assertPlaatsdeelnemerEquals(TestCase $testCase, $data, Plaatsdeelnemer $plaatsdeelnemer): void
+{
+    $testCase->assertEquals($data["plaats_id"], $plaatsdeelnemer->plaats_id);
+    $testCase->assertEquals($data["wedstrijddeelnemer_id"], $plaatsdeelnemer->wedstrijddeelnemer_id);
+    $testCase->assertEquals($data["is_weger"], $plaatsdeelnemer->is_weger);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param Plaatsdeelnemer $plaatsdeelnemer
+ */
+function assertPlaatsdeelnemerInDatabase(TestCase $testCase, Plaatsdeelnemer $plaatsdeelnemer): void
+{
+    $testCase->assertEquals(
+        1,
+        Plaatsdeelnemer::where(plaatsdeelnemerToArry($plaatsdeelnemer))->count()
+    );
+    $testCase->assertJson($plaatsdeelnemer->toJson())
+    ;
+}
+
+/**
+ * @param Plaatsdeelnemer $plaatsdeelnemer
+ * @return array
+ */
+function plaatsdeelnemerToArry(Plaatsdeelnemer $plaatsdeelnemer): array
+{
+    return [
+        'plaats_id' => $plaatsdeelnemer->plaats_id,
+        'wedstrijddeelnemer_id' => $plaatsdeelnemer->wedstrijddeelnemer_id,
+        'is_weger' => $plaatsdeelnemer->is_weger,
+    ];
 }
