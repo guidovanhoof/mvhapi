@@ -24,6 +24,14 @@ const URL_DEELNEMERS_ADMIN = "api/admin/deelnemers/";
 const URL_WEDSTRIJDDEELNEMERS_ADMIN = "api/admin/wedstrijddeelnemers/";
 const URL_PLAATSDEELNEMERS_ADMIN = "api/admin/plaatsdeelnemers/";
 
+/**
+ * @return int
+ */
+function getKkalenderJaar() {
+    static $jaar = 2000;
+    return $jaar++;
+}
+
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
 }

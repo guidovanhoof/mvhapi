@@ -48,6 +48,7 @@ return [
     'nummer_uniek_per_wedstrijd' => 'Nummer bestaat reeds voor wedstrijd!',
     'nummer_uniek_per_reeks' => 'Nummer bestaat reeds voor reeks!',
     'deelnemer_uniek_per_wedstrijd' => 'Deelnemer bestaat reeds voor wedstrijd!',
+    'deelnemer_uniek_per_plaat' => 'Deelnemer bestaat reeds voor plaats!',
     'gt' => [
         'numeric' => 'The :attribute must be greater than :value.',
         'file' => 'The :attribute must be greater than :value kilobytes.',

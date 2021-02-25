@@ -22,6 +22,7 @@ return [
     'nummer_uniek_per_wedstrijd' => 'Nummer bestaat reeds voor wedstrijd!',
     'nummer_uniek_per_reeks' => 'Nummer bestaat reeds voor reeks!',
     'deelnemer_uniek_per_wedstrijd' => 'Deelnemer bestaat reeds voor wedstrijd!',
+    'deelnemer_uniek_per_plaats' => 'Deelnemer bestaat reeds voor plaats!',
     'attributes' => [
         'jaar' => 'Jaar',
         'email' => 'Email',
@@ -43,5 +44,7 @@ return [
         'deelnemer' => 'Deelnemer',
         'deelnemer_id' => 'Deelnemer_id',
         'is_gediskwalificeerd' => 'Diskwalificatie',
+        'wedstrijddeelnemer_id' => 'Wedstrijddeelnemer_id',
+        'is_weger' => 'Weger',
     ],
 ];

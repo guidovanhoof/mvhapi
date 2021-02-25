@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PlaatsdeelnemerResource;
-use  App\Models\Plaatsdeelnemer;
+use App\Models\Plaats;
+use App\Models\Plaatsdeelnemer;
+use App\Rules\DeelnemerUniekPerPlaats;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,12 +29,13 @@ class PlaatsdeelnemersController extends Controller
     /**
      * Bewaren nieuwe plaatsdeelnemer..
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validData = $this->valideerPlaatsdeelnemer($request, new Plaatsdeelnemer());
+        return $this->plaatsdeelnemerResourceResponse(Plaatsdeelnemer::create($validData), 201);
     }
 
     /**
@@ -54,7 +57,7 @@ class PlaatsdeelnemersController extends Controller
     /**
      * Wijzigen bestaande plaatsdeelnemer.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Plaatsdeelnemer  $plaatsdeelnemer
      * @return \Illuminate\Http\Response
      */
@@ -84,6 +87,27 @@ class PlaatsdeelnemersController extends Controller
         return response()->json(
             new PlaatsdeelnemerResource($plaatsdeelnemer),
             $status
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param Plaatsdeelnemer $plaatsdeelnemer
+     * @return array
+     */
+    private function valideerPlaatsdeelnemer(Request $request, Plaatsdeelnemer  $plaatsdeelnemer): array
+    {
+        return $request->validate(
+            [
+              'plaats_id' => 'bail|required|exists:plaatsen,id',
+              'wedstrijddeelnemer_id' => [
+                  'bail',
+                  'required',
+                  'exists:wedstrijddeelnemers,id',
+                  new DeelnemerUniekPerPlaats($request["plaats_id"], $plaatsdeelnemer->id)
+              ],
+              'is_weger' => 'bail|required|numeric|between:0,1',
+          ]
         );
     }
 }
