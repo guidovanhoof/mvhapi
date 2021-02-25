@@ -27,7 +27,7 @@ class PlaatsdeelnemersController extends Controller
     }
 
     /**
-     * Bewaren nieuwe plaatsdeelnemer..
+     * Bewaren nieuwe plaatsdeelnemer.
      *
      * @param Request $request
      * @return JsonResponse
@@ -58,12 +58,18 @@ class PlaatsdeelnemersController extends Controller
      * Wijzigen bestaande plaatsdeelnemer.
      *
      * @param Request $request
-     * @param  \App\Models\Plaatsdeelnemer  $plaatsdeelnemer
-     * @return \Illuminate\Http\Response
+     * @param  $id
+     * @return JsonResponse
      */
-    public function update(Request $request, Plaatsdeelnemer $plaatsdeelnemer)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $plaatsdeelnemer = Plaatsdeelnemer::where("id", $id)->firstOrFail();
+            $plaatsdeelnemer->update($this->valideerPlaatsdeelnemer($request, $plaatsdeelnemer));
+            return $this->plaatsdeelnemerResourceResponse($plaatsdeelnemer, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse('Plaatsdeelnemer');
+        }
     }
 
     /**
