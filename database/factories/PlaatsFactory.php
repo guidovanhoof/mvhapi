@@ -26,8 +26,20 @@ class PlaatsFactory extends Factory
             "reeks_id" => function() {
                 return Reeks::factory()->create()->id;
             },
-            "nummer" => $this->faker->numberBetween(1, 255),
+            "nummer" => $this->getOplopendNummer(),
             "opmerkingen" => $this->faker->sentence,
         ];
+    }
+
+    /**
+     * Genereer oplopend en uniek nummer
+     *
+     * @return int
+     */
+    private function getOplopendNummer(): int
+    {
+        static $nummer = 1;
+        $nummer = $nummer == 256 ? 1 : $nummer;
+        return $nummer++;
     }
 }

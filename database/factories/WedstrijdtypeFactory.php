@@ -19,10 +19,20 @@ class WedstrijdtypeFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
-            "omschrijving" => $this->faker->word . (int) microtime(true),
+            "omschrijving" => 'Wedstrijdype ' . $this->getVolgnummer(),
         ];
+    }
+
+    /**
+     * Genereer oplopend en uniek volgnummer
+     * @return int
+     */
+    private function getVolgnummer(): int
+    {
+        static $volgnummer = 1;
+        return $volgnummer++;
     }
 }

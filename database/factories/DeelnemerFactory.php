@@ -22,8 +22,19 @@ class DeelnemerFactory extends Factory
     public function definition(): array
     {
         return [
-            "nummer" => $this->faker->numberBetween(1, 65535),
+            "nummer" => $this->getOplopendNummer(),
             "naam" => $this->faker->name
         ];
+    }
+
+    /**
+     * Genereer oploopend en uniek nummer
+     *
+     * @return int
+     */
+    private function getOplopendNummer(): int
+    {
+        static $nummer = 1;
+        return $nummer++;
     }
 }

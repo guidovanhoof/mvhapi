@@ -19,11 +19,23 @@ class KalenderFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
-            'jaar' => $this->faker->year,
+            'jaar' => $this->getVolgendeJaar(),
             'opmerkingen' => $this->faker->sentence()
         ];
+    }
+
+    /**
+     * Genereer een volgend en uniek jaar
+     *
+     * @return int
+     */
+    private function getVolgendeJaar(): int
+    {
+        static $volgendJaar = 2000;
+        $volgendJaar = $volgendJaar == 2101 ? 2000 : $volgendJaar;
+        return $volgendJaar++;
     }
 }

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Kalender;
 use App\Models\Wedstrijd;
 use App\Models\Wedstrijdtype;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class WedstrijdFactory extends Factory
@@ -27,7 +28,7 @@ class WedstrijdFactory extends Factory
             'kalender_id' => function() {
                 return Kalender::factory()->create()->id;
             },
-            'datum' => $this->faker->date('Y-m-d'),
+            'datum' => $this->getVolgendeDatum(),
             'nummer' => $this->faker->numberBetween(1, 65535),
             'omschrijving' => $this->faker->sentence(),
             'sponsor' => $this->faker->sentence(),
@@ -37,5 +38,17 @@ class WedstrijdFactory extends Factory
             },
             'opmerkingen' => $this->faker->sentences(2,true)
         ];
+    }
+
+    /**
+     * Genereer een volgende en unieke datum
+     *
+     * @return string
+     */
+    private function getVolgendeDatum(): string
+    {
+        static $volgendeDatum = '1999-12-31';
+        $volgendeDatum = Carbon::parse($volgendeDatum)->addDay()->format('Y-m-d');
+        return $volgendeDatum;
     }
 }

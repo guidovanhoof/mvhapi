@@ -20,17 +20,29 @@ class ReeksFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'wedstrijd_id' => function() {
                 return Wedstrijd::factory()->create()->id;
             },
-            'nummer' => $this->faker->numberBetween(1, 255),
+            'nummer' => $this->getOplopendNummer(),
             'aanvang' => $this->faker->time(),
             'duur' => $this->faker->time(),
             'gewicht_zak' => $this->faker->numberBetween(0, 255),
             'opmerkingen' => $this->faker->text(75),
         ];
+    }
+
+    /**
+     * Genereer oplopend en uniek nummer
+     *
+     * @return int
+     */
+    private function getOplopendNummer(): int
+    {
+        static $nummer = 1;
+        $nummer = $nummer == 256 ? 1 : $nummer;
+        return $nummer++;
     }
 }
