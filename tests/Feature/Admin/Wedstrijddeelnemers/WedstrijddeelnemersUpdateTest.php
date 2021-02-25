@@ -34,6 +34,16 @@ class WedstrijddeelnemersUpdateTest extends TestCase
     }
 
     /** @test */
+    public function plaatsdeelnemerNietAanwezig()
+    {
+        $this->wedstrijddeelnemer->id = 666;
+
+        $response = $this->wijzigWedstrijddeelnemer($this->wedstrijddeelnemer);
+
+        assertNietGevonden($this, $response, "Wedstrijddeelnemer");
+    }
+
+    /** @test */
     public function wedstrijddeelnemerWijzigen()
     {
         $wedstrijd = bewaarWedstrijd();
