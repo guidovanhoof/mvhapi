@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
 
 class PlaatsdeelnemersController extends Controller
 {
@@ -61,7 +62,7 @@ class PlaatsdeelnemersController extends Controller
      * @param  $id
      * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): JsonResponse
     {
         try {
             $plaatsdeelnemer = Plaatsdeelnemer::where("id", $id)->firstOrFail();
@@ -75,12 +76,18 @@ class PlaatsdeelnemersController extends Controller
     /**
      * Verwijderen bestaande plaatsdeelnemer.
      *
-     * @param  \App\Models\Plaatsdeelnemer  $plaatsdeelnemer
-     * @return \Illuminate\Http\Response
+     * @param  $id
+     * @return JsonResponse
      */
-    public function destroy(Plaatsdeelnemer $plaatsdeelnemer)
+    public function destroy($id): JsonResponse
     {
-        //
+        try {
+            $plaatsdeelnemer = Plaatsdeelnemer::where("id", $id)->firstOrFail();
+            $plaatsdeelnemer->delete();
+            return verwijderdResponse("Plaatsdeelnemer");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Plaatsdeelnemer");
+        }
     }
 
     /**
