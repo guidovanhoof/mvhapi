@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\GewichtResource;
+use App\Http\Resources\PlaatsdeelnemerResource;
 use App\Http\Resources\PlaatsResource;
 use App\Models\Plaats;
 use App\Rules\NummerUniekPerReeks;
@@ -112,6 +113,25 @@ class PlaatsenController extends Controller
             $plaats = Plaats::where("id", $id)->firstOrFail();
             return response()->json(
                 GewichtResource::collection($plaats->gewichten),
+                200
+            );
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Plaats");
+        }
+    }
+
+    /**
+     * Tonen alle deelnemers van een plaats.
+     *
+     * @param $id
+     * @return JsonResponse
+     */
+    public function deelnemers($id): JsonResponse
+    {
+        try {
+            $plaats = Plaats::where("id", $id)->firstOrFail();
+            return response()->json(
+                PlaatsdeelnemerResource::collection($plaats->deelnemers),
                 200
             );
         } catch (ModelNotFoundException $modelNotFoundException) {

@@ -30,7 +30,7 @@ class GewichtenStoreTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("gewichten");
+        cleanUpDb();
         $this->plaats = null;
         $this->gewicht = null;
 

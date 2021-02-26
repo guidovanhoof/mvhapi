@@ -12,7 +12,7 @@ class PlaatsdeelnemersDestroyTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("plaatsdeelnemers");
+        cleanUpDb();
 
         parent::tearDown();
     }

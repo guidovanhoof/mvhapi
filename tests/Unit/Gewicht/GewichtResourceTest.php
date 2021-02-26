@@ -27,7 +27,7 @@ class GewichtResourceTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("gewichten");
+        cleanUpDb();
         $this->gewicht = null;
 
         parent::tearDown();

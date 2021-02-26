@@ -30,7 +30,7 @@ class ReeksTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("plaatsen");
+        cleanUpDb();
         $this->kalender = null;
         $this->wedstrijd = null;
         $this->reeks = null;

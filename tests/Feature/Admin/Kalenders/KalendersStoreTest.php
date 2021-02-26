@@ -22,7 +22,7 @@ class KalendersStoreTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("kalenders");
+        cleanUpDb();
 
         parent::tearDown();
     }

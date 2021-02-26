@@ -28,7 +28,7 @@ class DeelnemerUniekPerPlaatsTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("plaatsdeelnemers");
+        cleanUpDb();
 
         parent::tearDown();
     }

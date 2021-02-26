@@ -24,14 +24,6 @@ const URL_DEELNEMERS_ADMIN = "api/admin/deelnemers/";
 const URL_WEDSTRIJDDEELNEMERS_ADMIN = "api/admin/wedstrijddeelnemers/";
 const URL_PLAATSDEELNEMERS_ADMIN = "api/admin/plaatsdeelnemers/";
 
-/**
- * @return int
- */
-function getKkalenderJaar() {
-    static $jaar = 2000;
-    return $jaar++;
-}
-
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
 }
@@ -243,120 +235,17 @@ function assertPlaatsEquals(TestCase $testCase, $data, Plaats $plaats): void
  *
  * @param string $actie
  */
-function cleanUpDb(string $actie)
-{
-    $verwijderActies = getVerwijderActies();
-    foreach ($verwijderActies[$actie] as $verwijderActie) {
-        $verwijderActie();
-    }
-}
-
-/**
- * Lijst met leeg te maken tabellen
- * @return string[][]
- */
-function getVerwijderActies(): array
-{
-    return [
-        'gewichten' => [
-            'cleanUpGewichten',
-            'cleanUpPlaatsen',
-            'cleanUpReeksen',
-            'cleanUpWedstrijden',
-            'cleanUpKalenders',
-            'cleanUpWedstrijdtypes',
-        ],
-        'plaatsen' => [
-            'cleanUpPlaatsen',
-            'cleanUpReeksen',
-            'cleanUpWedstrijden',
-            'cleanUpKalenders',
-            'cleanUpWedstrijdtypes',
-        ],
-        'reeksen' => [
-            'cleanUpReeksen',
-            'cleanUpWedstrijden',
-            'cleanUpKalenders',
-            'cleanUpWedstrijdtypes',
-        ],
-        'wedstrijden' => [
-            'cleanUpWedstrijddeelnemers',
-            'cleanUpReeksen',
-            'cleanUpWedstrijden',
-            'cleanUpKalenders',
-            'cleanUpWedstrijdtypes',
-        ],
-        'kalenders' => [
-            'cleanUpKalenders',
-            'cleanUpWedstrijdtypes',
-        ],
-        'deelnemers' => [
-            'cleanUpDeelnemers',
-        ],
-        'wedstrijddeelnemers' => [
-            'cleanUpWedstrijddeelnemers',
-            'cleanUpDeelnemers',
-            'cleanUpWedstrijden',
-            'cleanUpKalenders',
-        ],
-        'plaatsdeelnemers' => [
-            'cleanUpPlaatsdeelnemers',
-            'cleanUpPlaatsen',
-            'cleanUpReeksen',
-            'cleanUpWedstrijddeelnemers',
-            'cleanUpDeelnemers',
-            'cleanUpWedstrijden',
-            'cleanUpKalenders',
-        ],
-        'wedstrijdtypes' => [
-            'cleanUpWedstrijdtypes',
-        ],
-    ];
-}
-
-function cleanUpPlaatsen()
-{
-    Plaats::query()->delete();
-}
-
-function cleanUpKalenders(): void
-{
-    Kalender::query()->delete();
-}
-
-function cleanUpWedstrijden(): void
-{
-    Wedstrijd::query()->delete();
-}
-
-function cleanUpReeksen(): void
-{
-    Reeks::query()->delete();
-}
-
-function cleanUpWedstrijdtypes(): void
-{
-    Wedstrijdtype::query()->delete();
-}
-
-function cleanUpGewichten(): void
+function cleanUpDb()
 {
     Gewicht::query()->delete();
-}
-
-function cleanUpDeelnemers(): void
-{
-    Deelnemer::query()->delete();
-}
-
-function cleanUpWedstrijddeelnemers(): void
-{
-    Wedstrijddeelnemer::query()->delete();
-}
-
-function cleanUpPlaatsdeelnemers(): void
-{
     Plaatsdeelnemer::query()->delete();
+    Plaats::query()->delete();
+    Reeks::query()->delete();
+    Wedstrijddeelnemer::query()->delete();
+    Wedstrijd::query()->delete();
+    Wedstrijdtype::query()->delete();
+    Deelnemer::query()->delete();
+    Kalender::query()->delete();
 }
 
 function bewaarGewicht($velden = [])

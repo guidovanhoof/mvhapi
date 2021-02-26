@@ -30,7 +30,7 @@ class WedstrijdenStoreTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("wedstrijden");
+        cleanUpDb();
         $this->wedstrijd = null;
         $this->kalender = null;
 

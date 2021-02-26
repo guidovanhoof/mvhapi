@@ -28,7 +28,7 @@ class GewichtTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("gewichten");
+        cleanUpDb();
         parent::tearDown();
     }
 

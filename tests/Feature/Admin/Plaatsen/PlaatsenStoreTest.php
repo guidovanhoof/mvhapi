@@ -29,7 +29,7 @@ class PlaatsenStoreTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("plaatsen");
+        cleanUpDb();
         $this->reeks = null;
         $this->plaats = null;
 

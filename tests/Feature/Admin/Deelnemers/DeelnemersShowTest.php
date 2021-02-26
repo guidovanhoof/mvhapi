@@ -12,7 +12,7 @@ class DeelnemersShowTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("deelnemers");
+        cleanUpDb();
 
         parent::tearDown();
     }

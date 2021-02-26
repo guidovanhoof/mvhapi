@@ -122,7 +122,7 @@ class WedstrijdenController extends Controller
     }
 
     /**
-     * Tonen alle deelnemers van een wedstrijd
+     * Tonen alle deelnemers van een wedstrijd.
      *
      * @param $datum
      * @return JsonResponse|AnonymousResourceCollection

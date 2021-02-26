@@ -29,7 +29,7 @@ class PlaatsTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("gewichten");
+        cleanUpDb();
         $this->reeks = null;
         $this->plaats = null;
 
@@ -112,7 +112,23 @@ class PlaatsTest extends TestCase
         $actualGewichten = $this->plaats->gewichten;
 
         $this->assertCount(1, $actualGewichten);
-        assertGewichtEquals($this, $actualGewichten[0], $expectGewicht);    }
+        assertGewichtEquals($this, $actualGewichten[0], $expectGewicht);
+    }
+
+    /** @test  */
+    public function heeftDeelnemers()
+    {
+        $this->bewaarPlaats();
+        $deelnemer = bewaarWedstrijddeelnemer();
+        $expectDeelnemer = bewaarPlaatsdeelnemer(
+            ["plaats_id" => $this->plaats->id, "wedstrijddeelnemer_id" => $deelnemer->id]
+        );
+
+        $actualDeelnemers = $this->plaats->deelnemers;
+
+        $this->assertCount(1, $actualDeelnemers);
+        assertPlaatsdeelnemerEquals($this, $actualDeelnemers[0], $expectDeelnemer);
+    }
 
     private function bewaarPlaats(): void
     {

@@ -1,28 +1,28 @@
 <?php
 
-namespace Tests\Feature\Admin\Wedstrijden;
+namespace Tests\Feature\Admin\Plaatsen;
 
-use App\Models\Wedstrijd;
+use App\Models\Plaats;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class WedstrijdenReeksenTest extends TestCase
+class PlaatsenDeelnemersTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
      * @var Collection|Model|mixed
      */
-    private $wedstrijd;
+    private $plaats;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->wedstrijd = bewaarWedstrijd();
+        $this->plaats = bewaarPlaats();
     }
 
     public function tearDown(): void
@@ -33,32 +33,32 @@ class WedstrijdenReeksenTest extends TestCase
     }
 
     /** @test */
-    public function geenReeksenAanwezig()
+    public function geenDeelnemersAanwezig()
     {
-        $response = $this->getWedstrijdReeksen($this->wedstrijd);
+        $response = $this->getPlaatsdeelnemers($this->plaats);
 
         $response->assertStatus(200);
         $response->assertJson([]);
     }
 
     /** @test */
-    public function reeksenAanwezig()
+    public function deelnemersAanwezig()
     {
-        $reeks = bewaarReeks(["wedstrijd_id" => $this->wedstrijd->id]);
+        $plaatsdeelnemer = bewaarPlaatsdeelnemer(["plaats_id" => $this->plaats->id]);
 
-        $response = $this->getWedstrijdReeksen($this->wedstrijd);
+        $response = $this->getPlaatsdeelnemers($this->plaats);
 
         $response->assertStatus(200);
         $data = $response->json();
         $this->assertCount(1, $data);
-        assertReeksEquals($this, $data[0], $reeks);
+        assertPlaatsdeelnemerEquals($this, $data[0], $plaatsdeelnemer);
     }
 
     /**
-     * @param Wedstrijd $wedstrijd
+     * @param Plaats $plaats
      * @return TestResponse
      */
-    private function getWedstrijdReeksen(Wedstrijd $wedstrijd): TestResponse
+    private function getPlaatsdeelnemers(Plaats $plaats): TestResponse
     {
         $plainToken = createUserAndToken();
 
@@ -66,7 +66,7 @@ class WedstrijdenReeksenTest extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $plainToken)
             ->json(
                 'GET',
-                URL_WEDSTRIJDEN_ADMIN . $wedstrijd->datum . '/reeksen'
+                URL_PLAATSEN_ADMIN . $plaats->id . '/deelnemers'
             )
         ;
     }
