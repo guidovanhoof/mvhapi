@@ -43,6 +43,26 @@ class DeelnemersDestroyTest extends TestCase
         ;
     }
 
+    /** @test */
+    public function nogWedstrijddeelnemersGekoppeld()
+    {
+        $expectedMessage = "Deelnemer niet verwijderd! Nog wedstrijddeelnemers aanwezig!";
+        $deelnemer = bewaarDeelnemer();
+        bewaarWedstrijddeelnemer(["deelnemer_id" => $deelnemer->id]);
+
+        $response = $this->verwijderDeelnemer($deelnemer->nummer);
+
+        $response->assertStatus(405);
+        $errorMessage = $response->json()["message"];
+        $this
+            ->assertDatabaseHas(
+                "deelnemers",
+                deelnemerToArry($deelnemer)
+            )
+            ->assertEquals($expectedMessage, $errorMessage)
+        ;
+    }
+
     /**
      * @param $nummer
      * @return TestResponse

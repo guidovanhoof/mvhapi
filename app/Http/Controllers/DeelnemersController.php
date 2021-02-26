@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DeelnemerResource;
 use App\Models\Deelnemer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
 
 class DeelnemersController extends Controller
@@ -83,7 +85,11 @@ class DeelnemersController extends Controller
     {
         try {
             $deelnemer = Deelnemer::where("nummer", $nummer)->firstOrFail();
-            $deelnemer->delete();
+            try {
+                $deelnemer->delete();
+            } catch (QueryException $queryException) {
+                return nietVerwijderdResponse("Deelnemer", "wedstrijddeelnemers");
+            }
             return verwijderdResponse("Deelnemer");
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Deelnemer");
