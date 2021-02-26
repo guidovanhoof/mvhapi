@@ -93,7 +93,7 @@ class PlaatsenController extends Controller
             try {
                 $plaats->delete();
             } catch (QueryException $queryException) {
-                return nietVerwijderdResponse("Plaats", "gewichten");
+                return nietVerwijderdResponse("Plaats", "gewichten/deelnemers");
             }
             return verwijderdResponse("Plaats");
         } catch (ModelNotFoundException $modelNotFoundException) {
