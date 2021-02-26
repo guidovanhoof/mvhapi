@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Admin\Deelnemers;
+namespace Tests\Feature\Admin\Wedstrijddeelnemers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
@@ -12,7 +12,7 @@ class WedstrijddeelnemersShowTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("wedstrijddeelnemers");
+        cleanUpDb();
 
         parent::tearDown();
     }

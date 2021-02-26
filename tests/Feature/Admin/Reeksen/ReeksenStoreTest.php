@@ -29,7 +29,7 @@ class ReeksenStoreTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("reeksen");
+        cleanUpDb();
         $this->wedstrijd = null;
         $this->reeks = null;
 

@@ -101,6 +101,13 @@ Route::group(
             ->middleware("auth:sanctum")
         ;
 
+        Route::get(
+            "plaatsen/{id}/deelnemers",
+            [PlaatsenController::class, "deelnemers"]
+        )
+            ->middleware("auth:sanctum")
+        ;
+
         Route::apiResource(
             "gewichten",
             GewichtenController::class

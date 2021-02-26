@@ -24,7 +24,7 @@ class NummerUniekPerWedstrijdTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("reeksen");
+        cleanUpDb();
 
         parent::tearDown();
     }

@@ -27,7 +27,7 @@ class WedstrijddeelnemersUpdateTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("wedstrijddeelnemers");
+        cleanUpDb();
         $this->wedstrijddeelnemer = null;
 
         parent::tearDown();

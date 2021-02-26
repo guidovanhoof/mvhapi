@@ -13,7 +13,7 @@ class WedstrijdtypesUpdateTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("wedstrijdtypes");
+        cleanUpDb();
         parent::tearDown();
     }
 

@@ -24,7 +24,7 @@ class KalendersUpdateTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("kalenders");
+        cleanUpDb();
 
         parent::tearDown();
     }

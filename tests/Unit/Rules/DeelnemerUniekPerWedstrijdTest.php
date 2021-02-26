@@ -27,7 +27,7 @@ class DeelnemerUniekPerWedstrijdTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("wedstrijddeelnemers");
+        cleanUpDb();
 
         parent::tearDown();
     }

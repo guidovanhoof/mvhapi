@@ -23,13 +23,13 @@ class DeelnemersUpdateTest extends TestCase
     {
         parent::setUp();
 
-        $this->deelnemer = bewaarDeelnemer(["nummer" => 66]);
+        $this->deelnemer = bewaarDeelnemer();
         $this->nummer = $this->deelnemer->nummer;
     }
 
     public function tearDown(): void
     {
-        cleanUpDb("deelnemers");
+        cleanUpDb();
         $this->deelnemer = null;
 
         parent::tearDown();

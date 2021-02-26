@@ -12,7 +12,7 @@ class PlaatsenIndexTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("plaatsen");
+        cleanUpDb();
 
         parent::tearDown();
     }

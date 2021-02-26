@@ -28,7 +28,7 @@ class PlaatsResourceTest extends TestCase
 
     public function tearDown(): void
     {
-        cleanUpDb("plaatsen");
+        cleanUpDb();
         $this->plaats = null;
 
         parent::tearDown();
