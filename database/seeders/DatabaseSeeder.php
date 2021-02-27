@@ -13,17 +13,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call([
-            UsersSeeder::class,
-            KalendersSeeder::class,
-            WedstrijdtypesSeeder::class,
-            WedstrijdenSeeder::class,
-            ReeksenSeeder::class,
-            PlaatsenSeeder::class,
-            GewichtSeeder::class,
-            DeelnemersSeeder::class,
-            WedstrijddeelnemerSeeder::class,
-            PlaatsdeelnemerSeeder::class,
-        ]);
+        $this->call(
+            [
+                UsersSeeder::class,
+                KalendersSeeder::class,
+                WedstrijdtypesSeeder::class,
+                WedstrijdenSeeder::class,
+                ReeksenSeeder::class,
+                PlaatsenSeeder::class,
+                GewichtSeeder::class,
+                DeelnemersSeeder::class,
+                WedstrijddeelnemerSeeder::class,
+                PlaatsdeelnemerSeeder::class,
+                JeugdcategorieSeeder::class,
+            ]
+        );
     }
 }
