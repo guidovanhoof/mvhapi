@@ -3,6 +3,7 @@
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\DeelnemersController;
 use App\Http\Controllers\GewichtenController;
+use App\Http\Controllers\JeugdcategorieenController;
 use App\Http\Controllers\KalendersController;
 use App\Http\Controllers\PlaatsdeelnemersController;
 use App\Http\Controllers\PlaatsenController;
@@ -137,6 +138,14 @@ Route::group(
             PlaatsdeelnemersController::class
         )
             ->parameters(["plaatsdeelnemers" => "id"])
+            ->middleware("auth:sanctum")
+        ;
+
+        Route::apiResource(
+            "jeugdcategorieen",
+            JeugdcategorieenController::class
+        )
+            ->parameters(["jeugdcategorieen" => "id"])
             ->middleware("auth:sanctum")
         ;
     }

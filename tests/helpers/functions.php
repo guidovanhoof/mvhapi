@@ -2,6 +2,7 @@
 
 use App\Models\Deelnemer;
 use App\Models\Gewicht;
+use App\Models\Jeugdcategorie;
 use App\Models\Kalender;
 use App\Models\Plaats;
 use App\Models\Plaatsdeelnemer;
@@ -23,6 +24,7 @@ const URL_GEWICHTEN_ADMIN = "api/admin/gewichten/";
 const URL_DEELNEMERS_ADMIN = "api/admin/deelnemers/";
 const URL_WEDSTRIJDDEELNEMERS_ADMIN = "api/admin/wedstrijddeelnemers/";
 const URL_PLAATSDEELNEMERS_ADMIN = "api/admin/plaatsdeelnemers/";
+const URL_JEUGDCATEGORIEEN_ADMIN = "api/admin/jeugdcategorieen/";
 
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
@@ -205,7 +207,6 @@ function stdlog($omschrijving, $waarde)
 {
     echo "\n### $omschrijving = '$waarde' ###\n";
 }
-
 
 function bewaarPlaats($velden = [])
 {
@@ -558,5 +559,51 @@ function plaatsdeelnemerToArry(Plaatsdeelnemer $plaatsdeelnemer): array
         'plaats_id' => $plaatsdeelnemer->plaats_id,
         'wedstrijddeelnemer_id' => $plaatsdeelnemer->wedstrijddeelnemer_id,
         'is_weger' => $plaatsdeelnemer->is_weger,
+    ];
+}
+
+function bewaarJeugdcategorie($velden = [])
+{
+    return Jeugdcategorie::factory()->create($velden);
+}
+
+function maakJeugdcategorie($velden = [])
+{
+    return Jeugdcategorie::factory()->make($velden);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param $data
+ * @param Jeugdcategorie $jeugdcategorie
+ */
+function assertJeugdcategorieEquals(TestCase $testCase, $data, Jeugdcategorie $jeugdcategorie): void
+{
+    $testCase->assertEquals($data["omschrijving"], $jeugdcategorie->omschrijving);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param Jeugdcategorie $jeugdcategorie
+ */
+function assertJeugdcategorieInDatabase(TestCase $testCase, Jeugdcategorie $jeugdcategorie): void
+{
+    $testCase->assertEquals(
+        1,
+        Jeugdcategorie::where(jeugdcategorieToArry($jeugdcategorie))->count()
+    );
+    $testCase->assertJson($jeugdcategorie->toJson())
+    ;
+}
+
+/**
+ * @param Jeugdcategorie $jeugdcategorie
+ * @return array
+ */
+function jeugdcategorieToArry(Jeugdcategorie $jeugdcategorie): array
+{
+    return [
+        'wedstrijddeelnemer_id' => $jeugdcategorie->wedstrijddeelnemer_id,
+        'jeugdcategorie_id' => $jeugdcategorie->jeugdcategorie_id,
     ];
 }
