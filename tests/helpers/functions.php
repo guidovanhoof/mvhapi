@@ -603,7 +603,6 @@ function assertJeugdcategorieInDatabase(TestCase $testCase, Jeugdcategorie $jeug
 function jeugdcategorieToArry(Jeugdcategorie $jeugdcategorie): array
 {
     return [
-        'wedstrijddeelnemer_id' => $jeugdcategorie->wedstrijddeelnemer_id,
-        'jeugdcategorie_id' => $jeugdcategorie->jeugdcategorie_id,
+        'omschrijving' => $jeugdcategorie->omschrijving,
     ];
 }
