@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\JeugdcategorieResource;
 use App\Models\Jeugdcategorie;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use function App\Helpers\nietGevondenResponse;
 
 class JeugdcategorieenController extends Controller
 {
@@ -22,17 +24,7 @@ class JeugdcategorieenController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Bewaren nieuwe jeugdcategorie.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -43,14 +35,19 @@ class JeugdcategorieenController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Tonen één jeugdcategorie.
      *
-     * @param  \App\Models\Jeugdcategorie  $jeugdcategorie
-     * @return \Illuminate\Http\Response
+     * @param  $id
+     * @return JsonResponse
      */
-    public function show(Jeugdcategorie $jeugdcategorie)
+    public function show($id): JsonResponse
     {
-        //
+        try {
+            $jeugdcategorie = Jeugdcategorie::where("id", $id)->firstOrFail();
+            return $this->jeugdcategorieResourceResponse($jeugdcategorie, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse('Jeugdcategorie');
+        }
     }
 
     /**
@@ -85,5 +82,18 @@ class JeugdcategorieenController extends Controller
     public function destroy(Jeugdcategorie $jeugdcategorie)
     {
         //
+    }
+
+    /**
+     * @param Jeugdcategorie $jeugdcategorie
+     * @param int $status
+     * @return JsonResponse
+     */
+    private function jeugdcategorieResourceResponse(Jeugdcategorie $jeugdcategorie, int $status): JsonResponse
+    {
+        return response()->json(
+            new JeugdcategorieResource($jeugdcategorie),
+            $status
+        );
     }
 }
