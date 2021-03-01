@@ -26,12 +26,14 @@ class JeugdcategorieenController extends Controller
     /**
      * Bewaren nieuwe jeugdcategorie.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        $validData = $this->valideerJeugdcategorie($request);
+
+        return $this->jeugdcategorieResourceResponse(Jeugdcategorie::create($validData),201);
     }
 
     /**
@@ -51,20 +53,9 @@ class JeugdcategorieenController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Jeugdcategorie  $jeugdcategorie
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Jeugdcategorie $jeugdcategorie)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Models\Jeugdcategorie  $jeugdcategorie
      * @return \Illuminate\Http\Response
      */
@@ -94,6 +85,19 @@ class JeugdcategorieenController extends Controller
         return response()->json(
             new JeugdcategorieResource($jeugdcategorie),
             $status
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    private function valideerJeugdcategorie(Request $request): array
+    {
+        return $request->validate(
+            [
+                'omschrijving' => 'bail|required|unique:jeugdcategorieen,omschrijving',
+            ]
         );
     }
 }
