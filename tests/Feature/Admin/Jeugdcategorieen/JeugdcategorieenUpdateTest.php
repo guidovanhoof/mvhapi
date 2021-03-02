@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class JeugdcategorieenStoreTest extends TestCase
+class JeugdcategorieenUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -22,7 +22,7 @@ class JeugdcategorieenStoreTest extends TestCase
     {
         parent::setUp();
 
-        $this->jeugdcategorie = maakJeugdcategorie();
+        $this->jeugdcategorie = bewaarJeugdcategorie();
     }
 
     public function tearDown(): void
@@ -34,18 +34,25 @@ class JeugdcategorieenStoreTest extends TestCase
     }
 
     /** @test */
-    public function jeugdcategorieAanmaken()
+    public function jeugdcategorieNietAanwezig()
     {
-        $response = $this->bewaarJeugdcategorie($this->jeugdcategorie);
+        $this->jeugdcategorie->id = 666;
 
-        $response->assertStatus(201);
-        $this
-            ->assertDatabaseHas(
-                'jeugdcategorieen',
-                jeugdcategorieToArry($this->jeugdcategorie)
-            )
-            ->assertJson($this->jeugdcategorie->toJson())
-        ;
+        $response = $this->wijzigJeugdcategorie($this->jeugdcategorie);
+
+        assertNietGevonden($this, $response, 'Jeugdcategorie');
+    }
+
+    /** @test */
+    public function jeugdcategorieWijzigen()
+    {
+        $this->jeugdcategorie->omschrijving = "nieuwe omschrijving";
+
+        $response = $this->wijzigJeugdcategorie($this->jeugdcategorie);
+
+        $response->assertStatus(200);
+        assertJeugdcategorieInDatabase($this, $this->jeugdcategorie);
+        $this->assertJson($this->jeugdcategorie->toJson());
     }
 
     /** @test */
@@ -53,7 +60,7 @@ class JeugdcategorieenStoreTest extends TestCase
         $expectedErrorMessage = "Omschrijving is verplicht!";
         $this->jeugdcategorie->omschrijving = null;
 
-        $response = $this->bewaarJeugdcategorie($this->jeugdcategorie);
+        $response = $this->wijzigJeugdcategorie($this->jeugdcategorie);
 
         assertErrorMessage($this, "omschrijving", $response, $expectedErrorMessage);
     }
@@ -64,16 +71,26 @@ class JeugdcategorieenStoreTest extends TestCase
         $jeugdcategorie = bewaarJeugdcategorie();
         $this->jeugdcategorie->omschrijving = $jeugdcategorie->omschrijving;
 
-        $response = $this->bewaarJeugdcategorie($this->jeugdcategorie);
+        $response = $this->wijzigJeugdcategorie($this->jeugdcategorie);
 
         assertErrorMessage($this, "omschrijving", $response, $expectedErrorMessage);
+    }
+
+    /** @test */
+    public function nietsGewijzgid()
+    {
+        $response = $this->wijzigJeugdcategorie($this->jeugdcategorie);
+
+        $this->assertEquals(200, $response->status());
+        assertJeugdcategorieInDatabase($this, $this->jeugdcategorie);
+        $this->assertJson($this->jeugdcategorie->toJson());
     }
 
     /**
      * @param Jeugdcategorie $jeugdcategorie
      * @return TestResponse
      */
-    private function bewaarJeugdcategorie(Jeugdcategorie $jeugdcategorie): TestResponse
+    private function wijzigJeugdcategorie(Jeugdcategorie $jeugdcategorie): TestResponse
     {
         $plainToken = createUserAndToken();
 
@@ -81,8 +98,8 @@ class JeugdcategorieenStoreTest extends TestCase
             $this
                 ->withHeader('Authorization', 'Bearer ' . $plainToken)
                 ->json(
-                    'POST',
-                    URL_JEUGDCATEGORIEEN_ADMIN,
+                    'PUT',
+                    URL_JEUGDCATEGORIEEN_ADMIN . $jeugdcategorie->id,
                     jeugdcategorieToArry($jeugdcategorie)
                 )
             ;
