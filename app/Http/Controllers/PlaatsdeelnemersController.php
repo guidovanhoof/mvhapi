@@ -117,7 +117,7 @@ class PlaatsdeelnemersController extends Controller
                 'bail',
                 'required',
                 'exists:wedstrijddeelnemers,id',
-                                  new DeelnemerUniekPerPlaats($request["plaats_id"], $plaatsdeelnemer->id)
+                new DeelnemerUniekPerPlaats($request["plaats_id"], $plaatsdeelnemer->id)
               ],
               'is_weger' => 'bail|required|numeric|between:0,1',
           ]

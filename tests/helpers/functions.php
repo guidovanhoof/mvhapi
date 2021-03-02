@@ -590,7 +590,7 @@ function assertJeugdcategorieInDatabase(TestCase $testCase, Jeugdcategorie $jeug
 {
     $testCase->assertEquals(
         1,
-        Jeugdcategorie::where(jeugdcategorieToArry($jeugdcategorie))->count()
+        Jeugdcategorie::where(jeugdcategorieToArray($jeugdcategorie))->count()
     );
     $testCase->assertJson($jeugdcategorie->toJson())
     ;
@@ -600,7 +600,7 @@ function assertJeugdcategorieInDatabase(TestCase $testCase, Jeugdcategorie $jeug
  * @param Jeugdcategorie $jeugdcategorie
  * @return array
  */
-function jeugdcategorieToArry(Jeugdcategorie $jeugdcategorie): array
+function jeugdcategorieToArray(Jeugdcategorie $jeugdcategorie): array
 {
     return [
         'omschrijving' => $jeugdcategorie->omschrijving,
