@@ -42,7 +42,7 @@ class JeugdcategorieenStoreTest extends TestCase
         $this
             ->assertDatabaseHas(
                 'jeugdcategorieen',
-                jeugdcategorieToArry($this->jeugdcategorie)
+                jeugdcategorieToArray($this->jeugdcategorie)
             )
             ->assertJson($this->jeugdcategorie->toJson())
         ;
@@ -83,7 +83,7 @@ class JeugdcategorieenStoreTest extends TestCase
                 ->json(
                     'POST',
                     URL_JEUGDCATEGORIEEN_ADMIN,
-                    jeugdcategorieToArry($jeugdcategorie)
+                    jeugdcategorieToArray($jeugdcategorie)
                 )
             ;
     }

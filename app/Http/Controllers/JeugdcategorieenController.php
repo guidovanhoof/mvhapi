@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
 
 class JeugdcategorieenController extends Controller
 {
@@ -53,7 +54,7 @@ class JeugdcategorieenController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Wijzigen bestaande jeugdcategorie.
      *
      * @param Request $request
      * @param $id
@@ -71,14 +72,20 @@ class JeugdcategorieenController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijderen bestaande jeugdcategorie.
      *
-     * @param  \App\Models\Jeugdcategorie  $jeugdcategorie
-     * @return \Illuminate\Http\Response
+     * @param  $id
+     * @return JsonResponse
      */
-    public function destroy(Jeugdcategorie $jeugdcategorie)
+    public function destroy($id): JsonResponse
     {
-        //
+        try {
+            $jeugdcategorie = Jeugdcategorie::where("id", $id)->firstOrFail();
+            $jeugdcategorie->delete();
+            return verwijderdResponse('Jeugdcategorie');
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse('Jeugdcategorie');
+        }
     }
 
     /**

@@ -100,7 +100,7 @@ class JeugdcategorieenUpdateTest extends TestCase
                 ->json(
                     'PUT',
                     URL_JEUGDCATEGORIEEN_ADMIN . $jeugdcategorie->id,
-                    jeugdcategorieToArry($jeugdcategorie)
+                    jeugdcategorieToArray($jeugdcategorie)
                 )
             ;
     }

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Admin\Plaatsdeelnemers;
 
-use App\Models\Plaats;
 use App\Models\Plaatsdeelnemer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
