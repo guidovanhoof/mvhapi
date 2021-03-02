@@ -31,7 +31,7 @@ class JeugdcategorieenController extends Controller
      */
     public function store(Request $request)
     {
-        $validData = $this->valideerJeugdcategorie($request);
+        $validData = $this->valideerJeugdcategorie($request, new Jeugdcategorie());
 
         return $this->jeugdcategorieResourceResponse(Jeugdcategorie::create($validData),201);
     }
@@ -56,12 +56,18 @@ class JeugdcategorieenController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  \App\Models\Jeugdcategorie  $jeugdcategorie
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, Jeugdcategorie $jeugdcategorie)
+    public function update(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $jeugdcategorie = Jeugdcategorie::where("id", $id)->firstOrFail();
+            $jeugdcategorie->update($this->valideerJeugdcategorie($request, $jeugdcategorie));
+            return $this->jeugdcategorieResourceResponse($jeugdcategorie, 200);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse('Jeugdcategorie');
+        }
     }
 
     /**
@@ -90,13 +96,15 @@ class JeugdcategorieenController extends Controller
 
     /**
      * @param Request $request
+     * @param Jeugdcategorie $jeugdcategorie
      * @return array
      */
-    private function valideerJeugdcategorie(Request $request): array
+    private function valideerJeugdcategorie(Request $request, Jeugdcategorie $jeugdcategorie): array
     {
         return $request->validate(
             [
-                'omschrijving' => 'bail|required|unique:jeugdcategorieen,omschrijving',
+                'omschrijving' => 'bail|required|unique:jeugdcategorieen,omschrijving' .
+                    ($jeugdcategorie->id ? (',' . $jeugdcategorie->id . ',id') : '')
             ]
         );
     }

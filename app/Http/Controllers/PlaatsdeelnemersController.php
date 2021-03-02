@@ -112,12 +112,12 @@ class PlaatsdeelnemersController extends Controller
     {
         return $request->validate(
             [
-              'plaats_id' => 'bail|required|exists:plaatsen,id',
-              'wedstrijddeelnemer_id' => [
-                  'bail',
-                  'required',
-                  'exists:wedstrijddeelnemers,id',
-                  new DeelnemerUniekPerPlaats($request["plaats_id"], $plaatsdeelnemer->id)
+                'plaats_id' => 'bail|required|exists:plaatsen,id',
+                'wedstrijddeelnemer_id' => [
+                'bail',
+                'required',
+                'exists:wedstrijddeelnemers,id',
+                                  new DeelnemerUniekPerPlaats($request["plaats_id"], $plaatsdeelnemer->id)
               ],
               'is_weger' => 'bail|required|numeric|between:0,1',
           ]
