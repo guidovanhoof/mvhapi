@@ -10,6 +10,7 @@ use App\Models\Reeks;
 use App\Models\User;
 use App\Models\Wedstrijd;
 use App\Models\Wedstrijddeelnemer;
+use App\Models\WedstrijddeelnemerJeugdcategorie;
 use App\Models\Wedstrijdtype;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Testing\TestResponse;
@@ -25,6 +26,7 @@ const URL_DEELNEMERS_ADMIN = "api/admin/deelnemers/";
 const URL_WEDSTRIJDDEELNEMERS_ADMIN = "api/admin/wedstrijddeelnemers/";
 const URL_PLAATSDEELNEMERS_ADMIN = "api/admin/plaatsdeelnemers/";
 const URL_JEUGDCATEGORIEEN_ADMIN = "api/admin/jeugdcategorieen/";
+const URL_WEDSTRIJDDEELNEMERJEUGDCATEGORIEEN_ADMIN = "api/admin/wedstrijddeelnemerjeugdcategorieen/";
 
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
@@ -234,7 +236,6 @@ function assertPlaatsEquals(TestCase $testCase, $data, Plaats $plaats): void
 /**
  * Maak de nodige tabellen leeg
  *
- * @param string $actie
  */
 function cleanUpDb()
 {
@@ -242,8 +243,10 @@ function cleanUpDb()
     Plaatsdeelnemer::query()->delete();
     Plaats::query()->delete();
     Reeks::query()->delete();
+    WedstrijddeelnemerJeugdcategorie::query()->delete();
     Wedstrijddeelnemer::query()->delete();
     Wedstrijd::query()->delete();
+    Jeugdcategorie::query()->delete();
     Wedstrijdtype::query()->delete();
     Deelnemer::query()->delete();
     Kalender::query()->delete();
@@ -604,5 +607,54 @@ function jeugdcategorieToArray(Jeugdcategorie $jeugdcategorie): array
 {
     return [
         'omschrijving' => $jeugdcategorie->omschrijving,
+    ];
+}
+
+function bewaarWedstrijddeelnemerJeugdcategorie($velden = [])
+{
+    return WedstrijddeelnemerJeugdcategorie::factory()->create($velden);
+}
+
+function maakWedstrijddeelnemerJeugdcategorie($velden = [])
+{
+    return WedstrijddeelnemerJeugdcategorie::factory()->make($velden);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param $data
+ * @param WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie
+ */
+function assertWedstrijddeelnemerJeugdcategorieEquals(
+    TestCase $testCase, $data, WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie
+): void
+{
+    $testCase->assertEquals($data["wedstrijddeelnemer_id"], $wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id);
+    $testCase->assertEquals($data["jeugdcategorie_id"], $wedstrijddeelnemerJeugdcategorie->jeugdcategorie_id);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie
+ */
+function assertWedstrijddeelnemerJeugdcategorieInDatabase(TestCase $testCase, WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie): void
+{
+    $testCase->assertEquals(
+        1,
+        WedstrijddeelnemerJeugdcategorie::where(jeugdcategorieToArray($wedstrijddeelnemerJeugdcategorie))->count()
+    );
+    $testCase->assertJson($wedstrijddeelnemerJeugdcategorie->toJson())
+    ;
+}
+
+/**
+ * @param WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie
+ * @return array
+ */
+function wedstrijddeelnemerJeugdcategorieToArrayw(WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie): array
+{
+    return [
+        'wedstrijddeelnemer_id' => $wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id,
+        'jeugdcategorie_id' => $wedstrijddeelnemerJeugdcategorie->jeugdcategorie_id,
     ];
 }
