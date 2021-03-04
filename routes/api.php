@@ -8,6 +8,7 @@ use App\Http\Controllers\KalendersController;
 use App\Http\Controllers\PlaatsdeelnemersController;
 use App\Http\Controllers\PlaatsenController;
 use App\Http\Controllers\ReeksController;
+use App\Http\Controllers\WedstrijddeelnemerJeugdcategorieenController;
 use App\Http\Controllers\WedstrijddeelnemersController;
 use App\Http\Controllers\WedstrijdenController;
 use App\Http\Controllers\WedstrijdtypesController;
@@ -146,6 +147,14 @@ Route::group(
             JeugdcategorieenController::class
         )
             ->parameters(["jeugdcategorieen" => "id"])
+            ->middleware("auth:sanctum")
+        ;
+
+        Route::apiResource(
+            "wedstrijddeelnemerjeugdcategorieen",
+            WedstrijddeelnemerJeugdcategorieenController::class
+        )
+            ->parameters(["wedstrijddeelnemerjeugdcategorieen" => "id"])
             ->middleware("auth:sanctum")
         ;
     }
