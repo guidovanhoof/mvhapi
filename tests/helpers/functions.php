@@ -658,3 +658,12 @@ function wedstrijddeelnemerJeugdcategorieToArrayw(WedstrijddeelnemerJeugdcategor
         'jeugdcategorie_id' => $wedstrijddeelnemerJeugdcategorie->jeugdcategorie_id,
     ];
 }
+
+/**
+ * @param TestResponse $response
+ * @return mixed
+ */
+function getJsonFromResponse(TestResponse $response)
+{
+    return $response->json();
+}
