@@ -46,5 +46,6 @@ return [
         'is_gediskwalificeerd' => 'Diskwalificatie',
         'wedstrijddeelnemer_id' => 'Wedstrijddeelnemer_id',
         'is_weger' => 'Weger',
+        'jeugdcategorie_id' => 'Jeugdcategorie_id',
     ],
 ];
