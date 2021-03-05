@@ -637,11 +637,15 @@ function assertWedstrijddeelnemerJeugdcategorieEquals(
  * @param TestCase $testCase
  * @param WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie
  */
-function assertWedstrijddeelnemerJeugdcategorieInDatabase(TestCase $testCase, WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie): void
+function assertWedstrijddeelnemerJeugdcategorieInDatabase(
+    TestCase $testCase, WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie
+): void
 {
     $testCase->assertEquals(
         1,
-        WedstrijddeelnemerJeugdcategorie::where(jeugdcategorieToArray($wedstrijddeelnemerJeugdcategorie))->count()
+        WedstrijddeelnemerJeugdcategorie::where(
+            wedstrijddeelnemerJeugdcategorieToArrayw($wedstrijddeelnemerJeugdcategorie)
+        )->count()
     );
     $testCase->assertJson($wedstrijddeelnemerJeugdcategorie->toJson())
     ;
