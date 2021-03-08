@@ -3,13 +3,11 @@
 namespace Tests\Feature\Admin\WedstrijddeelnemerJeugdcategorieen;
 
 use App\Models\WedstrijddeelnemerJeugdcategorie;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
+class WedstrijddeelnemersJeugdcategorieenUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -21,7 +19,7 @@ class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
 
         $wedstrijddeelnemer = bewaarWedstrijddeelnemer();
         $jeugdcategorie = bewaarJeugdcategorie();
-        $this->wedstrijddeelnemerJeugdcategorie = maakWedstrijddeelnemerJeugdcategorie(
+        $this->wedstrijddeelnemerJeugdcategorie = bewaarWedstrijddeelnemerJeugdcategorie(
             [
                 'wedstrijddeelnemer_id' => $wedstrijddeelnemer->id,
                 'jeugdcategorie_id' => $jeugdcategorie->id,
@@ -37,13 +35,18 @@ class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
     }
 
     /** @test */
-    public function wedstrijddeelnemerJeugdcategorieBewaren()
+    public function wedstrijddeelnemerJeugdcategorieWijzigen()
     {
-        $response = $this->bewaarWedstrijddeelnemerJeugdcategorie(
+        $wedstrijddeelnemer = bewaarWedstrijddeelnemer();
+        $jeugdcategorie = bewaarJeugdcategorie();
+        $this->wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id = $wedstrijddeelnemer->id;
+        $this->wedstrijddeelnemerJeugdcategorie->jeudgcategorie_id = $jeugdcategorie->id;
+
+        $response = $this->wijzigWedstrijddeelnemerJeugdcategorie(
             $this->wedstrijddeelnemerJeugdcategorie
         );
 
-        $response->assertStatus(201);
+        $response->assertStatus(200);
         assertWedstrijddeelnemerJeugdcategorieInDatabase(
             $this, $this->wedstrijddeelnemerJeugdcategorie
         );
@@ -55,7 +58,7 @@ class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
         $expectedErrorMessage = "Wedstrijddeelnemer_id is verplicht!";
         $this->wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id = null;
 
-        $response = $this->bewaarWedstrijddeelnemerJeugdcategorie(
+        $response = $this->wijzigWedstrijddeelnemerJeugdcategorie(
             $this->wedstrijddeelnemerJeugdcategorie
         );
 
@@ -70,7 +73,7 @@ class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
         $expectedErrorMessage = "Wedstrijddeelnemer_id niet gevonden!";
         $this->wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id = 666;
 
-        $response = $this->bewaarWedstrijddeelnemerJeugdcategorie(
+        $response = $this->wijzigWedstrijddeelnemerJeugdcategorie(
             $this->wedstrijddeelnemerJeugdcategorie
         );
 
@@ -87,7 +90,7 @@ class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
         $this->wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id =
             $wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id;
 
-        $response = $this->bewaarWedstrijddeelnemerJeugdcategorie(
+        $response = $this->wijzigWedstrijddeelnemerJeugdcategorie(
             $this->wedstrijddeelnemerJeugdcategorie
         );
 
@@ -102,7 +105,7 @@ class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
         $expectedErrorMessage = "Jeugdcategorie_id is verplicht!";
         $this->wedstrijddeelnemerJeugdcategorie->jeugdcategorie_id = null;
 
-        $response = $this->bewaarWedstrijddeelnemerJeugdcategorie(
+        $response = $this->wijzigWedstrijddeelnemerJeugdcategorie(
             $this->wedstrijddeelnemerJeugdcategorie
         );
 
@@ -117,7 +120,7 @@ class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
         $expectedErrorMessage = "Jeugdcategorie_id niet gevonden!";
         $this->wedstrijddeelnemerJeugdcategorie->jeugdcategorie_id = 666;
 
-        $response = $this->bewaarWedstrijddeelnemerJeugdcategorie(
+        $response = $this->wijzigWedstrijddeelnemerJeugdcategorie(
             $this->wedstrijddeelnemerJeugdcategorie
         );
 
@@ -130,7 +133,7 @@ class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
      * @param $wedstrijddeelnemerJeugdcategorie
      * @return TestResponse
      */
-    private function bewaarWedstrijddeelnemerJeugdcategorie(
+    private function wijzigWedstrijddeelnemerJeugdcategorie(
         WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie
     ): TestResponse
     {
@@ -139,8 +142,8 @@ class WedstrijddeelnemersJeugdcategorieenStoreTest extends TestCase
         return $this
             ->withHeader('Authorization', 'Bearer ' . $plainToken)
             ->json(
-                'POST',
-                URL_WEDSTRIJDDEELNEMERJEUGDCATEGORIEEN_ADMIN,
+                'PUT',
+                URL_WEDSTRIJDDEELNEMERJEUGDCATEGORIEEN_ADMIN . $wedstrijddeelnemerJeugdcategorie->id,
                 wedstrijddeelnemerJeugdcategorieToArrayw($wedstrijddeelnemerJeugdcategorie)
             )
         ;

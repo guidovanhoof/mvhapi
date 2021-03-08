@@ -60,12 +60,23 @@ class WedstrijddeelnemerJeugdcategorieenController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie)
+    public function update(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $wedstrijddeelnemerJeugdcategorie = WedstrijddeelnemerJeugdcategorie::where("id", $id)->firstOrFail();
+            $wedstrijddeelnemerJeugdcategorie->update(
+                $this->valideerWedstrijddeelnemerJeugdcategorie($request, $wedstrijddeelnemerJeugdcategorie)
+            );
+            return $this->resourceResponse(
+                $wedstrijddeelnemerJeugdcategorie,
+                200
+            );
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("Wedstrijddeelnemer Jeugdcategorie");
+        }
     }
 
     /**
