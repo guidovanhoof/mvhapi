@@ -3,7 +3,7 @@
 namespace Tests\Unit\Wedstrijddeelnemer;
 
 
-use App\Http\Resources\WedstrijddeelnemerResource;
+use App\Http\Resources\Api\WedstrijddeelnemerResource;
 use App\Models\Deelnemer;
 use App\Models\Wedstrijddeelnemer;
 use Illuminate\Foundation\Testing\RefreshDatabase;

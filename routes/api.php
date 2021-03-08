@@ -1,17 +1,17 @@
 <?php
 
-use App\Http\Controllers\ApiAuthController;
-use App\Http\Controllers\DeelnemersController;
-use App\Http\Controllers\GewichtenController;
-use App\Http\Controllers\JeugdcategorieenController;
-use App\Http\Controllers\KalendersController;
-use App\Http\Controllers\PlaatsdeelnemersController;
-use App\Http\Controllers\PlaatsenController;
-use App\Http\Controllers\ReeksController;
-use App\Http\Controllers\WedstrijddeelnemerJeugdcategorieenController;
-use App\Http\Controllers\WedstrijddeelnemersController;
-use App\Http\Controllers\WedstrijdenController;
-use App\Http\Controllers\WedstrijdtypesController;
+use App\Http\Controllers\Api\ApiAuthController;
+use App\Http\Controllers\Api\DeelnemersController;
+use App\Http\Controllers\Api\GewichtenController;
+use App\Http\Controllers\Api\JeugdcategorieenController;
+use App\Http\Controllers\Api\KalendersController;
+use App\Http\Controllers\Api\PlaatsdeelnemersController;
+use App\Http\Controllers\Api\PlaatsenController;
+use App\Http\Controllers\Api\ReeksController;
+use App\Http\Controllers\Api\WedstrijddeelnemerJeugdcategorieenController;
+use App\Http\Controllers\Api\WedstrijddeelnemersController;
+use App\Http\Controllers\Api\WedstrijdenController;
+use App\Http\Controllers\Api\WedstrijdtypesController;
 use Illuminate\Support\Facades\Route;
 
 /*

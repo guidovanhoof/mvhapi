@@ -3,7 +3,7 @@
 namespace Tests\Unit\Plaatsdeelnemer;
 
 
-use App\Http\Resources\PlaatsdeelnemerResource;
+use App\Http\Resources\Api\PlaatsdeelnemerResource;
 use App\Models\Plaatsdeelnemer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

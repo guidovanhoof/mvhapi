@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\GewichtResource;
-use App\Http\Resources\PlaatsdeelnemerResource;
-use App\Http\Resources\PlaatsResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\GewichtResource;
+use App\Http\Resources\Api\PlaatsdeelnemerResource;
+use App\Http\Resources\Api\PlaatsResource;
 use App\Models\Plaats;
 use App\Rules\NummerUniekPerReeks;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use function App\Helpers\nietGevondenResponse;
 use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;

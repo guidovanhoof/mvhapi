@@ -3,7 +3,7 @@
 namespace Tests\Unit\Plaats;
 
 
-use App\Http\Resources\PlaatsResource;
+use App\Http\Resources\Api\PlaatsResource;
 use App\Models\Plaats;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

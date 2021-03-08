@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class KalenderResource extends JsonResource
+class GewichtResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,9 @@ class KalenderResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "jaar" => $this->jaar,
-            "omschrijving" => $this->omschrijving(),
-            "opmerkingen" => $this->opmerkingen,
+            "plaats_id" => $this->plaats_id,
+            "gewicht" => $this->gewicht,
+            "is_geldig" => $this->is_geldig,
         ];
     }
 }

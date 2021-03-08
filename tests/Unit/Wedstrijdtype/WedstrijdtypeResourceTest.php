@@ -3,7 +3,7 @@
 namespace Tests\Unit\Wedstrijdtype;
 
 
-use App\Http\Resources\WedstrijdtypeResource;
+use App\Http\Resources\Api\WedstrijdtypeResource;
 use App\Models\Wedstrijdtype;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

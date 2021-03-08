@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Wedstrijd;
 
-use App\Http\Resources\WedstrijdResource;
+use App\Http\Resources\Api\WedstrijdResource;
 use App\Models\Wedstrijd;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\PlaatsResource;
-use App\Http\Resources\ReeksResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\PlaatsResource;
+use App\Http\Resources\Api\ReeksResource;
 use App\Models\Reeks;
 use App\Rules\NummerUniekPerWedstrijd;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

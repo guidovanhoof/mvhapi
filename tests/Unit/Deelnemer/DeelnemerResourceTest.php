@@ -3,7 +3,7 @@
 namespace Tests\Unit\Deelnemer;
 
 
-use App\Http\Resources\DeelnemerResource;
+use App\Http\Resources\Api\DeelnemerResource;
 use App\Models\Deelnemer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

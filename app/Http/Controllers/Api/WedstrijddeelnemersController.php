@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\WedstrijddeelnemerResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\WedstrijddeelnemerResource;
 use App\Models\Wedstrijddeelnemer;
 use App\Rules\DeelnemerUniekPerWedstrijd;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
 use function App\Helpers\verwijderdResponse;
 

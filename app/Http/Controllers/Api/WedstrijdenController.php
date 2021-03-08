@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\ReeksResource;
-use App\Http\Resources\WedstrijddeelnemerResource;
-use App\Http\Resources\WedstrijdResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\ReeksResource;
+use App\Http\Resources\Api\WedstrijddeelnemerResource;
+use App\Http\Resources\Api\WedstrijdResource;
 use App\Models\Wedstrijd;
 use App\Rules\DatumInKalenderJaar;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

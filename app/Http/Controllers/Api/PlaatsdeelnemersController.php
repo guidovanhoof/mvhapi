@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\PlaatsdeelnemerResource;
-use App\Models\Plaats;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\PlaatsdeelnemerResource;
 use App\Models\Plaatsdeelnemer;
 use App\Rules\DeelnemerUniekPerPlaats;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
