@@ -117,6 +117,23 @@ class WedstrijddeelnemerTest extends TestCase
         );
     }
 
+    /** @test */
+    public function heeftEenJeugdcategorie()
+    {
+        $this->bewaarWedstrijddeelnemer();
+        $jeugdcategorie = bewaarJeugdcategorie();
+        bewaarWedstrijddeelnemerJeugdcategorie(
+            [
+                'wedstrijddeelnemer_id' => $this->wedstrijddeelnemer->id,
+                'jeugdcategorie_id' => $jeugdcategorie->id,
+            ]
+        );
+
+        $actualJeugdCategorie = $this->wedstrijddeelnemer->jeugdcategorie;
+
+        $this->assertEquals($jeugdcategorie->id, $actualJeugdCategorie->jeugdcategorie_id);
+    }
+
     private function bewaarWedstrijddeelnemer()
     {
         $this->wedstrijddeelnemer->save();
