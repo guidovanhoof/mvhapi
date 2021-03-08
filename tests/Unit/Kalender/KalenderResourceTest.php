@@ -3,7 +3,7 @@
 namespace Tests\Unit\Kalender;
 
 
-use App\Http\Resources\KalenderResource;
+use App\Http\Resources\Api\KalenderResource;
 use App\Models\Kalender;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

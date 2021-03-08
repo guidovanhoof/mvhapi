@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Gewicht;
 
-use App\Http\Resources\GewichtResource;
+use App\Http\Resources\Api\GewichtResource;
 use App\Models\Gewicht;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

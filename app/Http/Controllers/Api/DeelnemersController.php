@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\DeelnemerResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\DeelnemerResource;
 use App\Models\Deelnemer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;

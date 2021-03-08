@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Reeks;
 
-use App\Http\Resources\ReeksResource;
+use App\Http\Resources\Api\ReeksResource;
 use App\Models\Reeks;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

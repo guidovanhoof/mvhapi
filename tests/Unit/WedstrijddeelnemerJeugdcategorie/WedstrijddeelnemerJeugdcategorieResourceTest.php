@@ -3,7 +3,7 @@
 namespace Tests\Unit\WedstrijddeelnemerJeugdcategorie;
 
 
-use App\Http\Resources\WedstrijddeelnemerJeugdcategorieResource;
+use App\Http\Resources\Api\WedstrijddeelnemerJeugdcategorieResource;
 use App\Models\WedstrijddeelnemerJeugdcategorie;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;

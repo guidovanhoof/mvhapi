@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\WedstrijdtypeResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\WedstrijdtypeResource;
 use App\Models\Wedstrijdtype;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;

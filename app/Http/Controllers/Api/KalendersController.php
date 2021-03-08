@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\KalenderResource;
-use App\Http\Resources\WedstrijdResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\KalenderResource;
+use App\Http\Resources\Api\WedstrijdResource;
 use App\Models\Kalender;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;

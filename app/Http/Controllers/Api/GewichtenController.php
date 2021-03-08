@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\GewichtResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\GewichtResource;
 use App\Models\Gewicht;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use function App\Helpers\nietGevondenResponse;
 use function App\Helpers\verwijderdResponse;
 

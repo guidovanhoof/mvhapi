@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
-use App\Http\Resources\WedstrijddeelnemerJeugdcategorieResource;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\WedstrijddeelnemerJeugdcategorieResource;
 use App\Models\WedstrijddeelnemerJeugdcategorie;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
