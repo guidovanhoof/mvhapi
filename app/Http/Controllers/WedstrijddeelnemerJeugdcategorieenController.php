@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
 
 class WedstrijddeelnemerJeugdcategorieenController extends Controller
 {
@@ -75,19 +76,25 @@ class WedstrijddeelnemerJeugdcategorieenController extends Controller
                 200
             );
         } catch (ModelNotFoundException $modelNotFoundException) {
-            return nietGevondenResponse("Wedstrijddeelnemer Jeugdcategorie");
+            return nietGevondenResponse("WedstrijddeelnemerJeugdcategorie");
         }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy(WedstrijddeelnemerJeugdcategorie $wedstrijddeelnemerJeugdcategorie)
+    public function destroy($id)
     {
-        //
+        try {
+            $wedstrijddeelnemerJeugdcategorie = WedstrijddeelnemerJeugdcategorie::where("id", $id)->firstOrFail();
+            $wedstrijddeelnemerJeugdcategorie->delete();
+            return verwijderdResponse("WedstrijddeelnemerJeugdcategorie");
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("WedstrijddeelnemerJeugdcategorie");
+        }
     }
 
     /**
