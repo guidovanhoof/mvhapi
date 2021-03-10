@@ -39,7 +39,7 @@ class WedstrijddeelnemerJeugdcategorieTest extends TestCase
         $wedstrijddeelnemer = bewaarWedstrijddeelnemer();
         $this->wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id = $wedstrijddeelnemer->id;
 
-        $this->bewaarJeugdcategorie();
+        $this->bewaarWedstrijddeelnemerJeugdcategorie();
 
         $this->assertEquals(
             $wedstrijddeelnemer->id, $this->wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id
@@ -55,7 +55,7 @@ class WedstrijddeelnemerJeugdcategorieTest extends TestCase
         $this->wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id =
             $wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id;
 
-        $this->bewaarJeugdcategorie();
+        $this->bewaarWedstrijddeelnemerJeugdcategorie();
     }
 
     /** @test  */
@@ -64,7 +64,7 @@ class WedstrijddeelnemerJeugdcategorieTest extends TestCase
         $jeugdcategorie = bewaarJeugdcategorie();
         $this->wedstrijddeelnemerJeugdcategorie->jeugdcategorie_id = $jeugdcategorie->id;
 
-        $this->bewaarJeugdcategorie();
+        $this->bewaarWedstrijddeelnemerJeugdcategorie();
 
         $this->assertEquals(
             $jeugdcategorie->id, $this->wedstrijddeelnemerJeugdcategorie->jeugdcategorie_id
@@ -77,7 +77,7 @@ class WedstrijddeelnemerJeugdcategorieTest extends TestCase
         $this->expectException(QueryException::class);
         $this->wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id = 666;
 
-        $this->bewaarJeugdcategorie();
+        $this->bewaarWedstrijddeelnemerJeugdcategorie();
     }
 
     /** @test  */
@@ -86,10 +86,24 @@ class WedstrijddeelnemerJeugdcategorieTest extends TestCase
         $this->expectException(QueryException::class);
         $this->wedstrijddeelnemerJeugdcategorie->jeugdcategorie_id = 666;
 
-        $this->bewaarJeugdcategorie();
+        $this->bewaarWedstrijddeelnemerJeugdcategorie();
     }
 
-    private function bewaarJeugdcategorie()
+    /** @test  */
+    public function heeftEenJeugdcategorie()
+    {
+        $jeugdcategorie = bewaarJeugdcategorie();
+        $wedstrijddeelnemer = bewaarWedstrijddeelnemer();
+        $this->wedstrijddeelnemerJeugdcategorie->wedstrijddeelnemer_id = $wedstrijddeelnemer->id;
+        $this->wedstrijddeelnemerJeugdcategorie->jeugdcategorie_id = $jeugdcategorie->id;
+        $this->bewaarWedstrijddeelnemerJeugdcategorie();
+
+        $actualJeugdcategorie = $this->wedstrijddeelnemerJeugdcategorie->jeugdcategorie;
+
+        assertJeugdcategorieEquals($this, $jeugdcategorie, $actualJeugdcategorie);
+    }
+
+    private function bewaarWedstrijddeelnemerJeugdcategorie()
     {
         $this->wedstrijddeelnemerJeugdcategorie->save();
         $this->wedstrijddeelnemerJeugdcategorie->fresh();

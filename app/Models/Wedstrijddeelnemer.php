@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Wedstrijddeelnemer extends Model
 {
@@ -18,10 +17,17 @@ class Wedstrijddeelnemer extends Model
     /**
      * Wedstrijddeelnemer kan 1 jeugdcategorie hebben.
      *
-     * @return HasOne
+     * @return Jeugdcategorie|null
      */
-    public function jeugdcategorie(): HasOne
+    public function jeugdcategorie(): ?Jeugdcategorie
     {
-        return $this->hasOne(WedstrijddeelnemerJeugdcategorie::class);
+        $wedstrijddeelnemerJeugdcategorie = WedstrijddeelnemerJeugdcategorie::where(
+            'wedstrijddeelnemer_id', $this->id
+        )
+            ->first();
+        return $wedstrijddeelnemerJeugdcategorie
+            ? $wedstrijddeelnemerJeugdcategorie->jeugdcategorie
+            : null
+        ;
     }
 }

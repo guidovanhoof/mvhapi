@@ -129,9 +129,9 @@ class WedstrijddeelnemerTest extends TestCase
             ]
         );
 
-        $actualJeugdCategorie = $this->wedstrijddeelnemer->jeugdcategorie;
+        $actualJeugdCategorie = $this->wedstrijddeelnemer->jeugdcategorie();
 
-        $this->assertEquals($jeugdcategorie->id, $actualJeugdCategorie->jeugdcategorie_id);
+        assertJeugdcategorieEquals($this, $jeugdcategorie, $actualJeugdCategorie);
     }
 
     private function bewaarWedstrijddeelnemer()

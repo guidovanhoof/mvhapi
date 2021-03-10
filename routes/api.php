@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\WedstrijddeelnemerJeugdcategorieenController;
 use App\Http\Controllers\Api\WedstrijddeelnemersController;
 use App\Http\Controllers\Api\WedstrijdenController;
 use App\Http\Controllers\Api\WedstrijdtypesController;
+use App\Models\Wedstrijddeelnemer;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -131,6 +132,13 @@ Route::group(
             WedstrijddeelnemersController::class
         )
             ->parameters(["wedstrijddeelnemers" => "id"])
+            ->middleware("auth:sanctum")
+        ;
+
+        Route::get(
+            "wedstrijddeelnemers/{id}/jeugdcategorie",
+            [WedstrijddeelnemersController::class, "jeugdcategorie"]
+        )
             ->middleware("auth:sanctum")
         ;
 

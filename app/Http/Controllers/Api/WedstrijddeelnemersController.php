@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\WedstrijddeelnemerResource;
 use App\Models\Wedstrijddeelnemer;
 use App\Rules\DeelnemerUniekPerWedstrijd;
+use http\Env\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -90,6 +91,20 @@ class WedstrijddeelnemersController extends Controller
             return verwijderdResponse("Wedstrijddeelnemer");
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Wedstrijddeelnemer");
+        }
+    }
+
+    /**
+     * @param $id
+     * @return JsonResponse
+     */
+    public function jeugdcategorie($id): JsonResponse
+    {
+        try {
+            $wedstrijddeelnemer = Wedstrijddeelnemer::where('id', $id)->firstOrFail();
+            return response()->json($wedstrijddeelnemer->jeugdcategorie());
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse('Wedstrijddeelnemer');
         }
     }
 
