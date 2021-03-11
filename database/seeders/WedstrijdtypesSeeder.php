@@ -15,12 +15,12 @@ class WedstrijdtypesSeeder extends Seeder
     public function run()
     {
         $types = [
-            "Ledenwedstrijd",
-            "Jeugdvissen",
-            "Koppel met getrokken maat, apart vissen",
-            "Criterium",
-            "Zomercriterium",
-            "Woensdagcriterium"
+            'Ledenwedstrijd',
+            'Jeugdvissen',
+            'Koppel met getrokken maat, apart vissen',
+            'Criterium',
+            'Zomercriterium',
+            'Woensdagcriterium'
         ];
 
         foreach ($types as $type) {

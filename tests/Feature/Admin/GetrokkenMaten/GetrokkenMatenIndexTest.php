@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature\Admin\WedstrijddeelnemerJeugdcategorieen;
+namespace Tests\Feature\Admin\GetrokkenMaten;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
-class WedstrijddeelnemersJeugdcategorieenIndexTest extends TestCase
+class GetrokkenMatenIndexTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -18,31 +18,31 @@ class WedstrijddeelnemersJeugdcategorieenIndexTest extends TestCase
     }
 
     /** @test */
-    public function geenWedstrijddeelnemerJeugdcategorieenAanwezig()
+    public function geenGetrokkenMatenAanwezig()
     {
-        $response = $this->getWedstrijddeelnemerJeugdcategorieen();
+        $response = $this->getGetrokkenMaten();
 
         $response->assertStatus(200);
         $response->assertJson([]);
     }
 
     /** @test */
-    public function wedstrijddeelnemerJeugdcategorieenAanwezig()
+    public function getrokkenMatenAanwezig()
     {
-        $wedstrijddeelnemerJeugdcategorie = bewaarWedstrijddeelnemerJeugdcategorie();
+        $getrokkenMaat = bewaarGetrokkenMaat();
 
-        $response = $this->getWedstrijddeelnemerJeugdcategorieen();
+        $response = $this->getGetrokkenMaten();
 
         $response->assertStatus(200);
         $data = $response->json();
         $this->assertCount(1, $data);
-        assertWedstrijddeelnemerJeugdcategorieEquals($this, $data[0], $wedstrijddeelnemerJeugdcategorie);
+        assertGetrokkenMaatEquals($this, $data[0], $getrokkenMaat);
     }
 
     /**
      * @return TestResponse
      */
-    private function getWedstrijddeelnemerJeugdcategorieen(): TestResponse
+    private function getGetrokkenMaten(): TestResponse
     {
         $plainToken = createUserAndToken();
 
@@ -50,7 +50,7 @@ class WedstrijddeelnemersJeugdcategorieenIndexTest extends TestCase
             ->withHeader('Authorization', 'Bearer ' . $plainToken)
             ->json(
                 'GET',
-                URL_WEDSTRIJDDEELNEMERJEUGDCATEGORIEEN_ADMIN
+                URL_GETROKKENMATEN_ADMIN
             )
         ;
     }
