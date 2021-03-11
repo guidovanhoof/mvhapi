@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
                 PlaatsdeelnemerSeeder::class,
                 JeugdcategorieenSeeder::class,
                 WedstrijddeelnemerJeugdcategorieenSeeder::class,
+                GetrokkenMatenSeeder::class,
             ]
         );
     }

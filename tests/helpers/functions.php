@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Deelnemer;
+use App\Models\GetrokkenMaat;
 use App\Models\Gewicht;
 use App\Models\Jeugdcategorie;
 use App\Models\Kalender;
@@ -27,6 +28,7 @@ const URL_WEDSTRIJDDEELNEMERS_ADMIN = "api/admin/wedstrijddeelnemers/";
 const URL_PLAATSDEELNEMERS_ADMIN = "api/admin/plaatsdeelnemers/";
 const URL_JEUGDCATEGORIEEN_ADMIN = "api/admin/jeugdcategorieen/";
 const URL_WEDSTRIJDDEELNEMERJEUGDCATEGORIEEN_ADMIN = "api/admin/wedstrijddeelnemerjeugdcategorieen/";
+const URL_GETROKKENMATEN_ADMIN = "api/admin/getrokkenmaten/";
 
 function errorMessage($veld, $response) {
     return $response->json()["errors"][$veld][0];
@@ -244,6 +246,7 @@ function cleanUpDb()
     Plaats::query()->delete();
     Reeks::query()->delete();
     WedstrijddeelnemerJeugdcategorie::query()->delete();
+    GetrokkenMaat::query()->delete();
     Wedstrijddeelnemer::query()->delete();
     Wedstrijd::query()->delete();
     Jeugdcategorie::query()->delete();
@@ -663,11 +666,55 @@ function wedstrijddeelnemerJeugdcategorieToArrayw(WedstrijddeelnemerJeugdcategor
     ];
 }
 
-/**
- * @param TestResponse $response
- * @return mixed
- */
-function getJsonFromResponse(TestResponse $response)
+function bewaarGetrokkenMaat($velden = [])
 {
-    return $response->json();
+    return GetrokkenMaat::factory()->create($velden);
+}
+
+function maakGetrokkenMaat($velden = [])
+{
+    return GetrokkenMaat::factory()->make($velden);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param $data
+ * @param GetrokkenMaat $getrokkenMaat
+ */
+function assertGetrokkenMaatEquals(
+    TestCase $testCase, $data, GetrokkenMaat $getrokkenMaat
+): void
+{
+    $testCase->assertEquals($data["wedstrijddeelnemer_id"], $getrokkenMaat->wedstrijddeelnemer_id);
+    $testCase->assertEquals($data["getrokken_maat_id"], $getrokkenMaat->getrokken_maat_id);
+}
+
+/**
+ * @param TestCase $testCase
+ * @param GetrokkenMaat $getrokkenMaat
+ */
+function assertGetrokkenMaatInDatabase(
+    TestCase $testCase, GetrokkenMaat $getrokkenMaat
+): void
+{
+    $testCase->assertEquals(
+        1,
+        GetrokkenMaat::where(
+            getrokkenMaatToArray($getrokkenMaat)
+        )->count()
+    );
+    $testCase->assertJson($getrokkenMaat->toJson())
+    ;
+}
+
+/**
+ * @param GetrokkenMaat $getrokkenMaat
+ * @return array
+ */
+function getrokkenMaatToArray(GetrokkenMaat $getrokkenMaat): array
+{
+    return [
+        'wedstrijddeelnemer_id' => $getrokkenMaat->wedstrijddeelnemer_id,
+        'getrokken_maat_id' => $getrokkenMaat->getrokken_maat_id,
+    ];
 }

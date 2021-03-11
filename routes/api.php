@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\WedstrijddeelnemerJeugdcategorieenController;
 use App\Http\Controllers\Api\WedstrijddeelnemersController;
 use App\Http\Controllers\Api\WedstrijdenController;
 use App\Http\Controllers\Api\WedstrijdtypesController;
+use App\Http\Controllers\GetrokkenMatenController;
 use App\Models\Wedstrijddeelnemer;
 use Illuminate\Support\Facades\Route;
 
@@ -163,6 +164,14 @@ Route::group(
             WedstrijddeelnemerJeugdcategorieenController::class
         )
             ->parameters(["wedstrijddeelnemerjeugdcategorieen" => "id"])
+            ->middleware("auth:sanctum")
+        ;
+
+        Route::apiResource(
+            "getrokkenmaten",
+            GetrokkenMatenController::class
+        )
+            ->parameters(["getrokkenmaten" => "id"])
             ->middleware("auth:sanctum")
         ;
     }
