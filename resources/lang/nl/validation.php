@@ -18,11 +18,13 @@ return [
         'numeric' => ':attribute moet groter dan :value zijn!',
     ],
     'boolean' => ':attribute moet 1 of true (voor ja) of 0 of false (voor nee) zijn!',
+    'different' => ':attribute en :other moeten verschillend zijn!',
     'datum_in_kalender_jaar' => 'Datum niet in kalenderjaar!',
     'nummer_uniek_per_wedstrijd' => 'Nummer bestaat reeds voor wedstrijd!',
     'nummer_uniek_per_reeks' => 'Nummer bestaat reeds voor reeks!',
     'deelnemer_uniek_per_wedstrijd' => 'Deelnemer bestaat reeds voor wedstrijd!',
     'deelnemer_uniek_per_plaats' => 'Deelnemer bestaat reeds voor plaats!',
+    'getrokkenmaat_uniek_per_wedstrijddeelnemer' => 'Getrokken_maat_id bestaat reeds voor wedstrijddeelnemer_id!',
     'attributes' => [
         'jaar' => 'Jaar',
         'email' => 'Email',
@@ -47,5 +49,6 @@ return [
         'wedstrijddeelnemer_id' => 'Wedstrijddeelnemer_id',
         'is_weger' => 'Weger',
         'jeugdcategorie_id' => 'Jeugdcategorie_id',
+        'getrokken_maat_id' => 'Getrokken_maat_id',
     ],
 ];

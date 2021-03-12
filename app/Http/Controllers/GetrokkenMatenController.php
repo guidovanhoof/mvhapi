@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\GetrokkenMaatResource;
 use App\Models\GetrokkenMaat;
+use App\Rules\GetrokkenMaatUniekPerWedstrijddeelnemer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -26,12 +27,17 @@ class GetrokkenMatenController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $validData = $this->valideerGetrokkenMaat($request, new GetrokkenMaat());
+
+        return $this->getrokkenMaatResourceResponse(
+            GetrokkenMaat::create($validData),
+            201
+        );
     }
 
     /**
@@ -44,27 +50,16 @@ class GetrokkenMatenController extends Controller
     {
         try {
             $getrokkenMaat = GetrokkenMaat::where('id', $id)->firstOrFail();
-            return $this->getrokkenMaatResourceResponse($getrokkenMaat);
+            return $this->getrokkenMaatResourceResponse($getrokkenMaat, 200);
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse('GetrokkenMaat');
         }
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param GetrokkenMaat $getrokkenMaat
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(GetrokkenMaat $getrokkenMaat)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param GetrokkenMaat $getrokkenMaat
      * @return \Illuminate\Http\Response
      */
@@ -86,12 +81,42 @@ class GetrokkenMatenController extends Controller
 
     /**
      * @param GetrokkenMaat $getrokkenMaat
+     * @param int $status
      * @return JsonResponse
      */
-    private function getrokkenMaatResourceResponse(GetrokkenMaat $getrokkenMaat): JsonResponse
+    private function getrokkenMaatResourceResponse(GetrokkenMaat $getrokkenMaat, int $status): JsonResponse
     {
         return response()->json(
-            new GetrokkenMaatResource($getrokkenMaat)
+            new GetrokkenMaatResource($getrokkenMaat),
+            $status
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @param GetrokkenMaat $getrokkenMaat
+     * @return array
+     */
+    private function valideerGetrokkenMaat(Request $request, GetrokkenMaat $getrokkenMaat): array
+    {
+        return $request->validate(
+            [
+                'wedstrijddeelnemer_id' => [
+                    'bail',
+                    'required',
+                    'exists:wedstrijddeelnemers,id',
+                    'different:getrokken_maat_id',
+                ],
+                'getrokken_maat_id' => [
+                    'bail',
+                    'required',
+                    'exists:wedstrijddeelnemers,id',
+                    'different:wedstrijddeelnemer_id',
+                    new GetrokkenMaatUniekPerWedstrijddeelnemer(
+                        $request['wedstrijddeelnemer_id'], $getrokkenMaat->id
+                    ),
+                ],
+            ]
         );
     }
 }

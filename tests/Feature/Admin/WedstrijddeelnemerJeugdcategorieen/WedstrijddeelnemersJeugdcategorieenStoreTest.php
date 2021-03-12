@@ -3,8 +3,6 @@
 namespace Tests\Feature\Admin\WedstrijddeelnemerJeugdcategorieen;
 
 use App\Models\WedstrijddeelnemerJeugdcategorie;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
