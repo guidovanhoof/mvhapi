@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\GetrokkenMaatResource;
 use App\Models\GetrokkenMaat;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use function App\Helpers\nietGevondenResponse;
 
 class GetrokkenMatenController extends Controller
 {
@@ -22,16 +24,6 @@ class GetrokkenMatenController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -43,20 +35,25 @@ class GetrokkenMatenController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Tonen van één getrokken maat.
      *
-     * @param  \App\Models\GetrokkenMaat  $getrokkenMaat
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function show(GetrokkenMaat $getrokkenMaat)
+    public function show($id): JsonResponse
     {
-        //
+        try {
+            $getrokkenMaat = GetrokkenMaat::where('id', $id)->firstOrFail();
+            return $this->getrokkenMaatResourceResponse($getrokkenMaat);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse('GetrokkenMaat');
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\GetrokkenMaat  $getrokkenMaat
+     * @param GetrokkenMaat $getrokkenMaat
      * @return \Illuminate\Http\Response
      */
     public function edit(GetrokkenMaat $getrokkenMaat)
@@ -68,7 +65,7 @@ class GetrokkenMatenController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\GetrokkenMaat  $getrokkenMaat
+     * @param GetrokkenMaat $getrokkenMaat
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, GetrokkenMaat $getrokkenMaat)
@@ -79,11 +76,22 @@ class GetrokkenMatenController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\GetrokkenMaat  $getrokkenMaat
+     * @param GetrokkenMaat $getrokkenMaat
      * @return \Illuminate\Http\Response
      */
     public function destroy(GetrokkenMaat $getrokkenMaat)
     {
         //
+    }
+
+    /**
+     * @param GetrokkenMaat $getrokkenMaat
+     * @return JsonResponse
+     */
+    private function getrokkenMaatResourceResponse(GetrokkenMaat $getrokkenMaat): JsonResponse
+    {
+        return response()->json(
+            new GetrokkenMaatResource($getrokkenMaat)
+        );
     }
 }
