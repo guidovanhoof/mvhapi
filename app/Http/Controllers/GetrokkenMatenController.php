@@ -8,6 +8,7 @@ use App\Rules\GetrokkenMaatUniekPerWedstrijddeelnemer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Mockery\Exception\BadMethodCallException;
 use function App\Helpers\nietGevondenResponse;
 
 class GetrokkenMatenController extends Controller
@@ -25,7 +26,7 @@ class GetrokkenMatenController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Bewaren nieuwe getrokken maat.
      *
      * @param Request $request
      * @return JsonResponse
@@ -57,15 +58,26 @@ class GetrokkenMatenController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Wijzigen bestaande getrokken maat.
      *
      * @param Request $request
-     * @param GetrokkenMaat $getrokkenMaat
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, GetrokkenMaat $getrokkenMaat)
+    public function update(Request $request, $id): JsonResponse
     {
-        //
+        try {
+            $getrokkenMaat = GetrokkenMaat::where("id", $id)->firstOrFail();
+            $getrokkenMaat->update(
+                $this->valideerGetrokkenMaat($request, $getrokkenMaat)
+            );
+            return $this->getrokkenMaatResourceResponse(
+                $getrokkenMaat,
+                200
+            );
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse("GetrokkenMaat");
+        }
     }
 
     /**
