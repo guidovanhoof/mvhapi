@@ -8,8 +8,10 @@ use App\Rules\GetrokkenMaatUniekPerWedstrijddeelnemer;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Mockery\Exception\BadMethodCallException;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\verwijderdResponse;
 
 class GetrokkenMatenController extends Controller
 {
@@ -81,14 +83,20 @@ class GetrokkenMatenController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijderen bestaande getrokken maat.
      *
-     * @param GetrokkenMaat $getrokkenMaat
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return JsonResponse
      */
-    public function destroy(GetrokkenMaat $getrokkenMaat)
+    public function destroy($id): JsonResponse
     {
-        //
+        try {
+            $id = GetrokkenMaat::where('id', $id)->firstOrFail();
+            $id->delete();
+            return verwijderdResponse('GetrokkenMaat');
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return nietGevondenResponse('GetrokkenMaat');
+        }
     }
 
     /**
