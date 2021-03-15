@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Wedstrijddeelnemer extends Model
 {
@@ -27,6 +29,36 @@ class Wedstrijddeelnemer extends Model
             ->first();
         return $wedstrijddeelnemerJeugdcategorie
             ? $wedstrijddeelnemerJeugdcategorie->jeugdcategorie
+            : null
+        ;
+    }
+
+    /**
+     * Wedstrijddeelnemer heeft 1 deelnemer.
+     *
+     * @return BelongsTo
+     */
+    public function deelnemer(): BelongsTo
+    {
+        return $this->belongsTo(Deelnemer::class);
+    }
+
+    /**
+     * Wedstrijddeelnemer heeft 1 getrokken maat.
+     *
+     */
+    public function getrokkenMaat()
+    {
+        $getrokkenmaat = GetrokkenMaat::where(
+            'wedstrijddeelnemer_id', $this->id
+        )
+            ->first();
+        $wedstrijddeelnemer = Wedstrijddeelnemer::where(
+            'id', $getrokkenmaat->getrokken_maat_id
+        )
+            ->first();
+        return $wedstrijddeelnemer
+            ? $wedstrijddeelnemer->deelnemer
             : null
         ;
     }

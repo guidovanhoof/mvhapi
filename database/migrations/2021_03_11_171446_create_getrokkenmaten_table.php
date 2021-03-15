@@ -15,7 +15,7 @@ class CreateGetrokkenMatenTable extends Migration
     {
         Schema::create('getrokkenmaten', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('wedstrijddeelnemer_id');
+            $table->unsignedBigInteger('wedstrijddeelnemer_id')->unique();
             $table->unsignedBigInteger('getrokken_maat_id');
             $table->timestamps();
 
