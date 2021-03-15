@@ -8,9 +8,11 @@ use App\Models\Wedstrijddeelnemer;
 use App\Rules\DeelnemerUniekPerWedstrijd;
 use http\Env\Response;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use function App\Helpers\nietGevondenResponse;
+use function App\Helpers\nietVerwijderdResponse;
 use function App\Helpers\verwijderdResponse;
 
 class WedstrijddeelnemersController extends Controller
@@ -87,7 +89,11 @@ class WedstrijddeelnemersController extends Controller
     {
         try {
             $wedstrijddeelnemerid = Wedstrijddeelnemer::where("id", $id)->firstOrFail();
-            $wedstrijddeelnemerid->delete();
+            try {
+                $wedstrijddeelnemerid->delete();
+            } catch (QueryException $queryException) {
+                return nietVerwijderdResponse('Wedstrijddeelnemer', 'jeugdcategorie/getrokken maat');
+            }
             return verwijderdResponse("Wedstrijddeelnemer");
         } catch (ModelNotFoundException $modelNotFoundException) {
             return nietGevondenResponse("Wedstrijddeelnemer");
