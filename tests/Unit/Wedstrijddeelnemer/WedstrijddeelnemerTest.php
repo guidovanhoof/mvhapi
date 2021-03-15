@@ -134,6 +134,36 @@ class WedstrijddeelnemerTest extends TestCase
         assertJeugdcategorieEquals($this, $jeugdcategorie, $actualJeugdCategorie);
     }
 
+    /** @test */
+    public function heeftEenDeelnemer()
+    {
+        $deelnemer = bewaarDeelnemer();
+        $this->wedstrijddeelnemer->deelnemer_id = $deelnemer->id;
+
+        $this->bewaarWedstrijddeelnemer();
+
+        $actualDeelnemer = $this->wedstrijddeelnemer->deelnemer;
+
+        assertDeelnemerEquals($this, $deelnemer, $actualDeelnemer);
+    }
+
+    /** @test */
+    public function heeftGetrokkenMaat()
+    {
+        $wedstrijddeelnemer = bewaarWedstrijddeelnemer();
+        $this->bewaarWedstrijddeelnemer();
+        bewaarGetrokkenMaat(
+            [
+                'wedstrijddeelnemer_id' => $this->wedstrijddeelnemer->id,
+                'getrokken_maat_id' => $wedstrijddeelnemer->id,
+            ]
+        );
+
+        $actualGetrokkenMaat = $this->wedstrijddeelnemer->getrokkenMaat();
+
+        assertDeelnemerEquals($this, $wedstrijddeelnemer->deelnemer, $actualGetrokkenMaat);
+    }
+
     private function bewaarWedstrijddeelnemer()
     {
         $this->wedstrijddeelnemer->save();

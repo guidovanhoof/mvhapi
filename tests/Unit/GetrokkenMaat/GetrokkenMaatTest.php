@@ -47,6 +47,18 @@ class GetrokkenMaatTest extends TestCase
     }
 
     /** @test  */
+    public function wedstrijddeelnemerIdIsUniek()
+    {
+        $this->expectException(QueryException::class);
+
+        $getrokkenMaat = bewaarGetrokkenMaat();
+        $this->getrokkenMaat->wedstrijddeelnemer_id =
+            $getrokkenMaat->wedstrijddeelnemer_id;
+
+        $this->bewaarGetrokkenMaat();
+    }
+
+    /** @test  */
     public function heeftEenGetrokkenMaatId()
     {
         $wedstrijddeelnemer = bewaarWedstrijddeelnemer();
