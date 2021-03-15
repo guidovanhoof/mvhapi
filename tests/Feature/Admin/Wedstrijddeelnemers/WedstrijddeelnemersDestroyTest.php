@@ -43,6 +43,56 @@ class WedstrijddeelnemersDestroyTest extends TestCase
         ;
     }
 
+    /** @test */
+    public function nogJeugdcategorieenGekoppeld()
+    {
+        $expectedMessage = "Wedstrijddeelnemer niet verwijderd! Nog jeugdcategorie/getrokken maat aanwezig!";
+        $jeugdcategorie = bewaarJeugdcategorie();
+        $wedstrijddeelnemer = bewaarWedstrijddeelnemer();
+        bewaarWedstrijddeelnemerJeugdcategorie(
+            [
+                'wedstrijddeelnemer_id' => $wedstrijddeelnemer->id,
+                'jeugdcategorie_id' => $jeugdcategorie->id,
+            ]
+        );
+
+        $response = $this->verwijderWedstrijddeelnemer($wedstrijddeelnemer->id);
+
+        $response->assertStatus(405);
+        $errorMessage = $response->json()["message"];
+        $this
+            ->assertDatabaseHas(
+                "wedstrijddeelnemers",
+                wedstrijddeelnemerToArry($wedstrijddeelnemer)
+            )
+            ->assertEquals($expectedMessage, $errorMessage);
+    }
+
+    /** @test */
+    public function nogGetrokkenMatenGekoppeld()
+    {
+        $expectedMessage = "Wedstrijddeelnemer niet verwijderd! Nog jeugdcategorie/getrokken maat aanwezig!";
+        $wedstrijddeelnemer = bewaarWedstrijddeelnemer();
+        $getrokkenMaat = bewaarWedstrijddeelnemer();
+        bewaarGetrokkenMaat(
+            [
+                'wedstrijddeelnemer_id' => $wedstrijddeelnemer->id,
+                'getrokken_maat_id' => $getrokkenMaat->id,
+            ]
+        );
+
+        $response = $this->verwijderWedstrijddeelnemer($wedstrijddeelnemer->id);
+
+        $response->assertStatus(405);
+        $errorMessage = $response->json()["message"];
+        $this
+            ->assertDatabaseHas(
+                "wedstrijddeelnemers",
+                wedstrijddeelnemerToArry($wedstrijddeelnemer)
+            )
+            ->assertEquals($expectedMessage, $errorMessage);
+    }
+
     /**
      * @param $id
      * @return TestResponse
